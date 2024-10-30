@@ -1,4 +1,4 @@
-package com.example.insuranceService.domain.insurance.service;
+package com.example.insuranceservice.domain.insurance.service;
 
 import org.springframework.stereotype.Service;
 

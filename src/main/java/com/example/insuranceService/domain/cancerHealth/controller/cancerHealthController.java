@@ -1,4 +1,4 @@
-package com.example.insuranceService.domain.cancerHealth.controller;
+package com.example.insuranceservice.domain.cancerHealth.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

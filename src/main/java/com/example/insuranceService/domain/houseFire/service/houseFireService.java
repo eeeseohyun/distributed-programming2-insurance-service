@@ -1,4 +1,4 @@
-package com.example.insuranceService.domain.houseFire.service;
+package com.example.insuranceservice.domain.houseFire.service;
 
 import org.springframework.stereotype.Service;
 
