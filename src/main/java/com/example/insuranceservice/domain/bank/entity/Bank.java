@@ -14,6 +14,8 @@ public class Bank {
     private String payerName;
     private String payerPhoneNum;
 
-//    private PaymentInfo paymentInfo;
+    @ManyToOne
+    @JoinColumn(name = "payment_info_id")
+    private PaymentInfo paymentInfo;
 }
 

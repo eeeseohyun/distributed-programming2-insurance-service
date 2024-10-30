@@ -1,5 +1,7 @@
 package com.example.insuranceservice.domain.card.entity;
 
+import com.example.insuranceservice.domain.contract.entity.Contract;
+import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,5 +16,7 @@ public class Card {
     private String cvcNum;
     private String password;
 
-//    private PaymentInfo paymentInfo;
+    @ManyToOne
+    @JoinColumn(name = "payment_info_id")
+    private PaymentInfo paymentInfo;
 }

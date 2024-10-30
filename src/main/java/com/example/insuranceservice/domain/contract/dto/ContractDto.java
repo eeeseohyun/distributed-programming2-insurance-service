@@ -1,15 +1,12 @@
-package com.example.insuranceservice.domain.contract.entity;
+package com.example.insuranceservice.domain.contract.dto;
 
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
-import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
-@Entity
-public class Contract {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "contract_id")
+@Data
+public class ContractDto {
     private Integer id;
     private String concludedDate;
     private Integer concludedEID;
@@ -25,12 +22,5 @@ public class Contract {
     private String resurrectionDate;
     private String resurrectionReason;
     private Integer underwritingEID;
-
-    @OneToMany(mappedBy = "contract")
     private List<PaymentInfo> paymentInfoList;
-
-//    private Customer customer;
-//    private Employee employee;
-//    private Insurance insurance;
-
 }
