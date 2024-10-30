@@ -1,5 +1,8 @@
 package com.example.insuranceService.domain.insurance.entity;
 
+import com.example.insuranceService.domain.cancerHealth.entity.CancerHealth;
+import com.example.insuranceService.domain.car.entity.Car;
+import com.example.insuranceService.domain.houseFire.entity.HouseFire;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -38,7 +41,7 @@ public class Insurance {
 
     @OneToOne
     @JoinColumn(name="internationalTravelId")
-    private InternationalTravel InternationalTravel;
+    private com.example.insuranceService.domain.InternationalTravel.entity.InternationalTravel InternationalTravel;
 
     @OneToOne
     @JoinColumn(name="houseFireID")

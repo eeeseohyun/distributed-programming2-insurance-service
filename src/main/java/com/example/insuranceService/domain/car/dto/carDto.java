@@ -1,7 +1,5 @@
-package com.example.insuranceService.domain.insurance.entity;
+package com.example.insuranceService.domain.car.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class Car {
-    @Id
+public class carDto {
     private int carId;
     private Boolean hasBlackBox;
     private String vin;
