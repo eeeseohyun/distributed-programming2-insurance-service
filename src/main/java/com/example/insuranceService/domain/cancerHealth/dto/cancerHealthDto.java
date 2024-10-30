@@ -1,4 +1,4 @@
-package com.example.insuranceService.domain.cancerHealth.dto;
+package com.example.insuranceservice.domain.cancerHealth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.example.insuranceService.domain.houseFire.dto;
+package com.example.insuranceservice.domain.houseFire.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

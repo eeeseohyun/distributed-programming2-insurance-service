@@ -1,7 +1,6 @@
-package com.example.insuranceService.domain.houseFire.repository;
+package com.example.insuranceservice.domain.houseFire.repository;
 
-import com.example.insuranceService.domain.cancerHealth.entity.CancerHealth;
-import com.example.insuranceService.domain.houseFire.entity.HouseFire;
+import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

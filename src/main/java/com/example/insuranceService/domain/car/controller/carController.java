@@ -1,4 +1,4 @@
-package com.example.insuranceService.domain.car.controller;
+package com.example.insuranceservice.domain.car.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
