@@ -1,11 +1,7 @@
 package com.example.insuranceservice.domain.customer.entity;
 
-import com.example.insuranceservice.domain.Accident.entity.Accident;
-import com.example.insuranceservice.domain.MedicalHistory.entity.MedicalHistory;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import java.util.List;
+import com.example.insuranceservice.domain.accident.entity.Accident;
+import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
