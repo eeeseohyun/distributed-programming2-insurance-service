@@ -1,4 +1,4 @@
-package com.example.insuranceService.domain.insurance;
+package com.example.insuranceservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -24,14 +24,12 @@ public class PaymentInfo {
     @JoinColumn(name = "contract_id")
     private Contract contract;
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "paymentInfo")
     private List<Card> cardList;
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "paymentInfo")
     private List<Bank> bankList;
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "paymentInfo")
     private List<Automatic> automaticList;
-
-
 }
