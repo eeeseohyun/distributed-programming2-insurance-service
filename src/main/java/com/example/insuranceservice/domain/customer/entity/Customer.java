@@ -1,10 +1,13 @@
 package com.example.insuranceservice.domain.customer.entity;
 
 import com.example.insuranceservice.domain.accident.entity.Accident;
+import com.example.insuranceservice.domain.counsel.entity.Counsel;
+import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.List;
 
 @Entity
@@ -33,6 +36,10 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedicalHistory> medicalHistories;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Counsel> counsels;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Contract> contracts;
 }
-
-
