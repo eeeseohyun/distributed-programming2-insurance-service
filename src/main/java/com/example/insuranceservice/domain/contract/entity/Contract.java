@@ -1,16 +1,22 @@
 package com.example.insuranceservice.domain.contract.entity;
 
+import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "contract_id")
     private Integer id;
+
     private String concludedDate;
     private Integer concludedEID;
     private String contractStatus;
@@ -29,8 +35,7 @@ public class Contract {
     @OneToMany(mappedBy = "contract")
     private List<PaymentInfo> paymentInfoList;
 
-//    private Customer customer;
-//    private Employee employee;
-//    private Insurance insurance;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 }

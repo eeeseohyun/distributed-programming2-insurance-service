@@ -1,4 +1,4 @@
-package com.example.insuranceService.domain.car.entity;
+package com.example.insuranceservice.domain.car.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

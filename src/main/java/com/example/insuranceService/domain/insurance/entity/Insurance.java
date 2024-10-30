@@ -1,19 +1,20 @@
-package com.example.insuranceService.domain.insurance.entity;
+package com.example.insuranceservice.domain.insurance.entity;
 
-import com.example.insuranceService.domain.cancerHealth.entity.CancerHealth;
-import com.example.insuranceService.domain.car.entity.Car;
-import com.example.insuranceService.domain.houseFire.entity.HouseFire;
+import com.example.insuranceservice.domain.cancerHealth.entity.CancerHealth;
+import com.example.insuranceservice.domain.car.entity.Car;
+import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
+import com.example.insuranceservice.domain.internationalTravel.entity.InternationalTravel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
 public class Insurance {
     @Id
@@ -41,7 +42,7 @@ public class Insurance {
 
     @OneToOne
     @JoinColumn(name="internationalTravelId")
-    private com.example.insuranceService.domain.InternationalTravel.entity.InternationalTravel InternationalTravel;
+    private InternationalTravel internationalTravel;
 
     @OneToOne
     @JoinColumn(name="houseFireID")
