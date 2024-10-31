@@ -1,23 +1,24 @@
 package com.example.insuranceservice.domain.customer.entity;
-
 import com.example.insuranceservice.domain.accident.entity.Accident;
 import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int customerID;
-
     private String account;
     private String address;
     private int age;
