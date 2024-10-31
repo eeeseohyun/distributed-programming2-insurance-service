@@ -15,6 +15,8 @@ public class CustomerController {
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
+
+    //// 고객 DB 서비스 카테고리 - 입수한 고객정보를 DB에 반영한다.
     @PostMapping("/create")
     public ResponseEntity<Void> createCustomer(@RequestBody CustomerDTO customerDTO) {
         customerService.createCustomer(customerDTO);
@@ -35,4 +37,5 @@ public class CustomerController {
         customerService.deleteCustomer(customerId);
         return ResponseEntity.ok().build();
     }
+    ////
 }

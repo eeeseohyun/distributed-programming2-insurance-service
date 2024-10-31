@@ -17,16 +17,16 @@ public class ContractService {
     public ContractService(ContractRepository contractRepository){
         this.contractRepository = contractRepository;;
     }
+
+    //// 계약체결 카테고리 - 계약을 체결한다.
     public List<ContractDto> getContractsToConclude() {
         List<Contract> permitContracts = contractRepository.findByContractStatus("ContractPermission");
         return permitContracts.stream().map(ContractDto::new).collect(Collectors.toList());
     }
-
     public List<ContractDto> getRejectedContracts() {
         List<Contract> rejectedContracts = contractRepository.findByContractStatus("ReviewReject");
         return rejectedContracts.stream().map(ContractDto::new).collect(Collectors.toList());
     }
-
     public String concludeContract(Integer contractId, boolean approve) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
         if (contractOptional.isPresent()) {
@@ -42,7 +42,6 @@ public class ContractService {
             return "해당 계약 id를 찾을 수 없습니다.";
         }
     }
-
     public String requestReUnderwriting(Integer contractId) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
         if (contractOptional.isPresent()) {
@@ -54,8 +53,56 @@ public class ContractService {
             return "해당 계약 id를 찾을 수 없습니다.";
         }
     }
+    ////
 
-    public String createContract(ContractDto contractDto) {
+    //// 인수심사 카테고리 - 계약의 인수심사를 하다, 계약 진행을 허가한다.
+    public List<ContractDto> getUnderwritedContracts() {
+        List<Contract> contracts = contractRepository.findByContractStatus("ReviewPermit");
+        return contracts.stream().map(ContractDto::new).collect(Collectors.toList());
+    }
+    public String permitContract(Integer contractId, boolean approve) {
+        Optional<Contract> contractOptional = contractRepository.findById(contractId);
+        if (contractOptional.isPresent()) {
+            Contract contract = contractOptional.get();
+            if (approve) {
+                contract.setContractStatus("ContractPermission");
+                contractRepository.save(contract);
+                return "계약 진행이 허가되었습니다.";
+            } else {
+                return "계약 진행이 취소되었습니다.";
+            }
+        } else {
+            return "해당 계약 ID를 찾을 수 없습니다.";
+        }
+    }
+    public List<ContractDto> getUnderwritingRequestedContracts() {
+        List<Contract> contracts = contractRepository.findByContractStatus("ReviewRequest");
+        return contracts.stream().map(ContractDto::new).collect(Collectors.toList());
+    }
+    public String processUnderwriting(Integer contractId, String evaluation, boolean approve) {
+        Optional<Contract> contractOptional = contractRepository.findById(contractId);
+        if (contractOptional.isPresent()) {
+            Contract contract = contractOptional.get();
+            contract.setEvaluation(evaluation);
+            if (approve) {
+                contract.setContractStatus("ReviewPermit");
+            } else {
+                contract.setContractStatus("ReviewReject");
+            }
+            contractRepository.save(contract);
+            return "[info] 인수심사 평가 결과가 저장되었습니다.";
+        } else {
+            return "해당 계약 ID를 찾을 수 없습니다.";
+        }
+    }
+    public List<ContractDto> getRejectedUnderwritedContracts() {
+        List<Contract> contracts = contractRepository.findByContractStatus("ReviewReject");
+        return contracts.stream().map(ContractDto::new).collect(Collectors.toList());
+    }
+    ////
+
+
+    public String testCreateContract(ContractDto contractDto) {
         Contract contract = new Contract();
         contract.setConcludedDate(contractDto.getConcludedDate());
         contract.setConcludedEID(contractDto.getConcludedEID());

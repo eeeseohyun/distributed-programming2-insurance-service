@@ -15,6 +15,8 @@ public class CustomerService {
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
+
+    //// 고객 DB 서비스 카테고리 - 입수한 고객정보를 DB에 반영한다.
     public void createCustomer(CustomerDTO customerDTO) {
         Customer customer = new Customer();
         customer.setAccount(customerDTO.getAccount());
@@ -81,4 +83,5 @@ public class CustomerService {
     public void deleteCustomer(Integer customerId) {
         customerRepository.deleteById(customerId);
     }
+    ////
 }
