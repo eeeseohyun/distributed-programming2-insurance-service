@@ -1,12 +1,8 @@
 package com.example.insuranceservice.domain.medicalHistory.service;
 
-<<<<<<< HEAD:src/main/java/com/example/insuranceservice/domain/MedicalHistory/service/MedicalHistoryService.java
-import com.example.insuranceservice.domain.MedicalHistory.repository.MedicalHistoryRepository;
-import com.example.insuranceservice.domain.MedicalHistory.entity.MedicalHistory;
-=======
+
 import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import com.example.insuranceservice.domain.medicalHistory.repository.MedicalHistoryRepository;
->>>>>>> 959a1e00dae8ae6016c20b2fe6a0ef01aece2119:src/main/java/com/example/insuranceservice/domain/medicalHistory/service/MedicalHistoryService.java
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

@@ -8,12 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-<<<<<<< HEAD
 import java.util.List;
-=======
->>>>>>> 959a1e00dae8ae6016c20b2fe6a0ef01aece2119
 
-import java.util.List;
 @Entity
 @Getter
 @Setter

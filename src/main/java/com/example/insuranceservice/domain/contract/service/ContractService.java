@@ -1,7 +1,7 @@
 package com.example.insuranceservice.domain.contract.service;
 
 
-import com.example.insuranceservice.domain.Constant;
+
 import com.example.insuranceservice.domain.cancerHealth.dto.CancerHealthDto;
 import com.example.insuranceservice.domain.car.dto.CarDto;
 import com.example.insuranceservice.domain.contract.dto.ContractDto;
@@ -20,7 +20,7 @@ import com.example.insuranceservice.domain.customer.repository.CustomerRepositor
 import com.example.insuranceservice.domain.houseFire.dto.HouseFireDto;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
-import com.example.insuranceservice.domain.internationalTravel.dto.InternationalTravelDto;
+import com.example.insuranceservice.domain.InternationalTravel.dto.InternationalTravelDto;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRequestDto;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import com.example.insuranceservice.global.constant.Constant;
@@ -35,7 +35,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -110,7 +109,7 @@ public class ContractService {
     public void manageUpdate(ContractDto contractDto) {
         contractRepository.deleteById(contractDto.getId());
         contractRepository.save(contractDto.toEntity());
-
+    }
     //// 계약체결 카테고리 - 계약을 체결한다.
     public List<ContractDto> getContractsToConclude() {
         List<Contract> permitContracts = contractRepository.findByContractStatus("ContractPermission");

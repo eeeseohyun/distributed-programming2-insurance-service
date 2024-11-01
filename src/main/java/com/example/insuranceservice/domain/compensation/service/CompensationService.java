@@ -1,12 +1,6 @@
 package com.example.insuranceservice.domain.compensation.service;
-
-<<<<<<< HEAD:src/main/java/com/example/insuranceservice/domain/Compensation/service/CompensationService.java
-import com.example.insuranceservice.domain.Compensation.repository.CompensationRepository;
-import com.example.insuranceservice.domain.Compensation.entity.Compensation;
-=======
 import com.example.insuranceservice.domain.compensation.entity.Compensation;
 import com.example.insuranceservice.domain.compensation.repository.CompensationRepository;
->>>>>>> 959a1e00dae8ae6016c20b2fe6a0ef01aece2119:src/main/java/com/example/insuranceservice/domain/compensation/service/CompensationService.java
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

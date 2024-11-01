@@ -2,26 +2,21 @@ package com.example.insuranceservice.domain.contract.dto;
 
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
-<<<<<<< HEAD
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-=======
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
->>>>>>> 959a1e00dae8ae6016c20b2fe6a0ef01aece2119
+
 
 import java.util.List;
 
 @Data
-<<<<<<< HEAD
 @Builder
 @Slf4j
-=======
 @NoArgsConstructor
 @AllArgsConstructor
->>>>>>> 959a1e00dae8ae6016c20b2fe6a0ef01aece2119
 public class ContractDto {
     private Integer id;
 
@@ -43,8 +38,6 @@ public class ContractDto {
     private String insuranceName;
     private Integer customerId;
 
-<<<<<<< HEAD
-
     public Contract toEntity() {
         return Contract.builder()
                 .id(this.id)
@@ -64,7 +57,7 @@ public class ContractDto {
                 .underwritingEID(this.underwritingEID)
                 .paymentInfoList(this.paymentInfoList)
                 .build();
-=======
+    }
     public ContractDto(Contract contract) {
         this.id = contract.getId();
         this.concludedDate = contract.getConcludedDate();
@@ -82,6 +75,5 @@ public class ContractDto {
         this.resurrectionReason = contract.getResurrectionReason();
         this.underwritingEID = contract.getUnderwritingEID();
         this.paymentInfoList = contract.getPaymentInfoList();
->>>>>>> 959a1e00dae8ae6016c20b2fe6a0ef01aece2119
     }
 }
