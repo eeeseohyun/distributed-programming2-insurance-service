@@ -1,4 +1,4 @@
-package com.example.insuranceservice.domain.contract.dto;
+package com.example.insuranceService.domain.contract.dto;
 
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ContractDto {
     private Integer id;
+
     private String concludedDate;
     private Integer concludedEID;
     private String contractStatus;
@@ -28,6 +29,8 @@ public class ContractDto {
     private String resurrectionReason;
     private Integer underwritingEID;
     private List<PaymentInfo> paymentInfoList;
+    private String insuranceName;
+    private Integer customerId;
 
     public ContractDto(Contract contract) {
         this.id = contract.getId();

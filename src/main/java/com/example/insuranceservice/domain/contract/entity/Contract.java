@@ -33,7 +33,7 @@ public class Contract {
     private String resurrectionReason;
     private Integer underwritingEID;
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
     private List<PaymentInfo> paymentInfoList;
 
     @ManyToOne(fetch = FetchType.LAZY)

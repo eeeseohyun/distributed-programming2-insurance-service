@@ -3,9 +3,12 @@ package com.example.insuranceservice.domain.bank.entity;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

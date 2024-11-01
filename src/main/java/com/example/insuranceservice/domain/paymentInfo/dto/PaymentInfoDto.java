@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class PaymentInfoDto {
     private Integer id;
-    private String paymenyType;
+    private String paymentType;
     private String fixedMonthlyPaymentDate;
     private Integer fixedMonthlyPayment;
     private Contract contract;
