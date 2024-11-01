@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class CancerHealthDto {
     private int cancerId;
     private String categoryOfCancer;

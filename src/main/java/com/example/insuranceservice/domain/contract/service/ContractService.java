@@ -1,5 +1,7 @@
 package com.example.insuranceservice.domain.contract.service;
 
+
+import com.example.insuranceservice.domain.Constant;
 import com.example.insuranceservice.domain.cancerHealth.dto.CancerHealthDto;
 import com.example.insuranceservice.domain.car.dto.CarDto;
 import com.example.insuranceservice.domain.contract.dto.ContractDto;
@@ -24,6 +26,11 @@ import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import com.example.insuranceservice.global.constant.Constant;
 import org.springframework.stereotype.Service;
 
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Optional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -43,6 +50,66 @@ public class ContractService {
         this.customerRepository = customerRepository;
         this.insuranceRepository = insuranceRepository;
     }
+    // 미납관리한다.
+    public void manageLatePayment(int contractId) {
+        Optional<Contract> contractOptional = contractRepository.findById(contractId);
+        if(!contractOptional.isPresent()){
+          return;
+        }
+        Contract contract = contractOptional.get();
+        if(contract.getNonPaymentPeriod()>= Constant.maximumLatePaymentPeriod) {
+          contractRepository.deleteById(contractId);
+        }
+    }
+    // 부활관리한다.
+    public void manageRevive(ContractDto contractDto) {
+        Optional<Contract> contractOptional = contractRepository.findById(contractDto.getId());
+        if(!contractOptional.isPresent()){
+            return;
+        }
+        Contract contract = contractOptional.get();
+        contract.revive(contractDto);
+        contractRepository.deleteById(contractDto.getId());
+        contractRepository.save(contract);
+    }
+
+    // 만기관리하다.
+    public void manageExpirationContract(int contractId) throws ParseException {
+        Optional<Contract> contractOptional = contractRepository.findById(contractId);
+        if(!contractOptional.isPresent()){
+            return;
+        }
+        Contract contract = contractOptional.get();
+        SimpleDateFormat dateFormat =new SimpleDateFormat(Constant.dateFormat);
+        Date date = dateFormat.parse(contract.getExpirationDate());
+        Date today = new Date();
+        if(!date.before(today)) {
+            return;
+        }
+        if(!contract.getRenewalStatus()) {
+            contractRepository.deleteById(contractId);
+        }
+    }
+
+    // 재계약관리한다.
+    public void manageRenewalContract(int contractId) {
+        Optional<Contract> contractOptional = contractRepository.findById(contractId);
+        if(!contractOptional.isPresent()){
+            return;
+        }
+        Contract contract = contractOptional.get();
+        if(contract.getRenewalStatus()) {
+            contract.setExpirationDate(new Date().getYear() + 2 + "-" + new Date().getMonth() + "-" + new Date().getDay());
+            contractRepository.deleteById(contractId);
+            contractRepository.save(contract);
+        }
+
+    }
+
+    // 배서관리한다.
+    public void manageUpdate(ContractDto contractDto) {
+        contractRepository.deleteById(contractDto.getId());
+        contractRepository.save(contractDto.toEntity());
 
     //// 계약체결 카테고리 - 계약을 체결한다.
     public List<ContractDto> getContractsToConclude() {

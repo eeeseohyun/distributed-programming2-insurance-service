@@ -5,15 +5,21 @@ import com.example.insuranceservice.domain.bank.entity.Bank;
 import com.example.insuranceservice.domain.card.entity.Card;
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
+@Builder
+@Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class PaymentInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +41,6 @@ public class PaymentInfo {
 
     @OneToMany(mappedBy = "paymentInfo", cascade = CascadeType.ALL)
     private List<Automatic> automaticList;
+
 }
+

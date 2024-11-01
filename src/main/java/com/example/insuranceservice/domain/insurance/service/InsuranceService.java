@@ -1,5 +1,4 @@
 package com.example.insuranceservice.domain.insurance.service;
-
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
 import org.springframework.stereotype.Service;
@@ -29,4 +28,5 @@ public class InsuranceService {
         else
            throw new RuntimeException("존재하지 않는 보험 상품 ID");
     }
+
 }

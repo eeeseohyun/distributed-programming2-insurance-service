@@ -1,5 +1,4 @@
 package com.example.insuranceservice.domain.insurance.controller;
-
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import org.springframework.web.bind.annotation.GetMapping;
