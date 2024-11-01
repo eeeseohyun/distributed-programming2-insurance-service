@@ -3,6 +3,7 @@ import com.example.insuranceservice.domain.accident.entity.Accident;
 import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
+import com.example.insuranceservice.domain.payment.entity.Payment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,4 +44,7 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contract> contracts;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments;
 }

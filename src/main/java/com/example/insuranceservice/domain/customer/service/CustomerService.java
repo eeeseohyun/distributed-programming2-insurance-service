@@ -7,6 +7,7 @@ import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import com.example.insuranceservice.domain.medicalHistory.repository.MedicalHistoryRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,4 +85,10 @@ public class CustomerService {
         customerRepository.deleteById(customerId);
     }
     ////
+
+    public Customer findCustomerById(Integer customerId) {
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        if (customer.isPresent()) return customer.get();
+        else throw new RuntimeException("존재하지 않는 고객 ID");
+    }
 }

@@ -1,54 +1,51 @@
 package com.example.insuranceservice.domain.contract.service;
 
-
-
-import com.example.insuranceservice.domain.cancerHealth.dto.CancerHealthDto;
-import com.example.insuranceservice.domain.car.dto.CarDto;
-import com.example.insuranceservice.domain.contract.dto.ContractDto;
-import com.example.insuranceservice.domain.contract.repository.ContractRepository;
+import com.example.insuranceservice.domain.InternationalTravel.dto.InternationalTravelDto;
 import com.example.insuranceservice.domain.automatic.dto.AutomaticRequestDto;
 import com.example.insuranceservice.domain.automatic.entity.Automatic;
 import com.example.insuranceservice.domain.bank.dto.BankRequestDto;
 import com.example.insuranceservice.domain.bank.entity.Bank;
+import com.example.insuranceservice.domain.cancerHealth.dto.CancerHealthDto;
+import com.example.insuranceservice.domain.car.dto.CarDto;
 import com.example.insuranceservice.domain.card.dto.CardRequestDto;
 import com.example.insuranceservice.domain.card.entity.Card;
 import com.example.insuranceservice.domain.contract.dto.ContractDetailDto;
+import com.example.insuranceservice.domain.contract.dto.ContractDto;
 import com.example.insuranceservice.domain.contract.dto.ContractRequestDto;
 import com.example.insuranceservice.domain.contract.entity.Contract;
+import com.example.insuranceservice.domain.contract.repository.ContractRepository;
 import com.example.insuranceservice.domain.customer.entity.Customer;
-import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
+import com.example.insuranceservice.domain.customer.service.CustomerService;
 import com.example.insuranceservice.domain.houseFire.dto.HouseFireDto;
-import com.example.insuranceservice.domain.insurance.entity.Insurance;
-import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
-import com.example.insuranceservice.domain.InternationalTravel.dto.InternationalTravelDto;
+import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRequestDto;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import com.example.insuranceservice.global.constant.Constant;
 import org.springframework.stereotype.Service;
 
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ContractService {
 
     private ContractRepository contractRepository;
-    private CustomerRepository customerRepository;
-    private InsuranceRepository insuranceRepository;
+    private CustomerService customerService;
+    private InsuranceService insuranceService;
 
-    public ContractService(ContractRepository contractRepository, CustomerRepository customerRepository, InsuranceRepository insuranceRepository) {
+    public ContractService(ContractRepository contractRepository, CustomerService customerService, InsuranceService insuranceService) {
         this.contractRepository = contractRepository;;
-        this.customerRepository = customerRepository;
-        this.insuranceRepository = insuranceRepository;
+        this.customerService = customerService;
+        this.insuranceService = insuranceService;
     }
+
     // 미납관리한다.
     public void manageLatePayment(int contractId) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
@@ -214,22 +211,10 @@ public class ContractService {
         return "계약이 성공적으로 생성되었습니다.";
     }
 
-    private Contract getContractById(Integer contractId){
+    private Contract findContractById(Integer contractId){
         Optional<Contract> contract = contractRepository.findById(contractId);
         if (contract.isPresent()) return contract.get();
         else throw new RuntimeException("존재하지 않는 계약 ID");
-    }
-
-    private Insurance getInsuranceById(Integer insuranceId) {
-        Optional<Insurance> insurance = insuranceRepository.findById(insuranceId);
-        if (insurance.isPresent()) return insurance.get();
-        else throw new RuntimeException("존재하지 않는 보험 ID");
-    }
-
-    public Customer getCustomerById(Integer customerId) {
-        Optional<Customer> customer = customerRepository.findById(customerId);
-        if (customer.isPresent()) return customer.get();
-        else throw new RuntimeException("존재하지 않는 고객 ID");
     }
 
     //// 보험 상품 종류 카테고리
@@ -280,9 +265,9 @@ public class ContractService {
             }
             paymentInfoList.add(paymentInfo);
         }
-        contract.setCustomer(getCustomerById(contractRequestDto.getCustomerId()));
+        contract.setCustomer(customerService.findCustomerById(contractRequestDto.getCustomerId()));
         contract.setExpirationDate(contractRequestDto.getExpirationDate());
-        contract.setInsurance(getInsuranceById(contractRequestDto.getInsuranceId()));
+        contract.setInsurance(insuranceService.findInsuranceById(contractRequestDto.getInsuranceId()));
         contract.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateFormat)));
         contract.setIsConcluded(false);
         contract.setIsPassUW(false);
@@ -295,21 +280,21 @@ public class ContractService {
     //// 보유 계약 조회 카테고리
     // 보유 계약 조회
     public List<ContractDto> showConcludedContractList(Integer customerId) {
-        Customer customer = getCustomerById(customerId);
+        Customer customer = customerService.findCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus5);
         return getContractDtoList(contractList);
     }
 
     // 신청한 계약 조회
     public List<ContractDto> showRequestedContractList(Integer customerId) {
-        Customer customer = getCustomerById(customerId);
+        Customer customer = customerService.findCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus1);
         return getContractDtoList(contractList);
     }
 
     // 상세 내용 조회
     public ContractDetailDto showContractDetail(Integer contractId) {
-        Contract contract = getContractById(contractId);
+        Contract contract = findContractById(contractId);
         ContractDetailDto contractDetailDto = new ContractDetailDto();
         contractDetailDto.setId(contract.getId());
         contractDetailDto.setInsuranceName(contract.getInsurance().getInsuranceName());
@@ -349,7 +334,7 @@ public class ContractService {
     }
     // 계약을 해지한다
     public String cancelContract(Integer contractId) {
-        Contract contract = getContractById(contractId);
+        Contract contract = findContractById(contractId);
         contractRepository.delete(contract);
         return "계약이 성공적으로 해지되었습니다.";
     }

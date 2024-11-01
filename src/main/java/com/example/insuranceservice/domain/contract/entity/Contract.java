@@ -5,6 +5,7 @@ import com.example.insuranceservice.domain.contract.dto.ContractDto;
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.employee.entity.Employee;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
+import com.example.insuranceservice.domain.payment.entity.Payment;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,15 +43,6 @@ public class Contract {
     @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
     private List<PaymentInfo> paymentInfoList;
 
-    public void revive(ContractDto contractDto) {
-        this.id = contractDto.getId();
-        this.expirationDate = contractDto.getExpirationDate();
-        this.resurrectionDate = contractDto.getResurrectionDate();
-        this.resurrectionReason = contractDto.getResurrectionReason();
-        this.monthlyPremium = contractDto.getMonthlyPremium();
-        this.paymentInfoList = contractDto.getPaymentInfoList();
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
@@ -62,4 +54,16 @@ public class Contract {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurance_id")
     private Insurance insurance;
+
+    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
+    private List<Payment> paymentList;
+
+    public void revive(ContractDto contractDto) {
+        this.id = contractDto.getId();
+        this.expirationDate = contractDto.getExpirationDate();
+        this.resurrectionDate = contractDto.getResurrectionDate();
+        this.resurrectionReason = contractDto.getResurrectionReason();
+        this.monthlyPremium = contractDto.getMonthlyPremium();
+        this.paymentInfoList = contractDto.getPaymentInfoList();
+    }
 }
