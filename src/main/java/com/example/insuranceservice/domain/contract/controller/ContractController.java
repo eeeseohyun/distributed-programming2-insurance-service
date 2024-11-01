@@ -2,21 +2,18 @@ package com.example.insuranceservice.domain.contract.controller;
 
 import com.example.insuranceservice.domain.contract.dto.ContractDto;
 import com.example.insuranceservice.domain.contract.service.ContractService;
+import com.example.insuranceservice.domain.contract.dto.ContractDetailDto;
+import com.example.insuranceservice.domain.contract.dto.ContractRequestDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-<<<<<<< HEAD
+
 import java.text.ParseException;
 
-@RestController
-@RequestMapping("/api/contract")
-=======
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/contracts")
->>>>>>> 959a1e00dae8ae6016c20b2fe6a0ef01aece2119
 public class ContractController {
 
     private ContractService contractService;
@@ -24,7 +21,7 @@ public class ContractController {
     public ContractController(ContractService contractService){
         this.contractService = contractService;
     }
-<<<<<<< HEAD
+
     // 미납관리한다.
     @PostMapping("/latePayment")
     private void manageLatePayment(@RequestParam int contractId){
@@ -54,7 +51,13 @@ public class ContractController {
     private void manageUpdate(@RequestBody ContractDto contractDto){
         contractService.manageUpdate(contractDto);
     }
-=======
+
+    //// 보험 상품 종류 카테고리
+    // 보험 가입 신청
+    @PostMapping("/request")
+    public String requestContract(@RequestBody ContractRequestDto contractRequestDto){
+        return contractService.requestContract(contractRequestDto);
+    }
 
     //// 계약체결 카테고리 - 계약을 체결한다.
     @PostMapping("/conclude")
@@ -117,5 +120,23 @@ public class ContractController {
         return ResponseEntity.ok(message);
     }
 
->>>>>>> 959a1e00dae8ae6016c20b2fe6a0ef01aece2119
+    //// 보유 계약 조회 카테고리
+    // 보유 계약 조회
+    @GetMapping("/concluded/{customerId}")
+    public List<ContractDto> showConcludedContractList(@PathVariable Integer customerId){
+        return contractService.showConcludedContractList(customerId);
+    }
+
+    // 신청한 계약 조회
+    @GetMapping("/requested/{customerId}")
+    public List<ContractDto> showRequestedContractList(@PathVariable Integer customerId){
+        return contractService.showRequestedContractList(customerId);
+    }
+
+    // 상세 내용 조회
+    @GetMapping("/detail/{contractId}")
+    public ContractDetailDto showContractDetail(@PathVariable Integer contractId){
+        return contractService.showContractDetail(contractId);
+    }
+
 }

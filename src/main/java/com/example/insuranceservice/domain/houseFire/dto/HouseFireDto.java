@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class houseFireDto {
+
+public class HouseFireDto {
     private int houseFireId;
     private String categoryOfHouse;
     private int priceOfHouse;

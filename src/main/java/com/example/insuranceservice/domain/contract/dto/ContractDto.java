@@ -24,6 +24,7 @@ import java.util.List;
 >>>>>>> 959a1e00dae8ae6016c20b2fe6a0ef01aece2119
 public class ContractDto {
     private Integer id;
+
     private String concludedDate;
     private Integer concludedEID;
     private String contractStatus;
@@ -39,6 +40,8 @@ public class ContractDto {
     private String resurrectionReason;
     private Integer underwritingEID;
     private List<PaymentInfo> paymentInfoList;
+    private String insuranceName;
+    private Integer customerId;
 
 <<<<<<< HEAD
 

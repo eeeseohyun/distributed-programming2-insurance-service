@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 public class PaymentInfoDto {
     private Integer id;
-    private String paymenyType;
+    private String paymentType;
     private String fixedMonthlyPaymentDate;
     private Integer fixedMonthlyPayment;
     private Contract contract;

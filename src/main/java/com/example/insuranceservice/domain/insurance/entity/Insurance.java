@@ -2,6 +2,7 @@ package com.example.insuranceservice.domain.insurance.entity;
 
 import com.example.insuranceservice.domain.cancerHealth.entity.CancerHealth;
 import com.example.insuranceservice.domain.car.entity.Car;
+import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
 import com.example.insuranceservice.domain.internationalTravel.entity.InternationalTravel;
 import jakarta.persistence.Entity;
@@ -25,9 +26,9 @@ public class Insurance {
     private int minimumPeriod;
     private int minimumPremium;
     private String notice;
-    private String processOfCompoensation;
+    private String processOfCompensation;
     private String processOfSubscription;
-    private double rateOfdiscount;
+    private double rateOfDiscount;
     private String specialProvisionName;
     private String guaranteeName;
     private int maxCoverage;
@@ -47,4 +48,5 @@ public class Insurance {
     @OneToOne
     @JoinColumn(name="houseFireID")
     private HouseFire houseFire;
+
 }

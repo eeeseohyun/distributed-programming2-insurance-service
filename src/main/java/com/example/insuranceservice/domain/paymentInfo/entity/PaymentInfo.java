@@ -10,7 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
+import lombok.Getter;
+import lombok.Setter;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,7 @@ public class PaymentInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_info_id")
     private Integer id;
-    private String paymenyType;
+    private String paymentType;
     private String fixedMonthlyPaymentDate;
     private Integer fixedMonthlyPayment;
 
@@ -32,19 +33,14 @@ public class PaymentInfo {
     @JoinColumn(name = "contract_id")
     private Contract contract;
 
-    @OneToMany(mappedBy = "paymentInfo")
+    @OneToMany(mappedBy = "paymentInfo", cascade = CascadeType.ALL)
     private List<Card> cardList;
 
-    @OneToMany(mappedBy = "paymentInfo")
+    @OneToMany(mappedBy = "paymentInfo", cascade = CascadeType.ALL)
     private List<Bank> bankList;
 
-    @OneToMany(mappedBy = "paymentInfo")
+    @OneToMany(mappedBy = "paymentInfo", cascade = CascadeType.ALL)
     private List<Automatic> automaticList;
-<<<<<<< HEAD
-
-
 
 }
-=======
-}
->>>>>>> 959a1e00dae8ae6016c20b2fe6a0ef01aece2119
+

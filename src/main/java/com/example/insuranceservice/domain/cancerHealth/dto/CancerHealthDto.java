@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class cancerHealthDto {
+
+public class CancerHealthDto {
     private int cancerId;
     private String categoryOfCancer;
 }

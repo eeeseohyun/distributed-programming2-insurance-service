@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 @Builder
+
 public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
