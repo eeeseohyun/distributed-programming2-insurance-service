@@ -16,7 +16,7 @@ public class PaymentInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_info_id")
     private Integer id;
-    private String paymenyType;
+    private String paymentType;
     private String fixedMonthlyPaymentDate;
     private Integer fixedMonthlyPayment;
 

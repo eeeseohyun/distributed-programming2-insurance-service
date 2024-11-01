@@ -49,4 +49,29 @@ public class CounselService {
             throw new RuntimeException("존재하지 않는 Customer ID");
         return tempCustomer.get();
     }
+
+    // 상담 신청 내역 조회
+    public List<CounselDto> showCounselList(Integer customerId) {
+        Customer customer = findCustomerById(customerId);
+        List<CounselDto> counselList = new ArrayList<>();
+        for(Counsel counsel: counselRepository.findByCustomer(customer)){
+            CounselDto counselDto = new CounselDto();
+            counselDto.setCounselId(counsel.getCounselId());
+            counselDto.setCounselDetail(counsel.getCounselDetail());
+            counselDto.setContent(counsel.getContent());
+            counselDto.setDateOfCounsel(counsel.getDateOfCounsel());
+            counselDto.setInsuranceType(counsel.getInsuranceType());
+            counselDto.setStatusOfCounsel(counsel.getStatusOfCounsel());
+            counselDto.setTimeOfCounsel(counsel.getTimeOfCounsel());
+            if(counsel.getEmployee() != null)
+                counselDto.setEmployeeId(counsel.getEmployee().getEmployeeId());
+            else
+                counselDto.setEmployeeId(null);
+            counselDto.setCustomerId(counsel.getCustomer().getCustomerID());
+
+            counselList.add(counselDto);
+        }
+        return counselList;
+    }
+
 }

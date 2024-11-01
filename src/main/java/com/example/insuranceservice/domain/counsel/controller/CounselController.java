@@ -24,4 +24,10 @@ public class CounselController {
         return counselService.createCounsel(counselRequestDto);
     }
 
+    // 상담 신청 내역 조회
+    @GetMapping("/list/{customerId}")
+    public List<CounselDto> showCounselList(@PathVariable Integer customerId){
+        return counselService.showCounselList(customerId);
+    }
+
 }
