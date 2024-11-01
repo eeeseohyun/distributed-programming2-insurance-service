@@ -166,18 +166,8 @@ public class ContractService {
         else throw new RuntimeException("존재하지 않는 고객 ID");
     }
 
-    private List<ContractDto> getContractDtoList(List<Contract> contractList) {
-        List<ContractDto> contractDtoList = new ArrayList<>();
-        for(Contract contract : contractList) {
-            ContractDto contractDto = new ContractDto();
-            contractDto.setId(contract.getId());
-            contractDto.setInsuranceName(contract.getInsurance().getInsuranceName());
-            contractDto.setCustomerId(contract.getCustomer().getCustomerID());
-            contractDtoList.add(contractDto);
-        }
-        return contractDtoList;
-    }
-
+    //// 보험 상품 종류 카테고리
+    // 보험 가입 신청
     public String requestContract(ContractRequestDto contractRequestDto) {
         Contract contract = new Contract();
         List<PaymentInfo> paymentInfoList = new ArrayList<>();
@@ -236,18 +226,22 @@ public class ContractService {
         return "보험 가입 신청이 완료되었습니다.";
     }
 
+    //// 보유 계약 조회 카테고리
+    // 보유 계약 조회
     public List<ContractDto> showConcludedContractList(Integer customerId) {
         Customer customer = getCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus5);
         return getContractDtoList(contractList);
     }
 
+    // 신청한 계약 조회
     public List<ContractDto> showRequestedContractList(Integer customerId) {
         Customer customer = getCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus1);
         return getContractDtoList(contractList);
     }
 
+    // 상세 내용 조회
     public ContractDetailDto showContractDetail(Integer contractId) {
         Contract contract = getContractById(contractId);
         ContractDetailDto contractDetailDto = new ContractDetailDto();
@@ -286,6 +280,25 @@ public class ContractService {
             contractDetailDto.setInternationalDto(internationalTravelDto);
         }
         return contractDetailDto;
+    }
+    // 계약을 해지한다
+    public String cancelContract(Integer contractId) {
+        Contract contract = getContractById(contractId);
+        contractRepository.delete(contract);
+        return "계약이 성공적으로 해지되었습니다.";
+    }
+    ////
+
+    private List<ContractDto> getContractDtoList(List<Contract> contractList) {
+        List<ContractDto> contractDtoList = new ArrayList<>();
+        for(Contract contract : contractList) {
+            ContractDto contractDto = new ContractDto();
+            contractDto.setId(contract.getId());
+            contractDto.setInsuranceName(contract.getInsurance().getInsuranceName());
+            contractDto.setCustomerId(contract.getCustomer().getCustomerID());
+            contractDtoList.add(contractDto);
+        }
+        return contractDtoList;
     }
 
 }

@@ -105,4 +105,10 @@ public class ContractController {
         return contractService.showContractDetail(contractId);
     }
 
+    // 보유 계약 해지
+    @DeleteMapping("/cancel/{contractId}")
+    public String cancelContract(@PathVariable Integer contractId){
+        return contractService.cancelContract(contractId);
+    }
+
 }
