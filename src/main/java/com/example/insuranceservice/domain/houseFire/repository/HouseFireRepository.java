@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HouseFireRepository extends JpaRepository<HouseFire,Integer> {
+public interface houseFireRepository extends JpaRepository<HouseFire,Integer> {
 }

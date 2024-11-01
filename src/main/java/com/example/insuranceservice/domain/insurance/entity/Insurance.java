@@ -3,20 +3,19 @@ package com.example.insuranceservice.domain.insurance.entity;
 import com.example.insuranceservice.domain.cancerHealth.entity.CancerHealth;
 import com.example.insuranceservice.domain.car.entity.Car;
 import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceDto;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.example.insuranceservice.domain.internationalTravel.entity.InternationalTravel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
-@Builder
-@Slf4j
 public class Insurance {
     @Id
     private int insuranceID;
@@ -26,7 +25,7 @@ public class Insurance {
     private int minimumPeriod;
     private int minimumPremium;
     private String notice;
-    private String processOfCompensation;
+    private String processOfCompoensation;
     private String processOfSubscription;
     private double rateOfdiscount;
     private String specialProvisionName;
@@ -43,29 +42,9 @@ public class Insurance {
 
     @OneToOne
     @JoinColumn(name="internationalTravelId")
-    private com.example.insuranceservice.domain.InternationalTravel.entity.InternationalTravel InternationalTravel;
+    private InternationalTravel internationalTravel;
 
     @OneToOne
     @JoinColumn(name="houseFireID")
     private HouseFire houseFire;
-
-    public InsuranceDto toDto() {
-        return InsuranceDto.builder()
-                .insuranceID(this.insuranceID)
-                .insuranceName(this.insuranceName)
-                .category(this.category)
-                .insuranceRate(this.insuranceRate)
-                .minimumPeriod(this.minimumPeriod)
-                .minimumPremium(this.minimumPremium)
-                .notice(this.notice)
-                .processOfCompensation(this.processOfCompensation)
-                .processOfSubscription(this.processOfSubscription)
-                .rateOfdiscount(this.rateOfdiscount)
-                .specialProvisionName(this.specialProvisionName)
-                .guaranteeName(this.guaranteeName)
-                .maxCoverage(this.maxCoverage)
-                .guaranteeDescription(this.guaranteeDescription)
-                .build();
-    }
-
 }

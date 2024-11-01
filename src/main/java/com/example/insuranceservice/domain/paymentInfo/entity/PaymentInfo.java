@@ -40,7 +40,11 @@ public class PaymentInfo {
 
     @OneToMany(mappedBy = "paymentInfo")
     private List<Automatic> automaticList;
+<<<<<<< HEAD
 
 
 
 }
+=======
+}
+>>>>>>> 959a1e00dae8ae6016c20b2fe6a0ef01aece2119
