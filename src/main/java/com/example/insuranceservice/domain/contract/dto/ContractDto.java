@@ -1,4 +1,4 @@
-package com.example.insuranceService.domain.contract.dto;
+package com.example.insuranceservice.domain.contract.dto;
 
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;

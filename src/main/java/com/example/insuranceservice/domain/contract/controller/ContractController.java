@@ -1,7 +1,7 @@
-package com.example.insuranceService.domain.contract.controller;
+package com.example.insuranceservice.domain.contract.controller;
 
-import com.example.insuranceService.domain.contract.dto.ContractDto;
-import com.example.insuranceService.domain.contract.service.ContractService;
+import com.example.insuranceservice.domain.contract.dto.ContractDto;
+import com.example.insuranceservice.domain.contract.service.ContractService;
 import com.example.insuranceservice.domain.contract.dto.ContractDetailDto;
 import com.example.insuranceservice.domain.contract.dto.ContractRequestDto;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,7 @@
-package com.example.insuranceService.domain.contract.service;
+package com.example.insuranceservice.domain.contract.service;
 
-import com.example.insuranceService.domain.contract.dto.ContractDto;
-import com.example.insuranceService.domain.contract.repository.ContractRepository;
+import com.example.insuranceservice.domain.contract.dto.ContractDto;
+import com.example.insuranceservice.domain.contract.repository.ContractRepository;
 import com.example.insuranceservice.domain.automatic.dto.AutomaticRequestDto;
 import com.example.insuranceservice.domain.automatic.entity.Automatic;
 import com.example.insuranceservice.domain.bank.dto.BankRequestDto;

@@ -1,4 +1,4 @@
-package com.example.insuranceService.insuranceService;
+package com.example.insuranceservice.insuranceService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

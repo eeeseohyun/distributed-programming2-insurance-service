@@ -1,4 +1,4 @@
-package com.example.insuranceService.domain.contract.repository;
+package com.example.insuranceservice.domain.contract.repository;
 
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.customer.entity.Customer;
