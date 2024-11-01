@@ -6,6 +6,7 @@ import com.example.insuranceservice.domain.bank.dto.BankRequestDto;
 import com.example.insuranceservice.domain.bank.entity.Bank;
 import com.example.insuranceservice.domain.card.dto.CardRequestDto;
 import com.example.insuranceservice.domain.card.entity.Card;
+import com.example.insuranceservice.domain.contract.dto.ContractDto;
 import com.example.insuranceservice.domain.contract.dto.ContractRequestDto;
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.contract.repository.ContractRepository;
@@ -15,6 +16,7 @@ import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRequestDto;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
+import com.example.insuranceservice.global.constant.Constant;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,7 +47,7 @@ public class ContractService {
             String paymentType = paymentInfoDto.getPaymentType();
             paymentInfo.setPaymentType(paymentType);
             paymentInfo.setContract(contract);
-            if(paymentType.equals("card")) {
+            if(paymentType.equals(Constant.paymentInfoBank)) {
                 List<Card> cardList = new ArrayList<>();
                 for(CardRequestDto cardRequestDto : paymentInfoDto.getCardRequestDtoList()) {
                     Card card = cardRequestDto.toEntity(cardRequestDto);
@@ -53,7 +55,7 @@ public class ContractService {
                     cardList.add(card);
                 }
                 paymentInfo.setCardList(cardList);
-            } else if (paymentType.equals("bank")) {
+            } else if (paymentType.equals(Constant.paymentInfoCard)) {
                 List<Bank> bankList = new ArrayList<>();
                 for(BankRequestDto bankRequestDto : paymentInfoDto.getBankRequestDtoList()) {
                     Bank bank = bankRequestDto.toEntity(bankRequestDto);
@@ -61,7 +63,7 @@ public class ContractService {
                     bankList.add(bank);
                 }
                 paymentInfo.setBankList(bankList);
-            } else if (paymentType.equals("automatic")) {
+            } else if (paymentType.equals(Constant.paymentInfoAutomatic)) {
                 List<Automatic> automaticList = new ArrayList<>();
                 for(AutomaticRequestDto automaticRequestDto : paymentInfoDto.getAutomaticRequestDtoList()) {
                     Automatic automatic = automaticRequestDto.toEntity(automaticRequestDto);
@@ -74,17 +76,41 @@ public class ContractService {
         }
         contract.setCustomer(getCustomerById(contractRequestDto.getCustomerId()));
         contract.setExpirationDate(contractRequestDto.getExpirationDate());
-        contract.setInsurance(getInusranceById(contractRequestDto.getInsuranceId()));
-        contract.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        contract.setInsurance(getInsuranceById(contractRequestDto.getInsuranceId()));
+        contract.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateFormat)));
         contract.setIsConcluded(false);
         contract.setIsPassUW(false);
-        contract.setContractStatus("심사요청상태");
+        contract.setContractStatus(Constant.contractStatus1);
         contract.setPaymentInfoList(paymentInfoList);
         contractRepository.save(contract);
         return "보험 가입 신청이 완료되었습니다.";
     }
 
-    private Insurance getInusranceById(Integer insuranceId) {
+    public List<ContractDto> showConcludedContractList(Integer customerId) {
+        Customer customer = getCustomerById(customerId);
+        List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus5);
+        return getContractDtoList(contractList);
+    }
+
+    public List<ContractDto> showRequestedContractList(Integer customerId) {
+        Customer customer = getCustomerById(customerId);
+        List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus1);
+        return getContractDtoList(contractList);
+    }
+
+    private List<ContractDto> getContractDtoList(List<Contract> contractList) {
+        List<ContractDto> contractDtoList = new ArrayList<>();
+        for(Contract contract : contractList) {
+            ContractDto contractDto = new ContractDto();
+            contractDto.setId(contract.getId());
+            contractDto.setInsuranceName(contract.getInsurance().getInsuranceName());
+            contractDto.setCustomerId(contract.getCustomer().getCustomerID());
+            contractDtoList.add(contractDto);
+        }
+        return contractDtoList;
+    }
+
+    private Insurance getInsuranceById(Integer insuranceId) {
         Optional<Insurance> insurance = insuranceRepository.findById(insuranceId);
         if (insurance.isPresent())
             return insurance.get();
