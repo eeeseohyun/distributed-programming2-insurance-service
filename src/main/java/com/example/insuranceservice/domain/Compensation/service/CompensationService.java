@@ -1,7 +1,7 @@
 package com.example.insuranceservice.domain.Compensation.service;
 
-import com.example.insuranceservice.domain.Compensation.entity.Compensation;
 import com.example.insuranceservice.domain.Compensation.repository.CompensationRepository;
+import com.example.insuranceservice.domain.Compensation.entity.Compensation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

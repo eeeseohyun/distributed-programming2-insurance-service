@@ -1,12 +1,15 @@
 package com.example.insuranceservice.domain.card.entity;
 
-import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Data
+@Builder
+@Slf4j
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

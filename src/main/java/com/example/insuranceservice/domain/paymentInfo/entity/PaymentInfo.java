@@ -5,12 +5,20 @@ import com.example.insuranceservice.domain.bank.entity.Bank;
 import com.example.insuranceservice.domain.card.entity.Card;
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 @Entity
 @Data
+@Builder
+@Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class PaymentInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +32,15 @@ public class PaymentInfo {
     @JoinColumn(name = "contract_id")
     private Contract contract;
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "paymentInfo")
     private List<Card> cardList;
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "paymentInfo")
     private List<Bank> bankList;
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "paymentInfo")
     private List<Automatic> automaticList;
+
 
 
 }

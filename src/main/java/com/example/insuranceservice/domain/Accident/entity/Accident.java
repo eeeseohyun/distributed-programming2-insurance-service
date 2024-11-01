@@ -1,7 +1,7 @@
 package com.example.insuranceservice.domain.Accident.entity;
 
-import com.example.insuranceservice.domain.Compensation.entity.Compensation;
 import com.example.insuranceservice.domain.customer.entity.Customer;
+import com.example.insuranceservice.domain.Compensation.entity.Compensation;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,5 +1,6 @@
 package com.example.insuranceservice.domain.counsel.entity;
 
+import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.employee.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

@@ -1,7 +1,7 @@
 package com.example.insuranceservice.domain.MedicalHistory.service;
 
-import com.example.insuranceservice.domain.MedicalHistory.entity.MedicalHistory;
 import com.example.insuranceservice.domain.MedicalHistory.repository.MedicalHistoryRepository;
+import com.example.insuranceservice.domain.MedicalHistory.entity.MedicalHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

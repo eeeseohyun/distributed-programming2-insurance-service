@@ -1,11 +1,23 @@
 package com.example.insuranceservice.domain.contract.entity;
 
+import com.example.insuranceservice.domain.contract.dto.ContractDto;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
+@Data
+@Builder
+@Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +40,16 @@ public class Contract {
 
     @OneToMany(mappedBy = "contract")
     private List<PaymentInfo> paymentInfoList;
+
+    public void revive(ContractDto contractDto) {
+        this.id = contractDto.getId();
+        this.expirationDate = contractDto.getExpirationDate();
+        this.resurrectionDate = contractDto.getResurrectionDate();
+        this.resurrectionReason = contractDto.getResurrectionReason();
+        this.monthlyPremium = contractDto.getMonthlyPremium();
+        this.paymentInfoList = contractDto.getPaymentInfoList();
+    }
+
 
 //    private Customer customer;
 //    private Employee employee;
