@@ -2,21 +2,14 @@ package com.example.insuranceservice.domain.contract.entity;
 
 
 import com.example.insuranceservice.domain.contract.dto.ContractDto;
+import com.example.insuranceservice.domain.customer.entity.Customer;
+import com.example.insuranceservice.domain.employee.entity.Employee;
+import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import com.example.insuranceservice.domain.customer.entity.Customer;
-import com.example.insuranceservice.domain.insurance.entity.Insurance;
-import lombok.Getter;
-import lombok.Setter;
-
-
 import java.util.List;
-
 
 @Entity
 @Data
@@ -58,15 +51,13 @@ public class Contract {
         this.paymentInfoList = contractDto.getPaymentInfoList();
     }
 
-
-//    private Customer customer;
-//    private Employee employee;
-//    private Insurance insurance;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurance_id")

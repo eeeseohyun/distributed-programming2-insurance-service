@@ -1,5 +1,6 @@
 package com.example.insuranceservice.domain.employee.entity;
 
+import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -28,5 +29,6 @@ public class Employee {
     private List<Counsel> counsels = new ArrayList<>();
 
     @OneToMany(mappedBy = "employee")
-    private List<Counsel> contracts = new ArrayList<>();
+    private List<Contract> contracts = new ArrayList<>();
+
 }

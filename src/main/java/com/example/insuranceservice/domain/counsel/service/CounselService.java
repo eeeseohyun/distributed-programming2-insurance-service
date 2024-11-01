@@ -1,16 +1,19 @@
 package com.example.insuranceservice.domain.counsel.service;
 
-import com.example.insuranceservice.domain.counsel.dto.CounselDto;
-import com.example.insuranceservice.domain.counsel.dto.CounselRequestDto;
-import com.example.insuranceservice.domain.counsel.dto.CounselUpdateDto;
+import com.example.insuranceservice.domain.counsel.dto.*;
 import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import com.example.insuranceservice.domain.counsel.repository.CounselRepository;
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
 import com.example.insuranceservice.domain.employee.entity.Employee;
 import com.example.insuranceservice.domain.employee.service.EmployeeService;
+import com.example.insuranceservice.domain.insurance.entity.Insurance;
+import com.example.insuranceservice.domain.insurance.service.InsuranceService;
+import com.example.insuranceservice.global.constant.Constant;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +23,13 @@ public class CounselService {
     private CounselRepository counselRepository;
     private CustomerRepository customerRepository;
     private EmployeeService employeeService;
+    private InsuranceService insuranceService;
 
-    public CounselService(CounselRepository counselRepository, CustomerRepository customerRepository, EmployeeService employeeService) {
+    public CounselService(CounselRepository counselRepository, CustomerRepository customerRepository, EmployeeService employeeService, InsuranceService insuranceService) {
         this.counselRepository = counselRepository;
         this.customerRepository = customerRepository;
         this.employeeService = employeeService;
+        this.insuranceService = insuranceService;
     }
 
     // 상담 신청
@@ -122,6 +127,20 @@ public class CounselService {
         counsel.setNote(counselUpdateDto.getNote());
         counselRepository.save(counsel);
         return "상담 내용이 추가되었습니다.";
+    }
+
+    // 상담 보험 제안
+    public CounselSuggestDto suggestInsurance(Integer counselId, Integer insuranceId) {
+        Counsel counsel = findCounselById(counselId);
+        Insurance insurance = insuranceService.findInsuranceById(insuranceId);
+        CounselSuggestDto counselSuggestDto = new CounselSuggestDto();
+        counselSuggestDto.setCustomerName(counsel.getCustomer().getName());
+        counselSuggestDto.setPhone(counsel.getCustomer().getPhone());
+        counselSuggestDto.setEmail(counsel.getCustomer().getEmail());
+        counselSuggestDto.setInsuranceName(insurance.getInsuranceName());
+        counselSuggestDto.setEmployeeName(counsel.getEmployee().getName());
+        counselSuggestDto.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateFormat)));
+        return counselSuggestDto;
     }
 
     private List<CounselDto> getCounselDtoList(List<Counsel> requestedCounselList) {
