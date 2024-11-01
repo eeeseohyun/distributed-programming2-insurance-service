@@ -1,4 +1,4 @@
-package com.example.insuranceservice.domain.internationalTravel.dto;
+package com.example.insuranceservice.domain.InternationalTravel.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

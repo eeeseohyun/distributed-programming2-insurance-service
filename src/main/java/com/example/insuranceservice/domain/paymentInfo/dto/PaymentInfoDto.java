@@ -28,7 +28,7 @@ public class PaymentInfoDto {
     public PaymentInfo toEntity() {
         return PaymentInfo.builder()
                 .id(this.id)
-                .paymenyType(this.paymenyType)
+                .paymentType(this.paymentType)
                 .fixedMonthlyPaymentDate(this.fixedMonthlyPaymentDate)
                 .fixedMonthlyPayment(this.fixedMonthlyPayment)
                 .contract(this.contract)

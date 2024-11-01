@@ -1,14 +1,9 @@
 
 package com.example.insuranceservice.domain.InternationalTravel.entity;
-package com.example.insuranceservice.domain.internationalTravel.entity;
-
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -18,7 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Slf4j
 @Builder
-
+@Getter
+@Setter
 public class InternationalTravel {
     @Id
     private int travelId;

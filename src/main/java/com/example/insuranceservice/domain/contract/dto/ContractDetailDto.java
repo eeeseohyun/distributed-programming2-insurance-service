@@ -3,7 +3,7 @@ package com.example.insuranceservice.domain.contract.dto;
 import com.example.insuranceservice.domain.cancerHealth.dto.CancerHealthDto;
 import com.example.insuranceservice.domain.car.dto.CarDto;
 import com.example.insuranceservice.domain.houseFire.dto.HouseFireDto;
-import com.example.insuranceservice.domain.internationalTravel.dto.InternationalTravelDto;
+import com.example.insuranceservice.domain.InternationalTravel.dto.InternationalTravelDto;
 import lombok.Data;
 
 @Data

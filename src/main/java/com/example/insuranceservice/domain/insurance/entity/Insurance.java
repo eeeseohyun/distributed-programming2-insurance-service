@@ -2,9 +2,8 @@ package com.example.insuranceservice.domain.insurance.entity;
 
 import com.example.insuranceservice.domain.cancerHealth.entity.CancerHealth;
 import com.example.insuranceservice.domain.car.entity.Car;
-import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
-import com.example.insuranceservice.domain.internationalTravel.entity.InternationalTravel;
+import com.example.insuranceservice.domain.InternationalTravel.entity.InternationalTravel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
