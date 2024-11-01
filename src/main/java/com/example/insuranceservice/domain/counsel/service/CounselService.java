@@ -2,6 +2,7 @@ package com.example.insuranceservice.domain.counsel.service;
 
 import com.example.insuranceservice.domain.counsel.dto.CounselDto;
 import com.example.insuranceservice.domain.counsel.dto.CounselRequestDto;
+import com.example.insuranceservice.domain.counsel.dto.CounselUpdateDto;
 import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import com.example.insuranceservice.domain.counsel.repository.CounselRepository;
 import com.example.insuranceservice.domain.customer.entity.Customer;
@@ -62,7 +63,7 @@ public class CounselService {
             CounselDto counselDto = new CounselDto();
             counselDto.setCounselId(counsel.getCounselId());
             counselDto.setCounselDetail(counsel.getCounselDetail());
-            counselDto.setContent(counsel.getContent());
+            counselDto.setNote(counsel.getNote());
             counselDto.setDateOfCounsel(counsel.getDateOfCounsel());
             counselDto.setInsuranceType(counsel.getInsuranceType());
             counselDto.setStatusOfCounsel(counsel.getStatusOfCounsel());
@@ -78,14 +79,49 @@ public class CounselService {
         return counselList;
     }
 
+    //// 상담신청 일정 관리 카테고리
+    // 신청된 상담 일정 조회
     public List<CounselDto> showRequestedCounselList() {
         List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(false);
         return getCounselDtoList(requestedCounselList);
     }
 
+    // 확정된 상담 일정 조회
     public List<CounselDto> showConfirmedCounselList() {
         List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(true);
         return getCounselDtoList(requestedCounselList);
+    }
+
+    // 상담 일정 확정
+    public String confirmCounsel(Integer counselId, Integer employeeId) {
+        Counsel counsel = findCounselById(counselId);
+        Employee employee = employeeService.findEmployeeById(employeeId);
+
+        if(counsel.getStatusOfCounsel())
+            throw new RuntimeException("이미 처리완료된 상담입니다.");
+
+        counsel.setStatusOfCounsel(true);
+        counsel.setEmployee(employee);
+        counselRepository.save(counsel);
+        return "상담 일정이 확정되었습니다.";
+    }
+    ////
+
+    //// 상담 내역 관리 카테고리
+    // 상담 내역 조회
+    public List<CounselDto> showConsultedCounselList(Integer employeeId) {
+        Employee employee = employeeService.findEmployeeById(employeeId);
+        List<Counsel> counselList = counselRepository.findByEmployee(employee);
+        return getCounselDtoList(counselList);
+    }
+
+    // 상담 내용 추가
+    public String updateCounsel(Integer counselId, CounselUpdateDto counselUpdateDto) {
+        Counsel counsel = findCounselById(counselId);
+        counsel.setCounselDetail(counselUpdateDto.getCounselDetail());
+        counsel.setNote(counselUpdateDto.getNote());
+        counselRepository.save(counsel);
+        return "상담 내용이 추가되었습니다.";
     }
 
     private List<CounselDto> getCounselDtoList(List<Counsel> requestedCounselList) {
@@ -102,23 +138,11 @@ public class CounselService {
         return counselList;
     }
 
-    public String confirmCounsel(Integer counselId, Integer employeeId) {
-        Counsel counsel = findCounselById(counselId);
-        Employee employee = employeeService.findEmployeeById(employeeId);
-
-        if(counsel.getStatusOfCounsel())
-            throw new RuntimeException("이미 확정된 상담입니다.");
-
-        counsel.setStatusOfCounsel(true);
-        counsel.setEmployee(employee);
-        counselRepository.save(counsel);
-        return "상담 일정이 확정되었습니다.";
-    }
-
     public Counsel findCounselById(Integer counselId) {
         Optional<Counsel> tempCounsel = counselRepository.findById(counselId);
         if(tempCounsel.isEmpty())
             throw new RuntimeException("존재하지 않는 상담 ID");
         return tempCounsel.get();
     }
+
 }
