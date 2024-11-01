@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface CounselRepository  extends JpaRepository<Counsel, Integer> {
     List<Counsel> findByCustomer(Customer customer);
+    List<Counsel> findByStatusOfCounsel(boolean statusOfCounsel);
 }

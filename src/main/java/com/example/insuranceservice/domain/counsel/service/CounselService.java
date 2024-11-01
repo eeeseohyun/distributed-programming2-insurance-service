@@ -74,4 +74,27 @@ public class CounselService {
         return counselList;
     }
 
+    public List<CounselDto> showRequestedCounselList() {
+        List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(false);
+        return getCounselDtoList(requestedCounselList);
+    }
+
+    public List<CounselDto> showConfirmedCounselList() {
+        List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(true);
+        return getCounselDtoList(requestedCounselList);
+    }
+
+    private List<CounselDto> getCounselDtoList(List<Counsel> requestedCounselList) {
+        List<CounselDto> counselList = new ArrayList<>();
+        for(Counsel counsel : requestedCounselList){
+            CounselDto counselDto = new CounselDto();
+            counselDto.setCounselId(counsel.getCounselId());
+            counselDto.setCustomerId(counsel.getCustomer().getCustomerID());
+            counselDto.setInsuranceType(counsel.getInsuranceType());
+            counselDto.setTimeOfCounsel(counsel.getTimeOfCounsel());
+            counselDto.setDateOfCounsel(counsel.getDateOfCounsel());
+            counselList.add(counselDto);
+        }
+        return counselList;
+    }
 }

@@ -18,6 +18,7 @@ public class CounselController {
         this.counselService = counselService;
     }
 
+    //// 상담 신청 카테고리
     // 상담 신청
     @PostMapping("/create")
     public CounselDto createCounsel(@RequestBody CounselRequestDto counselRequestDto){
@@ -30,4 +31,16 @@ public class CounselController {
         return counselService.showCounselList(customerId);
     }
 
+    //// 상담신청 일정 관리 카테고리
+    // 신청된 상담 일정 조회
+    @GetMapping("/requested/list")
+    public List<CounselDto> showRequestedCounselList(){
+        return counselService.showRequestedCounselList();
+    }
+
+    // 확정된 상담 일정 조회
+    @GetMapping("/confirmed/list")
+    public List<CounselDto> showConcludedCounselList(){
+        return counselService.showConfirmedCounselList();
+    }
 }
