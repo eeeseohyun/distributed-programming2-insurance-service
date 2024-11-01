@@ -6,11 +6,14 @@ import com.example.insuranceservice.domain.card.entity.Card;
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class PaymentInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +27,12 @@ public class PaymentInfo {
     @JoinColumn(name = "contract_id")
     private Contract contract;
 
-    @OneToMany(mappedBy = "paymentInfo")
+    @OneToMany(mappedBy = "paymentInfo", cascade = CascadeType.ALL)
     private List<Card> cardList;
 
-    @OneToMany(mappedBy = "paymentInfo")
+    @OneToMany(mappedBy = "paymentInfo", cascade = CascadeType.ALL)
     private List<Bank> bankList;
 
-    @OneToMany(mappedBy = "paymentInfo")
+    @OneToMany(mappedBy = "paymentInfo", cascade = CascadeType.ALL)
     private List<Automatic> automaticList;
 }

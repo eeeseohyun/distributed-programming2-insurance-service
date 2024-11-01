@@ -11,6 +11,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Counsel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

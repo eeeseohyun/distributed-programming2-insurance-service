@@ -1,6 +1,7 @@
 package com.example.insuranceservice.domain.contract.entity;
 
 import com.example.insuranceservice.domain.customer.entity.Customer;
+import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -32,10 +33,14 @@ public class Contract {
     private String resurrectionReason;
     private Integer underwritingEID;
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
     private List<PaymentInfo> paymentInfoList;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "insurance_id")
+    private Insurance insurance;
 }

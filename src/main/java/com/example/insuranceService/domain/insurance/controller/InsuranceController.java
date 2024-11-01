@@ -25,6 +25,7 @@ public class InsuranceController {
     public List<Insurance> showInsuranceTypeList(@PathVariable String category){
         return insuranceService.showInsuranceTypeList(category);
     }
+
     // 보험 상품 상세 내용 조회
     @GetMapping("/detail/{id}")
     public Insurance showInsuranceDetail(@PathVariable Integer id){
