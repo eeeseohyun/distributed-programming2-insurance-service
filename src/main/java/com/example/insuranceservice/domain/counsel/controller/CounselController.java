@@ -43,4 +43,10 @@ public class CounselController {
     public List<CounselDto> showConcludedCounselList(){
         return counselService.showConfirmedCounselList();
     }
+
+    // 상담 일정 확정
+    @PostMapping("/confirm/{counselId}/{employeeId}")
+    public String confirmCounsel(@PathVariable Integer counselId, @PathVariable Integer employeeId){
+        return counselService.confirmCounsel(counselId, employeeId);
+    }
 }

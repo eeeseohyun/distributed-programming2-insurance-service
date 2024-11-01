@@ -6,6 +6,8 @@ import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import com.example.insuranceservice.domain.counsel.repository.CounselRepository;
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
+import com.example.insuranceservice.domain.employee.entity.Employee;
+import com.example.insuranceservice.domain.employee.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,10 +18,12 @@ import java.util.Optional;
 public class CounselService {
     private CounselRepository counselRepository;
     private CustomerRepository customerRepository;
+    private EmployeeService employeeService;
 
-    public CounselService(CounselRepository counselRepository, CustomerRepository customerRepository) {
+    public CounselService(CounselRepository counselRepository, CustomerRepository customerRepository, EmployeeService employeeService) {
         this.counselRepository = counselRepository;
         this.customerRepository = customerRepository;
+        this.employeeService = employeeService;
     }
 
     // 상담 신청
@@ -46,7 +50,7 @@ public class CounselService {
     private Customer findCustomerById(Integer customerId) {
         Optional<Customer> tempCustomer = customerRepository.findById(customerId);
         if(tempCustomer.isEmpty())
-            throw new RuntimeException("존재하지 않는 Customer ID");
+            throw new RuntimeException("존재하지 않는 고객 ID");
         return tempCustomer.get();
     }
 
@@ -96,5 +100,25 @@ public class CounselService {
             counselList.add(counselDto);
         }
         return counselList;
+    }
+
+    public String confirmCounsel(Integer counselId, Integer employeeId) {
+        Counsel counsel = findCounselById(counselId);
+        Employee employee = employeeService.findEmployeeById(employeeId);
+
+        if(counsel.getStatusOfCounsel())
+            throw new RuntimeException("이미 확정된 상담입니다.");
+
+        counsel.setStatusOfCounsel(true);
+        counsel.setEmployee(employee);
+        counselRepository.save(counsel);
+        return "상담 일정이 확정되었습니다.";
+    }
+
+    public Counsel findCounselById(Integer counselId) {
+        Optional<Counsel> tempCounsel = counselRepository.findById(counselId);
+        if(tempCounsel.isEmpty())
+            throw new RuntimeException("존재하지 않는 상담 ID");
+        return tempCounsel.get();
     }
 }
