@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InternationalDto {
+public class InternationalTravelDto {
     private int travelId;
     private String travelCountry;
     private int travelPeriod;

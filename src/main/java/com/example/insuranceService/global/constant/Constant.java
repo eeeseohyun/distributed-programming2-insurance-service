@@ -18,4 +18,8 @@ public class Constant {
     public static final int maximumLatePaymentPeriod = 30;
     public static final String dateFormat = "yyyy-MM-dd";
 
+    public static final String CarInsurance = "자동차보험";
+    public static final String HouseFireInsurance = "화재보험";
+    public static final String CancerHealthInsurance = "건강보험";
+    public static final String InternationalTravelInsurance = "국제여행보험";
 }

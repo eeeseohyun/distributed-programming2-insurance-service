@@ -10,11 +10,4 @@ public class CardRequestDto {
     private String password;
     private Integer paymentInfoId;
 
-    public Card toEntity(CardRequestDto cardRequestDto) {
-        Card card = new Card();
-        card.setCardNum(cardRequestDto.getCardNum());
-        card.setCvcNum(cardRequestDto.getCvcNum());
-        card.setPassword(cardRequestDto.getPassword());
-        return card;
-    }
 }

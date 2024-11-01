@@ -1,5 +1,6 @@
 package com.example.insuranceservice.domain.contract.controller;
 
+import com.example.insuranceservice.domain.contract.dto.ContractDetailDto;
 import com.example.insuranceservice.domain.contract.dto.ContractDto;
 import com.example.insuranceservice.domain.contract.dto.ContractRequestDto;
 import com.example.insuranceservice.domain.contract.entity.Contract;
@@ -35,5 +36,11 @@ public class ContractController {
     @GetMapping("/requested/{customerId}")
     public List<ContractDto> showRequestedContractList(@PathVariable Integer customerId){
         return contractService.showRequestedContractList(customerId);
+    }
+
+    // 상세 내용 조회
+    @GetMapping("/detail/{contractId}")
+    public ContractDetailDto showContractDetail(@PathVariable Integer contractId){
+        return contractService.showContractDetail(contractId);
     }
 }
