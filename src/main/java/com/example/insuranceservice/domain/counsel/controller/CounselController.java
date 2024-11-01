@@ -42,7 +42,7 @@ public class CounselController {
     }
 
     // 상담 일정 확정
-    @PostMapping("/confirm/{counselId}")
+    @PutMapping("/confirm/{counselId}")
     public String confirmCounsel(@PathVariable Integer counselId, @RequestBody Integer employeeId){
         return counselService.confirmCounsel(counselId, employeeId);
     }

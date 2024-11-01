@@ -1,11 +1,9 @@
 package com.example.insuranceservice.domain.payment.controller;
 
+import com.example.insuranceservice.domain.card.dto.CardRequestDto;
 import com.example.insuranceservice.domain.payment.dto.PaymentDto;
 import com.example.insuranceservice.domain.payment.service.PaymentService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +21,12 @@ public class PaymentController {
     @GetMapping("/list/{customerId}")
     public List<PaymentDto> showPaymentList(@PathVariable Integer customerId){
         return paymentService.showPaymentList(customerId);
+    }
+
+    // 보험료 납부
+    @PutMapping("/pay/{paymentId}")
+    public String payPremium(@PathVariable Integer paymentId, @RequestBody CardRequestDto cardRequestDto){
+        return paymentService.payPremium(paymentId, cardRequestDto);
     }
 
 }
