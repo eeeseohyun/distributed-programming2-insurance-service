@@ -5,6 +5,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("api/InsuranceService")
 @Controller
-public class cancerHealthController {
+public class CancerHealthController {
 
 }
