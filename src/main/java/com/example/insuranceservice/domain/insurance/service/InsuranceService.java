@@ -14,6 +14,7 @@ import com.example.insuranceservice.domain.houseFire.repository.HouseFireReposit
 import com.example.insuranceservice.domain.insurance.dto.InsuranceDto;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
+import com.example.insuranceservice.exception.DuplicateIDException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,8 +55,10 @@ public class InsuranceService {
            throw new RuntimeException("존재하지 않는 보험 상품 ID");
     }
     // 상품을 개발한다.
-    public void createInsurance(InsuranceDto insuranceDto) {
-        insuranceRepository.save(insuranceDto.toEntity());
+    public String createInsurance(InsuranceDto insuranceDto) throws DuplicateIDException {
+       Insurance response = insuranceRepository.save(insuranceDto.toEntity());
+       if(response!=null) return "[success] 성공적으로 보험 상품이 생성되었습니다!";
+       else throw new DuplicateIDException();
     }
     // 상품을 조회한다.
     public List<InsuranceDto> getAllInsurance() {
@@ -67,48 +70,56 @@ public class InsuranceService {
         return dtoList;
     }
     // 상품을 개발한다. - 차 보험
-    public void createCarInsurance(CarDto carDto, int insuranceId) {
+    public String createCarInsurance(CarDto carDto, int insuranceId) {
         Car car = carDto.toEntity();
-        carRepository.save(car);
+        Car response =carRepository.save(car);
         Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
 
         if (insurancelist.isPresent()) {
             Insurance insurance = insurancelist.get();
             insurance.setCar(car);
         }
+        if(response!=null) return "[success] 성공적으로 차 보험 상품이 생성되었습니다!";
+        else throw new NullPointerException();
     }
     // 상품을 개발한다. - 암 보험
-    public void createCancerInsurance(CancerHealthDto cancerHealthDto, int insuranceId) {
+    public String createCancerInsurance(CancerHealthDto cancerHealthDto, int insuranceId) {
         CancerHealth cancerHealth = cancerHealthDto.toEntity();
-        cancerHealthRepository.save(cancerHealth);
+        CancerHealth response = cancerHealthRepository.save(cancerHealth);
         Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
 
         if (insurancelist.isPresent()) {
             Insurance insurance = insurancelist.get();
             insurance.setCancerHealth(cancerHealth);
         }
+        if(response!=null) return "[success] 성공적으로 암 보험 상품이 생성되었습니다!";
+        else throw new NullPointerException();
     }
     // 상품을 개발한다. - 화재 보험
-    public void createHousefireInsurance(HouseFireDto houseFireDto, int insuranceId) {
+    public String createHousefireInsurance(HouseFireDto houseFireDto, int insuranceId) {
         HouseFire houseFire = houseFireDto.toEntity();
-        houseFireRepository.save(houseFire);
+        HouseFire response = houseFireRepository.save(houseFire);
         Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
 
         if (insurancelist.isPresent()) {
             Insurance insurance = insurancelist.get();
             insurance.setHouseFire(houseFire);
         }
+        if(response!=null) return "[success] 성공적으로 화재 보험 상품이 생성되었습니다!";
+        else throw new NullPointerException();
     }
     // 상품을 개발한다. - 여행 보험
-    public void createInternationalInsurance(InternationalTravelDto internationalDto, int insuranceId) {
+    public String createInternationalInsurance(InternationalTravelDto internationalDto, int insuranceId) {
         InternationalTravel internationalTravel = internationalDto.toEntity();
-        internationalRepository.save(internationalTravel);
+        InternationalTravel response =internationalRepository.save(internationalTravel);
         Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
 
         if (insurancelist.isPresent()) {
             Insurance insurance = insurancelist.get();
             insurance.setInternationalTravel(internationalTravel);
         }
+        if(response!=null) return "[success] 성공적으로 여행 보험 상품이 생성되었습니다!";
+        else throw new NullPointerException();
     }
 
 }

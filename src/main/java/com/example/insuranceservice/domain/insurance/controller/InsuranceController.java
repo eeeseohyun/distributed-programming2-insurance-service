@@ -6,6 +6,7 @@ import com.example.insuranceservice.domain.houseFire.dto.HouseFireDto;
 import com.example.insuranceservice.domain.insurance.dto.InsuranceDto;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
+import com.example.insuranceservice.exception.DuplicateIDException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,28 +35,32 @@ public class InsuranceController {
     }
     // 상품을 개발한다.
     @PostMapping("/create")
-    private void createInsurance(@RequestBody InsuranceDto insuranceDto){
-        insuranceService.createInsurance(insuranceDto);
+    private String createInsurance(@RequestBody InsuranceDto insuranceDto){
+        try {
+            return insuranceService.createInsurance(insuranceDto);
+        } catch (DuplicateIDException e) {
+            return e.toString();
+        }
     }
     // 상품을 개발한다. - 차 보험 디테일
     @PostMapping("/createCar/{insuranceId}")
-    private void createCarInsurance(@RequestBody CarDto carDto, @PathVariable int insuranceId){
-        insuranceService.createCarInsurance(carDto,insuranceId);
+    private String createCarInsurance(@RequestBody CarDto carDto, @PathVariable int insuranceId){
+       return insuranceService.createCarInsurance(carDto,insuranceId);
     }
     // 상품을 개발한다. - 암 보험 디테일
     @PostMapping("/createCancer/{insuranceId}")
-    private void createCancerInsurance(@RequestBody CancerHealthDto cancerHealthDtoDto, @PathVariable int insuranceId){
-        insuranceService.createCancerInsurance(cancerHealthDtoDto,insuranceId);
+    private String createCancerInsurance(@RequestBody CancerHealthDto cancerHealthDtoDto, @PathVariable int insuranceId){
+        return insuranceService.createCancerInsurance(cancerHealthDtoDto,insuranceId);
     }
     // 상품을 개발한다. - 화재 보험 디테일
     @PostMapping("/createHousefire/{insuranceId}")
-    private void createHousefireInsurance(@RequestBody HouseFireDto houseFireDto, @PathVariable int insuranceId){
-        insuranceService.createHousefireInsurance(houseFireDto,insuranceId);
+    private String createHousefireInsurance(@RequestBody HouseFireDto houseFireDto, @PathVariable int insuranceId){
+        return insuranceService.createHousefireInsurance(houseFireDto,insuranceId);
     }
     // 상품을 개발한다. - 여행 보험 디테일
     @PostMapping("/createInternational/{insuranceId}")
-    private void createInternationalInsurance(@RequestBody InternationalTravelDto internationalDto, @PathVariable int insuranceId){
-        insuranceService.createInternationalInsurance(internationalDto,insuranceId);
+    private String createInternationalInsurance(@RequestBody InternationalTravelDto internationalDto, @PathVariable int insuranceId){
+        return insuranceService.createInternationalInsurance(internationalDto,insuranceId);
     }
     // 상품 리스트를 확인한다.
     @GetMapping("/getAll")
