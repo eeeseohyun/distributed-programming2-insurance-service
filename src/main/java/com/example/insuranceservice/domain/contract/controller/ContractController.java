@@ -60,61 +60,55 @@ public class ContractController {
     }
 
     //// 계약체결 카테고리 - 계약을 체결한다.
-    @PostMapping("/conclude")
+    @PostMapping("/concludeContract")
     public ResponseEntity<String> concludeContract(@RequestParam Integer contractId, @RequestParam boolean approve) {
         String message = contractService.concludeContract(contractId, approve);
         return ResponseEntity.ok(message);
     }
 
-    @PostMapping("/request-reunderwriting")
+    @PostMapping("/requestReUnderwriting")
     public ResponseEntity<String> requestReUnderwriting(@RequestParam Integer contractId) {
         String message = contractService.requestReUnderwriting(contractId);
         return ResponseEntity.ok(message);
     }
 
-    @GetMapping("/contracts-to-conclude")
-    public ResponseEntity<List<ContractDto>> getContractsToConclude() {
-        List<ContractDto> contracts = contractService.getContractsToConclude();
+    @GetMapping("/showPermitedUnderwriteContractList")
+    public ResponseEntity<List<ContractDto>> showPermitedUnderwriteContractList() {
+        List<ContractDto> contracts = contractService.showPermitedUnderwriteContractList();
         return ResponseEntity.ok(contracts);
     }
 
-    @GetMapping("/rejected-contracts")
-    public ResponseEntity<List<ContractDto>> getRejectedContracts() {
-        List<ContractDto> contracts = contractService.getRejectedContracts();
+    @GetMapping("/showRejectedUnderwriteContractList")
+    public ResponseEntity<List<ContractDto>> showRejectedUnderwriteContractList() {
+        List<ContractDto> contracts = contractService.showRejectedUnderwriteContractList();
         return ResponseEntity.ok(contracts);
     }
     ////
 
     //// 인수심사 카테고리 - 계약의 인수심사를 하다, 계약 진행을 허가한다.
-    @PostMapping("/permit")
+    @PostMapping("/permitContract")
     public ResponseEntity<String> permitContract(@RequestParam Integer contractId, @RequestParam boolean approve) {
         String message = contractService.permitContract(contractId, approve);
         return ResponseEntity.ok(message);
     }
-    @GetMapping("/underwriting-requests")
-    public ResponseEntity<List<ContractDto>> getUnderwritingRequestedContracts() {
-        List<ContractDto> contracts = contractService.getUnderwritingRequestedContracts();
+    @GetMapping("/showRequestedUnderwriteContractList")
+    public ResponseEntity<List<ContractDto>> showRequestedUnderwriteContractList() {
+        List<ContractDto> contracts = contractService.showRequestedUnderwriteContractList();
         return ResponseEntity.ok(contracts);
     }
-    @PostMapping("/process-underwriting")
+    @PostMapping("/processUnderwriting")
     public ResponseEntity<String> processUnderwriting(@RequestParam Integer contractId, @RequestParam String evaluation, @RequestParam boolean approve) {
         String message = contractService.processUnderwriting(contractId, evaluation, approve);
         return ResponseEntity.ok(message);
     }
-    @GetMapping("/underwrited-contracts")
-    public ResponseEntity<List<ContractDto>> getUnderwritedContracts() {
-        List<ContractDto> contracts = contractService.getUnderwritedContracts();
-        return ResponseEntity.ok(contracts);
-    }
-
-    @GetMapping("/rejected-underwrited-contracts")
-    public ResponseEntity<List<ContractDto>> getRejectedUnderwritedContracts() {
-        List<ContractDto> contracts = contractService.getRejectedUnderwritedContracts();
+    @GetMapping("/showUnderwritedContractList")
+    public ResponseEntity<List<ContractDto>> showUnderwritedContractList() {
+        List<ContractDto> contracts = contractService.showUnderwritedContractList();
         return ResponseEntity.ok(contracts);
     }
     ////
 
-    @PostMapping("/create")
+    @PostMapping("/createContract")
     public ResponseEntity<String> createContract(@RequestBody ContractDto contractDto) {
         String message = contractService.testCreateContract(contractDto);
         return ResponseEntity.ok(message);

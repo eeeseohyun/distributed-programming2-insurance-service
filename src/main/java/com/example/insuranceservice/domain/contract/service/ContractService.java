@@ -111,11 +111,11 @@ public class ContractService {
         contractRepository.save(contractDto.toEntity());
     }
     //// 계약체결 카테고리 - 계약을 체결한다.
-    public List<ContractDto> getContractsToConclude() {
+    public List<ContractDto> showPermitedUnderwriteContractList() {
         List<Contract> permitContracts = contractRepository.findByContractStatus("ContractPermission");
         return permitContracts.stream().map(ContractDto::new).collect(Collectors.toList());
     }
-    public List<ContractDto> getRejectedContracts() {
+    public List<ContractDto> showRejectedUnderwriteContractList() {
         List<Contract> rejectedContracts = contractRepository.findByContractStatus("ReviewReject");
         return rejectedContracts.stream().map(ContractDto::new).collect(Collectors.toList());
     }
@@ -148,7 +148,7 @@ public class ContractService {
     ////
 
     //// 인수심사 카테고리 - 계약의 인수심사를 하다, 계약 진행을 허가한다.
-    public List<ContractDto> getUnderwritedContracts() {
+    public List<ContractDto> showUnderwritedContractList() {
         List<Contract> contracts = contractRepository.findByContractStatus("ReviewPermit");
         return contracts.stream().map(ContractDto::new).collect(Collectors.toList());
     }
@@ -167,7 +167,7 @@ public class ContractService {
             return "해당 계약 ID를 찾을 수 없습니다.";
         }
     }
-    public List<ContractDto> getUnderwritingRequestedContracts() {
+    public List<ContractDto> showRequestedUnderwriteContractList() {
         List<Contract> contracts = contractRepository.findByContractStatus("ReviewRequest");
         return contracts.stream().map(ContractDto::new).collect(Collectors.toList());
     }
@@ -186,10 +186,6 @@ public class ContractService {
         } else {
             return "해당 계약 ID를 찾을 수 없습니다.";
         }
-    }
-    public List<ContractDto> getRejectedUnderwritedContracts() {
-        List<Contract> contracts = contractRepository.findByContractStatus("ReviewReject");
-        return contracts.stream().map(ContractDto::new).collect(Collectors.toList());
     }
     ////
 
