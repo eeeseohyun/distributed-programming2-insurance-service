@@ -115,24 +115,27 @@ public class ContractService {
         List<Contract> permitContracts = contractRepository.findByContractStatus("ContractPermission");
         return permitContracts.stream().map(ContractDto::new).collect(Collectors.toList());
     }
-    public List<ContractDto> showRejectedUnderwriteContractList() {
-        List<Contract> rejectedContracts = contractRepository.findByContractStatus("ReviewReject");
-        return rejectedContracts.stream().map(ContractDto::new).collect(Collectors.toList());
-    }
     public String concludeContract(Integer contractId, boolean approve) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
         if (contractOptional.isPresent()) {
             Contract contract = contractOptional.get();
             if (approve) {
                 contract.setContractStatus("concluded");
+//                contract.setConcludeEID(this.employeeID); // 요건 로그인 되면 구현
+                contract.setConcludedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+                contract.setIsConcluded(true);
                 contractRepository.save(contract);
-                return "계약이 성공적으로 체결되었습니다.";
+                return "[success] 계약체결이 완료되었습니다.";
             } else {
-                return "계약 체결이 취소되었습니다.";
+                return "[info] 계약진행에 실패했습니다. 본 페이지를 다시 출력합니다.";
             }
         } else {
-            return "해당 계약 id를 찾을 수 없습니다.";
+            return "[error] 해당 계약 id를 찾을 수 없습니다.";
         }
+    }
+    public List<ContractDto> showRejectedUnderwriteContractList() {
+        List<Contract> rejectedContracts = contractRepository.findByContractStatus("ReviewReject");
+        return rejectedContracts.stream().map(ContractDto::new).collect(Collectors.toList());
     }
     public String requestReUnderwriting(Integer contractId) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
@@ -142,7 +145,7 @@ public class ContractService {
             contractRepository.save(contract);
             return "[success] 재심사 요청이 완료되었습니다.";
         } else {
-            return "해당 계약 id를 찾을 수 없습니다.";
+            return "[error] 해당 계약 id를 찾을 수 없습니다.";
         }
     }
     ////
@@ -159,12 +162,12 @@ public class ContractService {
             if (approve) {
                 contract.setContractStatus("ContractPermission");
                 contractRepository.save(contract);
-                return "계약 진행이 허가되었습니다.";
+                return "[success] 계약 진행을 허가하셨습니다.";
             } else {
-                return "계약 진행이 취소되었습니다.";
+                return "[info] 계약 허가가 완료되지 않았습니다. 다시 페이지를 출력합니다.";
             }
         } else {
-            return "해당 계약 ID를 찾을 수 없습니다.";
+            return "[error] 해당 계약 ID를 찾을 수 없습니다.";
         }
     }
     public List<ContractDto> showRequestedUnderwriteContractList() {
@@ -178,13 +181,15 @@ public class ContractService {
             contract.setEvaluation(evaluation);
             if (approve) {
                 contract.setContractStatus("ReviewPermit");
+                contractRepository.save(contract);
+                return "[success] 인수심사를 완료하였습니다.";
             } else {
                 contract.setContractStatus("ReviewReject");
+                contractRepository.save(contract);
+                return "[info] 인수심사를 거절하였습니다. 해당 계약건을 인수 제한한 계약건으로 분류합니다";
             }
-            contractRepository.save(contract);
-            return "[info] 인수심사 평가 결과가 저장되었습니다.";
         } else {
-            return "해당 계약 ID를 찾을 수 없습니다.";
+            return "[error] 해당 계약 ID를 찾을 수 없습니다.";
         }
     }
     ////
