@@ -2,21 +2,15 @@ package com.example.insuranceservice.domain.contract.entity;
 
 
 import com.example.insuranceservice.domain.contract.dto.ContractDto;
+import com.example.insuranceservice.domain.customer.entity.Customer;
+import com.example.insuranceservice.domain.employee.entity.Employee;
+import com.example.insuranceservice.domain.insurance.entity.Insurance;
+import com.example.insuranceservice.domain.payment.entity.Payment;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import com.example.insuranceservice.domain.customer.entity.Customer;
-import com.example.insuranceservice.domain.insurance.entity.Insurance;
-import lombok.Getter;
-import lombok.Setter;
-
-
 import java.util.List;
-
 
 @Entity
 @Data
@@ -49,6 +43,21 @@ public class Contract {
     @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
     private List<PaymentInfo> paymentInfoList;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "insurance_id")
+    private Insurance insurance;
+
+    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
+    private List<Payment> paymentList;
+
     public void revive(ContractDto contractDto) {
         this.id = contractDto.getId();
         this.expirationDate = contractDto.getExpirationDate();
@@ -57,18 +66,4 @@ public class Contract {
         this.monthlyPremium = contractDto.getMonthlyPremium();
         this.paymentInfoList = contractDto.getPaymentInfoList();
     }
-
-
-//    private Customer customer;
-//    private Employee employee;
-//    private Insurance insurance;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "insurance_id")
-    private Insurance insurance;
 }

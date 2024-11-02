@@ -2,8 +2,6 @@ package com.example.insuranceservice.domain.insurance.service;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +19,12 @@ public class InsuranceService {
         return insuranceRepository.findByCategory(category);
     }
 
-    public Insurance showInsuranceDetail(Integer id) {
-        Optional<Insurance> insurance = insuranceRepository.findById(id);
+    public Insurance showInsuranceDetail(Integer insuranceId) {
+        return findInsuranceById(insuranceId);
+    }
+
+    public Insurance findInsuranceById(Integer insuranceId) {
+        Optional<Insurance> insurance = insuranceRepository.findById(insuranceId);
         if(insurance.isPresent())
             return insurance.get();
         else

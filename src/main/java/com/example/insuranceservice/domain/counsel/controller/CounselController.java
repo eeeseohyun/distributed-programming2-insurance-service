@@ -1,10 +1,7 @@
 package com.example.insuranceservice.domain.counsel.controller;
 
-import com.example.insuranceservice.domain.counsel.dto.CounselDto;
-import com.example.insuranceservice.domain.counsel.dto.CounselRequestDto;
-import com.example.insuranceservice.domain.counsel.entity.Counsel;
+import com.example.insuranceservice.domain.counsel.dto.*;
 import com.example.insuranceservice.domain.counsel.service.CounselService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,8 +42,30 @@ public class CounselController {
     }
 
     // 상담 일정 확정
-    @PostMapping("/confirm/{counselId}/{employeeId}")
-    public String confirmCounsel(@PathVariable Integer counselId, @PathVariable Integer employeeId){
+    @PutMapping("/confirm/{counselId}")
+    public String confirmCounsel(@PathVariable Integer counselId, @RequestBody Integer employeeId){
         return counselService.confirmCounsel(counselId, employeeId);
     }
+    ////
+
+    //// 상담 내역 관리 카테고리
+    // 상담 내역 조회
+    @GetMapping("/consulted/list/{employeeId}")
+    public List<CounselDto> showConsultedCounselList(@PathVariable Integer employeeId){
+        return counselService.showConsultedCounselList(employeeId);
+    }
+
+    // 상담 내용 추가
+    @PutMapping("/update/{counselId}")
+    public String updateCounsel(@PathVariable Integer counselId, @RequestBody CounselUpdateDto counselUpdateDto){
+        return counselService.updateCounsel(counselId, counselUpdateDto);
+    }
+
+    // 상담 보험 제안
+    @PostMapping("/suggest/{counselId}")
+    public CounselSuggestDto suggestInsurance(@PathVariable Integer counselId, @RequestBody Integer insuranceId){
+        return counselService.suggestInsurance(counselId, insuranceId);
+    }
+    ////
+
 }

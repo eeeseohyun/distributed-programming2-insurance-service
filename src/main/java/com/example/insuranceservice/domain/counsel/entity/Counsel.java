@@ -18,11 +18,11 @@ public class Counsel {
     private Integer counselId;
 
     private String counselDetail;
-    private String content;
     private String dateOfCounsel;
     private String insuranceType;
     private Boolean statusOfCounsel;
     private String timeOfCounsel;
+    private String note;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")

@@ -6,7 +6,7 @@ import lombok.Data;
 public class CounselDto {
     private Integer counselId;
     private String counselDetail;
-    private String content;
+    private String note;
     private String dateOfCounsel;
     private String insuranceType;
     private Boolean statusOfCounsel;
