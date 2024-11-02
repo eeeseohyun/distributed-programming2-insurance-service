@@ -1,8 +1,23 @@
 package com.example.insuranceservice.domain.insurance.service;
+import com.example.insuranceservice.domain.InternationalTravel.dto.InternationalTravelDto;
+import com.example.insuranceservice.domain.InternationalTravel.entity.InternationalTravel;
+import com.example.insuranceservice.domain.InternationalTravel.repository.InternationalRepository;
+import com.example.insuranceservice.domain.cancerHealth.dto.CancerHealthDto;
+import com.example.insuranceservice.domain.cancerHealth.entity.CancerHealth;
+import com.example.insuranceservice.domain.cancerHealth.repository.CancerHealthRepository;
+import com.example.insuranceservice.domain.car.dto.CarDto;
+import com.example.insuranceservice.domain.car.entity.Car;
+import com.example.insuranceservice.domain.car.repository.CarRepository;
+import com.example.insuranceservice.domain.houseFire.dto.HouseFireDto;
+import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
+import com.example.insuranceservice.domain.houseFire.repository.HouseFireRepository;
+import com.example.insuranceservice.domain.insurance.dto.InsuranceDto;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +25,14 @@ import java.util.Optional;
 public class InsuranceService {
 
     private InsuranceRepository insuranceRepository;
+    @Autowired
+    private CarRepository carRepository;
+    @Autowired
+    private CancerHealthRepository cancerHealthRepository;
+    @Autowired
+    private InternationalRepository internationalRepository;
+    @Autowired
+    private HouseFireRepository houseFireRepository;
 
     public InsuranceService(InsuranceRepository insuranceRepository) {
         this.insuranceRepository = insuranceRepository;
@@ -29,6 +52,63 @@ public class InsuranceService {
             return insurance.get();
         else
            throw new RuntimeException("존재하지 않는 보험 상품 ID");
+    }
+    // 상품을 개발한다.
+    public void createInsurance(InsuranceDto insuranceDto) {
+        insuranceRepository.save(insuranceDto.toEntity());
+    }
+    // 상품을 조회한다.
+    public List<InsuranceDto> getAllInsurance() {
+        List<Insurance> list = insuranceRepository.findAll();
+        List<InsuranceDto> dtoList = new ArrayList<>();
+        for(Insurance insurance : list){
+            InsuranceDto dto = insurance.toDto();
+        }
+        return dtoList;
+    }
+    // 상품을 개발한다. - 차 보험
+    public void createCarInsurance(CarDto carDto, int insuranceId) {
+        Car car = carDto.toEntity();
+        carRepository.save(car);
+        Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
+
+        if (insurancelist.isPresent()) {
+            Insurance insurance = insurancelist.get();
+            insurance.setCar(car);
+        }
+    }
+    // 상품을 개발한다. - 암 보험
+    public void createCancerInsurance(CancerHealthDto cancerHealthDto, int insuranceId) {
+        CancerHealth cancerHealth = cancerHealthDto.toEntity();
+        cancerHealthRepository.save(cancerHealth);
+        Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
+
+        if (insurancelist.isPresent()) {
+            Insurance insurance = insurancelist.get();
+            insurance.setCancerHealth(cancerHealth);
+        }
+    }
+    // 상품을 개발한다. - 화재 보험
+    public void createHousefireInsurance(HouseFireDto houseFireDto, int insuranceId) {
+        HouseFire houseFire = houseFireDto.toEntity();
+        houseFireRepository.save(houseFire);
+        Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
+
+        if (insurancelist.isPresent()) {
+            Insurance insurance = insurancelist.get();
+            insurance.setHouseFire(houseFire);
+        }
+    }
+    // 상품을 개발한다. - 여행 보험
+    public void createInternationalInsurance(InternationalTravelDto internationalDto, int insuranceId) {
+        InternationalTravel internationalTravel = internationalDto.toEntity();
+        internationalRepository.save(internationalTravel);
+        Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
+
+        if (insurancelist.isPresent()) {
+            Insurance insurance = insurancelist.get();
+            insurance.setInternationalTravel(internationalTravel);
+        }
     }
 
 }
