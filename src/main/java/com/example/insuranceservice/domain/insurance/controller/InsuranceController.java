@@ -33,6 +33,7 @@ public class InsuranceController {
     public Insurance showInsuranceDetail(@PathVariable Integer id){
         return insuranceService.showInsuranceDetail(id);
     }
+
     // 상품을 개발한다.
     @PostMapping("/create")
     private String createInsurance(@RequestBody InsuranceDto insuranceDto){

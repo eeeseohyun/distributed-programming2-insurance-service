@@ -2,6 +2,7 @@ package com.example.insuranceservice.domain.counsel.controller;
 
 import com.example.insuranceservice.domain.counsel.dto.*;
 import com.example.insuranceservice.domain.counsel.service.CounselService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class CounselController {
 
     // 상담 일정 확정
     @PutMapping("/confirm/{counselId}")
-    public String confirmCounsel(@PathVariable Integer counselId, @RequestBody Integer employeeId){
+    public ResponseEntity<String> confirmCounsel(@PathVariable Integer counselId, @RequestBody Integer employeeId){
         return counselService.confirmCounsel(counselId, employeeId);
     }
     ////

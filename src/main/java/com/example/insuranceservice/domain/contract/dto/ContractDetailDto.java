@@ -22,5 +22,4 @@ public class ContractDetailDto {
     private HouseFireDto houseFireDto;
     private InternationalTravelDto internationalDto;
     private CancerHealthDto cancerHealthDto;
-
 }
