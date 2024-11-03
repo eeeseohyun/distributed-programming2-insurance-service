@@ -5,13 +5,11 @@ import com.example.insuranceservice.domain.car.entity.Car;
 import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
 import com.example.insuranceservice.domain.insurance.dto.InsuranceDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -29,7 +27,7 @@ public class Insurance {
     private String notice;
     private String processOfCompensation;
     private String processOfSubscription;
-    private double rateOfdiscount;
+    private double rateOfDiscount;
     private String specialProvisionName;
     private String guaranteeName;
     private int maxCoverage;
@@ -37,19 +35,15 @@ public class Insurance {
     @OneToOne
     @JoinColumn(name="carId")
     private Car car;
-
     @OneToOne
     @JoinColumn(name="cancerHealthId")
     private CancerHealth cancerHealth;
-
     @OneToOne
     @JoinColumn(name="internationalTravelId")
     private com.example.insuranceservice.domain.InternationalTravel.entity.InternationalTravel InternationalTravel;
-
     @OneToOne
     @JoinColumn(name="houseFireID")
     private HouseFire houseFire;
-
     public InsuranceDto toDto() {
         return InsuranceDto.builder()
                 .insuranceName(this.insuranceName)
@@ -60,12 +54,11 @@ public class Insurance {
                 .notice(this.notice)
                 .processOfCompensation(this.processOfCompensation)
                 .processOfSubscription(this.processOfSubscription)
-                .rateOfdiscount(this.rateOfdiscount)
+                .rateOfDiscount(this.rateOfDiscount)
                 .specialProvisionName(this.specialProvisionName)
                 .guaranteeName(this.guaranteeName)
                 .maxCoverage(this.maxCoverage)
                 .guaranteeDescription(this.guaranteeDescription)
                 .build();
     }
-
 }

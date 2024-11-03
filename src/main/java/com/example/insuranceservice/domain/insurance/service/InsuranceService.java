@@ -55,10 +55,13 @@ public class InsuranceService {
            throw new RuntimeException("존재하지 않는 보험 상품 ID");
     }
     // 상품을 개발한다.
-    public String createInsurance(InsuranceDto insuranceDto) throws DuplicateIDException {
-       Insurance response = insuranceRepository.save(insuranceDto.toEntity());
-       if(response!=null) return "[success] 성공적으로 보험 상품이 생성되었습니다!";
-       else throw new DuplicateIDException();
+    public Insurance createInsurance(InsuranceDto insuranceDto) throws DuplicateIDException {
+        Insurance insurance = insuranceRepository.save(insuranceDto.toEntity());
+        if (insurance != null) {
+            return insurance;
+        } else {
+            throw new DuplicateIDException();
+        }
     }
     // 상품을 조회한다.
     public List<InsuranceDto> getAllInsurance() {
@@ -83,17 +86,19 @@ public class InsuranceService {
         else throw new NullPointerException();
     }
     // 상품을 개발한다. - 암 보험
+    // 암 보험 생성
     public String createCancerInsurance(CancerHealthDto cancerHealthDto, int insuranceId) {
         CancerHealth cancerHealth = cancerHealthDto.toEntity();
         CancerHealth response = cancerHealthRepository.save(cancerHealth);
-        Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
 
-        if (insurancelist.isPresent()) {
-            Insurance insurance = insurancelist.get();
+        Optional<Insurance> optionalInsurance = insuranceRepository.findById(insuranceId);
+        if (optionalInsurance.isPresent()) {
+            Insurance insurance = optionalInsurance.get();
             insurance.setCancerHealth(cancerHealth);
+            insuranceRepository.save(insurance); // 변경된 Insurance 엔티티 저장
         }
-        if(response!=null) return "[success] 성공적으로 암 보험 상품이 생성되었습니다!";
-        else throw new NullPointerException();
+
+        return "[success] 성공적으로 암 보험 상품이 생성되었습니다!";
     }
     // 상품을 개발한다. - 화재 보험
     public String createHousefireInsurance(HouseFireDto houseFireDto, int insuranceId) {
