@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InsuranceDto {
     @Id
-    private int insuranceID;
     private String insuranceName;
     private String category;
     private int insuranceRate;
@@ -33,7 +32,6 @@ public class InsuranceDto {
     private String guaranteeDescription;
     public Insurance toEntity() {
         return Insurance.builder()
-                .insuranceID(this.getInsuranceID())
                 .insuranceName(this.getInsuranceName())
                 .category(this.getCategory())
                 .insuranceRate(this.getInsuranceRate())

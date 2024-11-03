@@ -46,7 +46,6 @@ public class Insurance {
     private HouseFire houseFire;
     public InsuranceDto toDto() {
         return InsuranceDto.builder()
-                .insuranceID(this.insuranceID)
                 .insuranceName(this.insuranceName)
                 .category(this.category)
                 .insuranceRate(this.insuranceRate)

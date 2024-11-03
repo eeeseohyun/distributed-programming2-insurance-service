@@ -5,10 +5,7 @@ import com.example.insuranceservice.domain.bank.dto.BankDto;
 import com.example.insuranceservice.domain.card.dto.CardDto;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoDto;
 import com.example.insuranceservice.domain.paymentInfo.service.PaymentInfoService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/paymentInfo")
 @RestController
@@ -20,21 +17,21 @@ public class PaymentInfoController {
         this.paymentInfoService = paymentInfoService;
     }
     @PostMapping("/create")
-    private void createPayment(@RequestBody PaymentInfoDto paymentInfoDto){
-        paymentInfoService.createPayment(paymentInfoDto);
+    private int createPayment(@RequestBody PaymentInfoDto paymentInfoDto){
+       return paymentInfoService.createPayment(paymentInfoDto);
     }
     @PostMapping("/setCardInfo")
-    private void setCardInfo(@RequestBody CardDto dto,@RequestBody PaymentInfoDto paymentInfoDto){
-        paymentInfoService.setCardInfo(dto,paymentInfoDto);
+    private void setCardInfo(@RequestBody CardDto dto, @PathVariable int payementInfoId){
+        paymentInfoService.setCardInfo(dto,payementInfoId);
 
     }
     @PostMapping("/setBankInfo")
-    private void setBankInfo(@RequestBody BankDto dto, @RequestBody PaymentInfoDto paymentInfoDto){
-        paymentInfoService.setBankInfo(dto,paymentInfoDto);
+    private void setBankInfo(@RequestBody BankDto dto, @PathVariable int payementInfoId){
+        paymentInfoService.setBankInfo(dto,payementInfoId);
     }
     @PostMapping("/setAutomaticInfo")
-    private void setAutomaticInfo(@RequestBody AutomaticDto dto, @RequestBody PaymentInfoDto paymentInfoDto){
-        paymentInfoService.setAutomaticInfo(dto,paymentInfoDto);
+    private void setAutomaticInfo(@RequestBody AutomaticDto dto, @PathVariable int payementInfoId){
+        paymentInfoService.setAutomaticInfo(dto,payementInfoId);
     }
 
 }

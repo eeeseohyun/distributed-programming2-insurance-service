@@ -13,12 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @Slf4j
 public class CancerHealthDto {
-    private int cancerId;
     private String categoryOfCancer;
 
     public CancerHealth toEntity() {
         return CancerHealth.builder()
-                .cancerId(this.cancerId)
                 .categoryOfCancer(this.categoryOfCancer)
                 .build();
     }
