@@ -26,7 +26,7 @@ public class InsuranceDto {
     private String notice;
     private String processOfCompensation;
     private String processOfSubscription;
-    private double rateOfdiscount;
+    private double rateOfDiscount;
     private String specialProvisionName;
     private String guaranteeName;
     private int maxCoverage;
@@ -42,7 +42,7 @@ public class InsuranceDto {
                 .notice(this.getNotice())
                 .processOfCompensation(this.getProcessOfCompensation())
                 .processOfSubscription(this.getProcessOfSubscription())
-                .rateOfdiscount(this.getRateOfdiscount())
+                .rateOfDiscount(this.getRateOfDiscount())
                 .specialProvisionName(this.getSpecialProvisionName())
                 .guaranteeName(this.getGuaranteeName())
                 .maxCoverage(this.getMaxCoverage())
