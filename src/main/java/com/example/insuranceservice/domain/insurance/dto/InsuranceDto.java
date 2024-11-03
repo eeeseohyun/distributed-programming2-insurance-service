@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @Slf4j
 public class InsuranceDto {
-    @Id
     private String insuranceName;
     private String category;
     private int insuranceRate;

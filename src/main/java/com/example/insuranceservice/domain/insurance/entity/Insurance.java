@@ -27,7 +27,8 @@ public class Insurance {
     private String notice;
     private String processOfCompensation;
     private String processOfSubscription;
-    private double rateOfDiscount;
+    @Column(nullable = false)
+    private double rateOfDiscount = 0.0;
     private String specialProvisionName;
     private String guaranteeName;
     private int maxCoverage;
