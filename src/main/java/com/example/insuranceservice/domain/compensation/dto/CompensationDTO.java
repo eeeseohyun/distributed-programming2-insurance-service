@@ -1,11 +1,11 @@
 package com.example.insuranceservice.domain.compensation.dto;
 
+import jakarta.persistence.Id;
 import lombok.Data;
 
 
 @Data
 public class CompensationDTO {
-    private int compensationID;
     private int accidentID;
     private int insuranceAmount;
     private String employeeOpinion;

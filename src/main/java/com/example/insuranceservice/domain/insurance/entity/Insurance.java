@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Insurance {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int insuranceID;
     private String insuranceName;
     private String category;
@@ -51,7 +52,6 @@ public class Insurance {
 
     public InsuranceDto toDto() {
         return InsuranceDto.builder()
-                .insuranceID(this.insuranceID)
                 .insuranceName(this.insuranceName)
                 .category(this.category)
                 .insuranceRate(this.insuranceRate)

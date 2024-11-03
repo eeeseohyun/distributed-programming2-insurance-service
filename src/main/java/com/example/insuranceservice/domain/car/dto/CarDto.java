@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @Slf4j
 public class CarDto {
-    private int carId;
     private Boolean hasBlackBox;
     private String vin;
     private String model;
@@ -21,7 +20,6 @@ public class CarDto {
 
     public Car toEntity() {
         return Car.builder()
-                .carId(this.carId)
                 .hasBlackBox(this.hasBlackBox)
                 .vin(this.vin)
                 .model(this.model)

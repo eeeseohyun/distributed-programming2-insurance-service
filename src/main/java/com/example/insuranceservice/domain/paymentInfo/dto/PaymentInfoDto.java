@@ -16,7 +16,6 @@ import java.util.List;
 @Builder
 @Slf4j
 public class PaymentInfoDto {
-    private Integer id;
     private String paymentType;
     private String fixedMonthlyPaymentDate;
     private Integer fixedMonthlyPayment;
@@ -27,7 +26,6 @@ public class PaymentInfoDto {
 
     public PaymentInfo toEntity() {
         return PaymentInfo.builder()
-                .id(this.id)
                 .paymentType(this.paymentType)
                 .fixedMonthlyPaymentDate(this.fixedMonthlyPaymentDate)
                 .fixedMonthlyPayment(this.fixedMonthlyPayment)

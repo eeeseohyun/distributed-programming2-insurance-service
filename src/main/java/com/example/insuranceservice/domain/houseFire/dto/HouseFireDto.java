@@ -13,13 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @Slf4j
 public class HouseFireDto {
-    private int houseFireId;
     private String categoryOfHouse;
     private int priceOfHouse;
 
     public HouseFire toEntity() {
         return HouseFire.builder()
-                .houseFireId(this.houseFireId)
                 .categoryOfHouse(this.categoryOfHouse)
                 .priceOfHouse(this.priceOfHouse)
                 .build();

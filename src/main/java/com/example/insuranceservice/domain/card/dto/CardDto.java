@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @Slf4j
 public class CardDto {
-    private Integer id;
     private String cardNum;
     private String cvcNum;
     private String password;
@@ -18,7 +17,6 @@ public class CardDto {
 
     public Card toEntity() {
         return Card.builder()
-                .id(this.id)
                 .cardNum(this.cardNum)
                 .cvcNum(this.cvcNum)
                 .password(this.password)

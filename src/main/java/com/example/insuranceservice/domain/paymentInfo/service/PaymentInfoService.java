@@ -34,16 +34,16 @@ public class PaymentInfoService {
         this.paymentInfoRepository = paymentInfoRepository;
     }
 
-    public void createPayment(PaymentInfoDto paymentInfoDto) {
-        paymentInfoRepository.save(paymentInfoDto.toEntity());
+    public int createPayment(PaymentInfoDto paymentInfoDto) {
+        return paymentInfoRepository.save(paymentInfoDto.toEntity()).getId();
     }
 
-    public void setCardInfo(CardDto dto,PaymentInfoDto paymentInfoDto) {
+    public void setCardInfo(CardDto dto,int payementInfoId) {
         List<Card> cardlist = new ArrayList<>();
         Card card = dto.toEntity();
         cardlist.add(card);
         cardRepository.save(card);
-        Optional<PaymentInfo> list = paymentInfoRepository.findById(paymentInfoDto.getId());
+        Optional<PaymentInfo> list = paymentInfoRepository.findById(payementInfoId);
 
         if (list.isPresent()) {
             PaymentInfo paymentInfo = list.get();
@@ -51,12 +51,12 @@ public class PaymentInfoService {
         }
     }
 
-    public void setBankInfo(BankDto dto, PaymentInfoDto paymentInfoDto) {
+    public void setBankInfo(BankDto dto, int paymentInfoId) {
         List<Bank> banklist = new ArrayList<>();
         Bank bank = dto.toEntity();
         banklist.add(bank);
         bankRepository.save(bank);
-        Optional<PaymentInfo> list = paymentInfoRepository.findById(paymentInfoDto.getId());
+        Optional<PaymentInfo> list = paymentInfoRepository.findById(paymentInfoId);
 
         if (list.isPresent()) {
             PaymentInfo paymentInfo = list.get();
@@ -64,12 +64,12 @@ public class PaymentInfoService {
         }
     }
 
-    public void setAutomaticInfo(AutomaticDto dto, PaymentInfoDto paymentInfoDto) {
+    public void setAutomaticInfo(AutomaticDto dto, int paymentInfoId) {
         List<Automatic> autoList = new ArrayList<>();
         Automatic auto = dto.toEntity();
         autoList.add(auto);
         automaticRepository.save(auto);
-        Optional<PaymentInfo> list = paymentInfoRepository.findById(paymentInfoDto.getId());
+        Optional<PaymentInfo> list = paymentInfoRepository.findById(paymentInfoId);
 
         if (list.isPresent()) {
             PaymentInfo paymentInfo = list.get();
