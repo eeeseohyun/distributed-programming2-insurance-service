@@ -7,9 +7,11 @@ import com.example.insuranceservice.domain.insurance.dto.InsuranceDto;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import com.example.insuranceservice.exception.DuplicateIDException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("api/insurances")
 @RestController
@@ -35,11 +37,12 @@ public class InsuranceController {
     }
     // 상품을 개발한다.
     @PostMapping("/create")
-    private String createInsurance(@RequestBody InsuranceDto insuranceDto){
+    public ResponseEntity<?> createInsurance(@RequestBody InsuranceDto insuranceDto){
         try {
-            return insuranceService.createInsurance(insuranceDto);
+            Insurance insurance = insuranceService.createInsurance(insuranceDto);
+            return ResponseEntity.ok(Map.of("insuranceID", insurance.getInsuranceID())); // 보험 ID 반환
         } catch (DuplicateIDException e) {
-            return e.toString();
+            return ResponseEntity.status(409).body(e.getMessage());
         }
     }
     // 상품을 개발한다. - 차 보험 디테일

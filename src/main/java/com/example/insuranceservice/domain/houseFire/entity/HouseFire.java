@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Builder
 @Slf4j
-
 public class HouseFire {
     @Id
     private int houseFireId;
