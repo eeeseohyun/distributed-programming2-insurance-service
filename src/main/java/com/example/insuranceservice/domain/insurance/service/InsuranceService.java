@@ -69,6 +69,7 @@ public class InsuranceService {
         List<InsuranceDto> dtoList = new ArrayList<>();
         for(Insurance insurance : list){
             InsuranceDto dto = insurance.toDto();
+            dtoList.add(dto);
         }
         return dtoList;
     }
