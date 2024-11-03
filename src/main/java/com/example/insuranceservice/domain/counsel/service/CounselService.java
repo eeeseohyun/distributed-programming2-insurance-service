@@ -10,6 +10,7 @@ import com.example.insuranceservice.domain.employee.service.EmployeeService;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import com.example.insuranceservice.global.constant.Constant;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -98,7 +99,7 @@ public class CounselService {
     }
 
     // 상담 일정 확정
-    public String confirmCounsel(Integer counselId, Integer employeeId) {
+    public ResponseEntity<String> confirmCounsel(Integer counselId, Integer employeeId) {
         Counsel counsel = findCounselById(counselId);
         Employee employee = employeeService.findEmployeeById(employeeId);
 
@@ -108,7 +109,7 @@ public class CounselService {
         counsel.setStatusOfCounsel(true);
         counsel.setEmployee(employee);
         counselRepository.save(counsel);
-        return "상담 일정이 확정되었습니다.";
+        return ResponseEntity.ok("상담 일정이 확정되었습니다.");
     }
     ////
 
@@ -152,6 +153,7 @@ public class CounselService {
             counselDto.setInsuranceType(counsel.getInsuranceType());
             counselDto.setTimeOfCounsel(counsel.getTimeOfCounsel());
             counselDto.setDateOfCounsel(counsel.getDateOfCounsel());
+            counselDto.setStatusOfCounsel(counsel.getStatusOfCounsel());
             counselList.add(counselDto);
         }
         return counselList;

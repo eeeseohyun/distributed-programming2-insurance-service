@@ -239,7 +239,7 @@ public class ContractService {
 
     //// 보험 상품 종류 카테고리
     // 보험 가입 신청
-    public String requestContract(ContractRequestDto contractRequestDto) {
+    public String requestContract(Integer customerId, ContractRequestDto contractRequestDto) {
         Contract contract = new Contract();
         List<PaymentInfo> paymentInfoList = new ArrayList<>();
         for(PaymentInfoRequestDto paymentInfoDto : contractRequestDto.getPaymentInfoRequestDtoList()){
@@ -285,10 +285,10 @@ public class ContractService {
             }
             paymentInfoList.add(paymentInfo);
         }
-        contract.setCustomer(customerService.findCustomerById(contractRequestDto.getCustomerId()));
+        contract.setCustomer(customerService.findCustomerById(customerId));
         contract.setExpirationDate(contractRequestDto.getExpirationDate());
         contract.setInsurance(insuranceService.findInsuranceById(contractRequestDto.getInsuranceId()));
-        contract.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateFormat)));
+        contract.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateTimeFormat)));
         contract.setIsConcluded(false);
         contract.setIsPassUW(false);
         contract.setContractStatus(Constant.contractStatus1);
@@ -367,6 +367,7 @@ public class ContractService {
             contractDto.setId(contract.getId());
             contractDto.setInsuranceName(contract.getInsurance().getInsuranceName());
             contractDto.setCustomerId(contract.getCustomer().getCustomerID());
+            contractDto.setContractStatus(contract.getContractStatus());
             contractDtoList.add(contractDto);
         }
         return contractDtoList;

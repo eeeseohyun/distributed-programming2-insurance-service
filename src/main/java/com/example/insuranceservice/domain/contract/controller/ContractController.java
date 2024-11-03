@@ -54,9 +54,9 @@ public class ContractController {
 
     //// 보험 상품 종류 카테고리
     // 보험 가입 신청
-    @PostMapping("/request")
-    public String requestContract(@RequestBody ContractRequestDto contractRequestDto){
-        return contractService.requestContract(contractRequestDto);
+    @PostMapping("/request/{customerId}")
+    public String requestContract(@PathVariable Integer customerId, @RequestBody ContractRequestDto contractRequestDto){
+        return contractService.requestContract(customerId, contractRequestDto);
     }
 
     //// 계약체결 카테고리 - 계약을 체결한다.

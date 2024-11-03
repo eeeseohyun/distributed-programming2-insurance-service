@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class ContractRequestDto {
     // 계약 신청 정보
-    private Integer customerId;
+//    private Integer customerId;
     private String expirationDate;
     private Integer insuranceId;
 
