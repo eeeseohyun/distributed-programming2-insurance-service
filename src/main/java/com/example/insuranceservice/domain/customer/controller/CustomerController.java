@@ -1,5 +1,6 @@
 package com.example.insuranceservice.domain.customer.controller;
 import com.example.insuranceservice.domain.customer.dto.CustomerDTO;
+import com.example.insuranceservice.domain.customer.dto.ShowCustomerList;
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/retrieve")
-    public ResponseEntity<List<CustomerDTO>> retrieveCustomer() {
-        List<CustomerDTO> customers = customerService.retrieveCustomer();
+    public ResponseEntity<List<ShowCustomerList>> retrieveCustomer() {
+        List<ShowCustomerList> customers = customerService.retrieveCustomer();
         return ResponseEntity.ok(customers);
     }
     @PutMapping("/update/{customerId}")
