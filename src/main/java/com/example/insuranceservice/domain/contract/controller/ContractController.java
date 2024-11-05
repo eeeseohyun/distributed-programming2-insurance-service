@@ -1,9 +1,7 @@
 package com.example.insuranceservice.domain.contract.controller;
 
-import com.example.insuranceservice.domain.contract.dto.ContractDto;
+import com.example.insuranceservice.domain.contract.dto.*;
 import com.example.insuranceservice.domain.contract.service.ContractService;
-import com.example.insuranceservice.domain.contract.dto.ContractDetailDto;
-import com.example.insuranceservice.domain.contract.dto.ContractRequestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,14 +71,14 @@ public class ContractController {
     }
 
     @GetMapping("/showPermitedUnderwriteContractList")
-    public ResponseEntity<List<ContractDto>> showPermitedUnderwriteContractList() {
-        List<ContractDto> contracts = contractService.showPermitedUnderwriteContractList();
+    public ResponseEntity<List<ShowPermitedUnderwriteContractDto>> showPermitedUnderwriteContractList() {
+        List<ShowPermitedUnderwriteContractDto> contracts = contractService.showPermitedUnderwriteContractList();
         return ResponseEntity.ok(contracts);
     }
 
     @GetMapping("/showRejectedUnderwriteContractList")
-    public ResponseEntity<List<ContractDto>> showRejectedUnderwriteContractList() {
-        List<ContractDto> contracts = contractService.showRejectedUnderwriteContractList();
+    public ResponseEntity<List<ShowRejectedUnderwriteContractDto>> showRejectedUnderwriteContractList() {
+        List<ShowRejectedUnderwriteContractDto> contracts = contractService.showRejectedUnderwriteContractList();
         return ResponseEntity.ok(contracts);
     }
     ////
@@ -92,9 +90,13 @@ public class ContractController {
         return ResponseEntity.ok(message);
     }
     @GetMapping("/showRequestedUnderwriteContractList")
-    public ResponseEntity<List<ContractDto>> showRequestedUnderwriteContractList() {
-        List<ContractDto> contracts = contractService.showRequestedUnderwriteContractList();
+    public ResponseEntity<List<ShowRequestedUnderwriteContractDto>> showRequestedUnderwriteContractList() {
+        List<ShowRequestedUnderwriteContractDto> contracts = contractService.showRequestedUnderwriteContractList();
         return ResponseEntity.ok(contracts);
+    }
+    @GetMapping("/showUnderwritingContractAndCustomer/{contractId}")
+    public ShowUnderwritingContractAndCustomerDto showUnderwritingContractAndCustomer(@PathVariable Integer contractId) {
+        return contractService.showUnderwritingContractAndCustomer(contractId);
     }
     @PostMapping("/processUnderwriting")
     public ResponseEntity<String> processUnderwriting(@RequestParam Integer contractId, @RequestParam String evaluation, @RequestParam boolean approve) {
@@ -102,8 +104,8 @@ public class ContractController {
         return ResponseEntity.ok(message);
     }
     @GetMapping("/showUnderwritedContractList")
-    public ResponseEntity<List<ContractDto>> showUnderwritedContractList() {
-        List<ContractDto> contracts = contractService.showUnderwritedContractList();
+    public ResponseEntity<List<ShowUnderwritedContractDto>> showUnderwritedContractList() {
+        List<ShowUnderwritedContractDto> contracts = contractService.showUnderwritedContractList();
         return ResponseEntity.ok(contracts);
     }
     ////

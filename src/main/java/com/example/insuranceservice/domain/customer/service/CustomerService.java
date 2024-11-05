@@ -1,6 +1,7 @@
 package com.example.insuranceservice.domain.customer.service;
 
 import com.example.insuranceservice.domain.customer.dto.CustomerDTO;
+import com.example.insuranceservice.domain.customer.dto.ShowCustomerList;
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
 import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
@@ -46,9 +47,9 @@ public class CustomerService {
         customer.setMedicalHistories(medicalHistories);
         customerRepository.save(customer);
     }
-    public List<CustomerDTO> retrieveCustomer() {
+    public List<ShowCustomerList> retrieveCustomer() {
         List<Customer> customers = customerRepository.findAll();
-        return customers.stream().map(CustomerDTO::new).collect(Collectors.toList());
+        return customers.stream().map(ShowCustomerList::new).collect(Collectors.toList());
     }
 
     public void updateCustomer(Integer customerId, CustomerDTO customerDTO) {

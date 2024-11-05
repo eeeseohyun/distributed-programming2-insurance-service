@@ -1,5 +1,4 @@
 package com.example.insuranceservice.domain.contract.service;
-
 import com.example.insuranceservice.domain.InternationalTravel.dto.InternationalTravelDto;
 import com.example.insuranceservice.domain.automatic.dto.AutomaticRequestDto;
 import com.example.insuranceservice.domain.automatic.entity.Automatic;
@@ -9,15 +8,15 @@ import com.example.insuranceservice.domain.cancerHealth.dto.CancerHealthDto;
 import com.example.insuranceservice.domain.car.dto.CarDto;
 import com.example.insuranceservice.domain.card.dto.CardRequestDto;
 import com.example.insuranceservice.domain.card.entity.Card;
-import com.example.insuranceservice.domain.contract.dto.ContractDetailDto;
-import com.example.insuranceservice.domain.contract.dto.ContractDto;
-import com.example.insuranceservice.domain.contract.dto.ContractRequestDto;
+import com.example.insuranceservice.domain.contract.dto.*;
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.contract.repository.ContractRepository;
 import com.example.insuranceservice.domain.customer.entity.Customer;
+import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
 import com.example.insuranceservice.domain.customer.service.CustomerService;
 import com.example.insuranceservice.domain.houseFire.dto.HouseFireDto;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
+import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRequestDto;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import com.example.insuranceservice.exception.DuplicateIDException;
@@ -41,11 +40,13 @@ public class ContractService {
     private ContractRepository contractRepository;
     private CustomerService customerService;
     private InsuranceService insuranceService;
+    private CustomerRepository customerRepository;
 
-    public ContractService(ContractRepository contractRepository, CustomerService customerService, InsuranceService insuranceService) {
+    public ContractService(ContractRepository contractRepository, CustomerService customerService, InsuranceService insuranceService, CustomerRepository customerRepository) {
         this.contractRepository = contractRepository;;
         this.customerService = customerService;
         this.insuranceService = insuranceService;
+        this.customerRepository = customerRepository;
     }
 
     // 미납관리한다.
@@ -127,9 +128,9 @@ public class ContractService {
         else return "[error] 배서가 반영 되지 않았습니다!";
     }
     //// 계약체결 카테고리 - 계약을 체결한다.
-    public List<ContractDto> showPermitedUnderwriteContractList() {
+    public List<ShowPermitedUnderwriteContractDto> showPermitedUnderwriteContractList() {
         List<Contract> permitContracts = contractRepository.findByContractStatus("ContractPermission");
-        return permitContracts.stream().map(ContractDto::new).collect(Collectors.toList());
+        return permitContracts.stream().map(ShowPermitedUnderwriteContractDto::new).collect(Collectors.toList());
     }
     public String concludeContract(Integer contractId, boolean approve) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
@@ -149,9 +150,9 @@ public class ContractService {
             return "[error] 해당 계약 id를 찾을 수 없습니다.";
         }
     }
-    public List<ContractDto> showRejectedUnderwriteContractList() {
+    public List<ShowRejectedUnderwriteContractDto> showRejectedUnderwriteContractList() {
         List<Contract> rejectedContracts = contractRepository.findByContractStatus("ReviewReject");
-        return rejectedContracts.stream().map(ContractDto::new).collect(Collectors.toList());
+        return rejectedContracts.stream().map(ShowRejectedUnderwriteContractDto::new).collect(Collectors.toList());
     }
     public String requestReUnderwriting(Integer contractId) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
@@ -167,10 +168,11 @@ public class ContractService {
     ////
 
     //// 인수심사 카테고리 - 계약의 인수심사를 하다, 계약 진행을 허가한다.
-    public List<ContractDto> showUnderwritedContractList() {
+    public List<ShowUnderwritedContractDto> showUnderwritedContractList() {
         List<Contract> contracts = contractRepository.findByContractStatus("ReviewPermit");
-        return contracts.stream().map(ContractDto::new).collect(Collectors.toList());
+        return contracts.stream().map(ShowUnderwritedContractDto::new).collect(Collectors.toList());
     }
+    // 여기에 나중에 contractid입력하면 그 정보 뜨게 수정해야함
     public String permitContract(Integer contractId, boolean approve) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
         if (contractOptional.isPresent()) {
@@ -186,9 +188,36 @@ public class ContractService {
             return "[error] 해당 계약 ID를 찾을 수 없습니다.";
         }
     }
-    public List<ContractDto> showRequestedUnderwriteContractList() {
+    public List<ShowRequestedUnderwriteContractDto> showRequestedUnderwriteContractList() {
         List<Contract> contracts = contractRepository.findByContractStatus("ReviewRequest");
-        return contracts.stream().map(ContractDto::new).collect(Collectors.toList());
+        return contracts.stream().map(ShowRequestedUnderwriteContractDto::new).collect(Collectors.toList());
+    }
+    public ShowUnderwritingContractAndCustomerDto showUnderwritingContractAndCustomer(Integer contractId) {
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new RuntimeException("[error] 해당 계약을 찾을 수 없습니다.]"));
+        Customer customer = customerRepository.findById(contract.getCustomer().getCustomerID())
+                .orElseThrow(() -> new RuntimeException("[error] 해당 고객을 찾을 수 없습니다."));
+
+        MedicalHistory medicalHistory = customer.getMedicalHistories().isEmpty() ? null : customer.getMedicalHistories().get(0);
+
+        return ShowUnderwritingContractAndCustomerDto.builder()
+                .contractId(contract.getId())
+                .createdDate(contract.getCreatedDate())
+                .createContractEID(contract.getConcludedEID())
+                .contractStatus(contract.getContractStatus())
+                .insuranceId(contract.getInsurance().getInsuranceID())
+                .customerName(customer.getName())
+                .customerPhone(customer.getPhone())
+                .customerEmail(customer.getEmail())
+                .customerAddress(customer.getAddress())
+                .birthDate(customer.getBirthDate())
+                .customerHeight(customer.getHeight())
+                .customerWeight(customer.getWeight())
+                .customerAge(customer.getAge())
+                .curePeriod(medicalHistory != null ? medicalHistory.getCurePeriod() : null)
+                .diseasesName(medicalHistory != null ? medicalHistory.getDiseasesName() : null)
+                .isCured(medicalHistory != null && medicalHistory.isCured())
+                .build();
     }
     public String processUnderwriting(Integer contractId, String evaluation, boolean approve) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
@@ -227,9 +256,16 @@ public class ContractService {
         contract.setResurrectionDate(contractDto.getResurrectionDate());
         contract.setResurrectionReason(contractDto.getResurrectionReason());
         contract.setUnderwritingEID(contractDto.getUnderwritingEID());
+
+        // Optional에서 Customer 객체를 꺼내서 설정
+        Customer customer = customerRepository.findById(contractDto.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Customer not found with ID: " + contractDto.getCustomerId()));
+        contract.setCustomer(customer);
+
         contractRepository.save(contract);
         return "계약이 성공적으로 생성되었습니다.";
     }
+
 
     private Contract findContractById(Integer contractId){
         Optional<Contract> contract = contractRepository.findById(contractId);
@@ -372,5 +408,4 @@ public class ContractService {
         }
         return contractDtoList;
     }
-
 }
