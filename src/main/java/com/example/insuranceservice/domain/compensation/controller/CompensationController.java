@@ -1,6 +1,8 @@
 package com.example.insuranceservice.domain.compensation.controller;
 
 import com.example.insuranceservice.domain.compensation.dto.BillDTO;
+import com.example.insuranceservice.domain.compensation.dto.CompensationDTO;
+import com.example.insuranceservice.domain.compensation.dto.CompensationUpdateDTO;
 import com.example.insuranceservice.domain.compensation.dto.LossDto;
 import com.example.insuranceservice.domain.compensation.entity.Compensation;
 import com.example.insuranceservice.domain.compensation.service.CompensationService;
@@ -36,7 +38,7 @@ public class CompensationController {
     }
     // 보상 신청
     @PostMapping("/createCompensation")
-    public String createCompensation(@RequestBody Compensation compensation) {
+    public String createCompensation(@RequestBody CompensationDTO compensation) {
         try {
             return compensationService.createCompensation(compensation);
         } catch (DuplicateIDException e) {
@@ -45,9 +47,9 @@ public class CompensationController {
     }
     // 보상 수정
     @PutMapping("/{compensationID}")
-    public String updateCompensation(@PathVariable int compensationID, @RequestBody Compensation compensation) {
+    public String updateCompensation( @RequestBody CompensationUpdateDTO compensation) {
         try {
-            return compensationService.updateCompensation(compensationID, compensation);
+            return compensationService.updateCompensation(compensation);
         } catch (NotFoundProfileException e) {
             return e.toString();
         }

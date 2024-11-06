@@ -11,7 +11,7 @@ import com.example.insuranceservice.domain.car.repository.CarRepository;
 import com.example.insuranceservice.domain.houseFire.dto.HouseFireDto;
 import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
 import com.example.insuranceservice.domain.houseFire.repository.HouseFireRepository;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceDto;
+import com.example.insuranceservice.domain.insurance.dto.*;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
 import com.example.insuranceservice.exception.DuplicateIDException;
@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.insuranceservice.global.constant.Constant.*;
 
 @Service
 public class InsuranceService {
@@ -54,77 +56,81 @@ public class InsuranceService {
         else
            throw new RuntimeException("존재하지 않는 보험 상품 ID");
     }
-    // 상품을 개발한다.
-    public Insurance createInsurance(InsuranceDto insuranceDto) throws DuplicateIDException {
-        Insurance insurance = insuranceRepository.save(insuranceDto.toEntity());
-        if (insurance != null) {
-            return insurance;
-        } else {
-            throw new DuplicateIDException();
-        }
-    }
-    // 상품을 조회한다.
+
     public List<InsuranceDto> getAllInsurance() {
         List<Insurance> list = insuranceRepository.findAll();
         List<InsuranceDto> dtoList = new ArrayList<>();
         for(Insurance insurance : list){
-            InsuranceDto dto = insurance.toDto();
-            dtoList.add(dto);
+            if(insurance.getCategory().equals(CarInsurance)){
+                int carId =insurance.getCar().getCarId();
+                Optional<Car> car = carRepository.findById(carId);
+                if(!car.isPresent()){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
+                InsuranceCarRequestDto dto = insurance.toCarDto(car.get());
+                dtoList.add(dto);
+            }else if(insurance.getCategory().equals(CancerHealthInsurance)){
+                int cancerId =insurance.getCancerHealth().getCancerId();
+                Optional<CancerHealth> cancer = cancerHealthRepository.findById(cancerId);
+                if(!cancer.isPresent()){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
+                InsuranceCancerRequestDto dto = insurance.toCancerDto(cancer.get());
+                dtoList.add(dto);
+            }else if(insurance.getCategory().equals(HouseFireInsurance)){
+                int houseFireId =insurance.getHouseFire().getHouseFireId();
+                Optional<HouseFire> houseFire = houseFireRepository.findById(houseFireId);
+                if(!houseFire.isPresent()){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
+                InsuranceHouseFireRequestDto dto = insurance.toHouseFireDto(houseFire.get());
+                dtoList.add(dto);
+            }else if(insurance.getCategory().equals(InternationalTravelInsurance)){
+                int internationalId =insurance.getInternationalTravel().getTravelId();
+                Optional<InternationalTravel> internationalTravel = internationalRepository.findById(internationalId);
+                if(!internationalTravel.isPresent()){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
+                InsuranceInternationalRequestDto dto = insurance.toInternationalDto(internationalTravel.get());
+                dtoList.add(dto);
+            }else{
+                throw new RuntimeException("존재하지 않는 보험 상품 종류입니다");
+            }
         }
         return dtoList;
     }
     // 상품을 개발한다. - 차 보험
-    public String createCarInsurance(CarDto carDto, int insuranceId) {
-        Car car = carDto.toEntity();
-        Car response =carRepository.save(car);
-        Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
+    public String createCarInsurance(InsuranceCarRequestDto dto) {
+        Car car = dto.TocarEntity();
+        Insurance insurance = dto.toInsuranceEntity(car);
 
-        if (insurancelist.isPresent()) {
-            Insurance insurance = insurancelist.get();
-            insurance.setCar(car);
-        }
-        if(response!=null) return "[success] 성공적으로 차 보험 상품이 생성되었습니다!";
+        Car response =carRepository.save(car);
+        Insurance insuranceResponse=insuranceRepository.save(insurance);
+        if(response!=null&&insuranceResponse!=null) return "[success] 성공적으로 차 보험 상품이 생성되었습니다!";
         else throw new NullPointerException();
     }
     // 상품을 개발한다. - 암 보험
     // 암 보험 생성
-    public String createCancerInsurance(CancerHealthDto cancerHealthDto, int insuranceId) {
-        CancerHealth cancerHealth = cancerHealthDto.toEntity();
-        CancerHealth response = cancerHealthRepository.save(cancerHealth);
+    public String createCancerInsurance(InsuranceCancerRequestDto dto) {
+        CancerHealth cancerHealth = dto.toCancerEntity();
+        Insurance insurance = dto.toInsuranceEntity(cancerHealth);
 
-        Optional<Insurance> optionalInsurance = insuranceRepository.findById(insuranceId);
-        if (optionalInsurance.isPresent()) {
-            Insurance insurance = optionalInsurance.get();
-            insurance.setCancerHealth(cancerHealth);
-            insuranceRepository.save(insurance); // 변경된 Insurance 엔티티 저장
-        }
+        CancerHealth response =cancerHealthRepository.save(cancerHealth);
+        Insurance insuranceResponse=insuranceRepository.save(insurance);
+        if(response!=null&&insuranceResponse!=null) return "[success] 성공적으로 암 보험 상품이 생성되었습니다!";
+        else throw new NullPointerException();
 
-        return "[success] 성공적으로 암 보험 상품이 생성되었습니다!";
     }
     // 상품을 개발한다. - 화재 보험
-    public String createHousefireInsurance(HouseFireDto houseFireDto, int insuranceId) {
-        HouseFire houseFire = houseFireDto.toEntity();
+    public String createHousefireInsurance(InsuranceHouseFireRequestDto dto) {
+        HouseFire houseFire = dto.toHouseFireEntity();
+        Insurance insurance = dto.toInsuranceEntity(houseFire);
+        
         HouseFire response = houseFireRepository.save(houseFire);
-        Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
-
-        if (insurancelist.isPresent()) {
-            Insurance insurance = insurancelist.get();
-            insurance.setHouseFire(houseFire);
-        }
-        if(response!=null) return "[success] 성공적으로 화재 보험 상품이 생성되었습니다!";
+        Insurance insuranceResponse=insuranceRepository.save(insurance);
+        if(response!=null&&insuranceResponse!=null) return "[success] 성공적으로 화재 보험 상품이 생성되었습니다!";
         else throw new NullPointerException();
     }
     // 상품을 개발한다. - 여행 보험
-    public String createInternationalInsurance(InternationalTravelDto internationalDto, int insuranceId) {
-        InternationalTravel internationalTravel = internationalDto.toEntity();
-        InternationalTravel response =internationalRepository.save(internationalTravel);
-        Optional<Insurance> insurancelist = insuranceRepository.findById(insuranceId);
+    public String createInternationalInsurance(InsuranceInternationalRequestDto dto) {
+        InternationalTravel internationalTravel = dto.toInternationalEntity();
+        Insurance insurance = dto.toInsuranceEntity(internationalTravel);
 
-        if (insurancelist.isPresent()) {
-            Insurance insurance = insurancelist.get();
-            insurance.setInternationalTravel(internationalTravel);
-        }
-        if(response!=null) return "[success] 성공적으로 여행 보험 상품이 생성되었습니다!";
+        InternationalTravel response = internationalRepository.save(internationalTravel);
+        Insurance insuranceResponse=insuranceRepository.save(insurance);
+        if(response!=null&&insuranceResponse!=null) return "[success] 성공적으로 여행 보험 상품이 생성되었습니다!";
         else throw new NullPointerException();
     }
 
