@@ -22,4 +22,9 @@ public class HouseFireDto {
                 .priceOfHouse(this.priceOfHouse)
                 .build();
     }
+
+    public HouseFireDto(HouseFire houseFire) {
+        this.categoryOfHouse = houseFire.getCategoryOfHouse();
+        this.priceOfHouse = houseFire.getPriceOfHouse();
+    }
 }

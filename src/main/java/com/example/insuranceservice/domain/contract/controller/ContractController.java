@@ -119,13 +119,13 @@ public class ContractController {
     //// 보유 계약 조회 카테고리
     // 보유 계약 조회
     @GetMapping("/concluded/{customerId}")
-    public List<ContractDto> showConcludedContractList(@PathVariable Integer customerId){
+    public List<ConcludedContractDto> showConcludedContractList(@PathVariable Integer customerId){
         return contractService.showConcludedContractList(customerId);
     }
 
     // 신청한 계약 조회
     @GetMapping("/requested/{customerId}")
-    public List<ContractDto> showRequestedContractList(@PathVariable Integer customerId){
+    public List<RequestedContractDto> showRequestedContractList(@PathVariable Integer customerId){
         return contractService.showRequestedContractList(customerId);
     }
 
