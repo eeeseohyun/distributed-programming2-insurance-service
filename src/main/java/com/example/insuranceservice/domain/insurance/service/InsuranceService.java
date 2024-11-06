@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.example.insuranceservice.global.constant.Constant.*;
 
@@ -41,12 +42,16 @@ public class InsuranceService {
         this.insuranceRepository = insuranceRepository;
     }
 
-    public List<Insurance> showInsuranceTypeList(String category) {
-        return insuranceRepository.findByCategory(category);
+    public List<InsuranceCategoryViewDto> showInsuranceTypeList(String category) {
+        List<Insurance> insuranceList = insuranceRepository.findByCategory(category);
+        return insuranceList.stream()
+                .map(InsuranceCategoryViewDto::new)
+                .collect(Collectors.toList());
     }
 
-    public Insurance showInsuranceDetail(Integer insuranceId) {
-        return findInsuranceById(insuranceId);
+    public InsuranceDetailDto showInsuranceDetail(Integer insuranceId) {
+        Insurance insurance = findInsuranceById(insuranceId);
+        return new InsuranceDetailDto(insurance);
     }
 
     public Insurance findInsuranceById(Integer insuranceId) {
