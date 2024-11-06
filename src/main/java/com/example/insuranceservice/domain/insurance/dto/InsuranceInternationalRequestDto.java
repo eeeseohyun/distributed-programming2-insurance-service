@@ -1,9 +1,7 @@
 package com.example.insuranceservice.domain.insurance.dto;
 
+import com.example.insuranceservice.domain.InternationalTravel.entity.InternationalTravel;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,19 +13,18 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Builder
 @Slf4j
-public class InsuranceDto {
-    private String insuranceName;
-    private String category;
-    private int insuranceRate;
-    private int minimumPeriod;
-    private int minimumPremium;
-    private String notice;
-    private String processOfCompensation;
-    private String processOfSubscription;
-    protected SpecialProvision specialProvision;
-    protected Guarantee guarantee;
+public class InsuranceInternationalRequestDto extends InsuranceDto{
+    private String travelCountry;
+    private int travelPeriod;
 
-    public Insurance toEntity() {
+    public InternationalTravel toInternationalEntity() {
+        return InternationalTravel.builder()
+                .travelCountry(this.travelCountry)
+                .travelPeriod(this.travelPeriod)
+                .build();
+    }
+
+    public Insurance toInsuranceEntity(InternationalTravel internationalTravel) {
         return Insurance.builder()
                 .insuranceName(this.getInsuranceName())
                 .category(this.getCategory())
@@ -42,7 +39,7 @@ public class InsuranceDto {
                 .guaranteeName(this.guarantee.getGuaranteeName())
                 .maxCoverage(this.guarantee.getMaxCoverage())
                 .guaranteeDescription(this.guarantee.getGuaranteeDescription())
+                .InternationalTravel(internationalTravel)
                 .build();
-        }
-
+    }
 }
