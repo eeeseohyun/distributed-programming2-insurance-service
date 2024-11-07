@@ -4,7 +4,7 @@ import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import lombok.Data;
 
 @Data
-public class InsuranceDetailDto {
+public class InsuranceDetailDto{
     private Integer insuranceID;
     private String insuranceName;
     private String category;
