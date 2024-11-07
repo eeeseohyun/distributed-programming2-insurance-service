@@ -1,5 +1,6 @@
 package com.example.insuranceservice.domain.counsel.service;
 
+import com.example.insuranceservice.domain.contract.dto.ConcludedContractDto;
 import com.example.insuranceservice.domain.counsel.dto.*;
 import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import com.example.insuranceservice.domain.counsel.repository.CounselRepository;
@@ -18,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CounselService {
@@ -34,7 +36,7 @@ public class CounselService {
     }
 
     // 상담 신청
-    public CounselDto createCounsel(CounselRequestDto counselRequestDto) {
+    public String createCounsel(CounselRequestDto counselRequestDto) {
         Counsel counsel = new Counsel();
         counsel.setInsuranceType(counselRequestDto.getInsuranceType());
         counsel.setTimeOfCounsel(counselRequestDto.getTimeOfCounsel());
@@ -42,16 +44,9 @@ public class CounselService {
         Customer customer = findCustomerById(counselRequestDto.getCustomerId());
         counsel.setCustomer(customer);
         counsel.setStatusOfCounsel(false);
-        Counsel savedCounsel = counselRepository.save(counsel);
+        counselRepository.save(counsel);
 
-        CounselDto counselDto = new CounselDto();
-        counselDto.setCounselId(savedCounsel.getCounselId());
-        counselDto.setInsuranceType(savedCounsel.getInsuranceType());
-        counselDto.setTimeOfCounsel(savedCounsel.getTimeOfCounsel());
-        counselDto.setDateOfCounsel(savedCounsel.getDateOfCounsel());
-        counselDto.setCustomerId(savedCounsel.getCustomer().getCustomerID());
-
-        return counselDto;
+        return "[success] 상담 신청이 완료되었습니다.";
     }
 
     private Customer findCustomerById(Integer customerId) {
@@ -62,40 +57,29 @@ public class CounselService {
     }
 
     // 상담 신청 내역 조회
-    public List<CounselDto> showCounselList(Integer customerId) {
+    public List<CustomerRequestedCounselDto> showCounselList(Integer customerId) {
         Customer customer = findCustomerById(customerId);
-        List<CounselDto> counselList = new ArrayList<>();
-        for(Counsel counsel: counselRepository.findByCustomer(customer)){
-            CounselDto counselDto = new CounselDto();
-            counselDto.setCounselId(counsel.getCounselId());
-            counselDto.setCounselDetail(counsel.getCounselDetail());
-            counselDto.setNote(counsel.getNote());
-            counselDto.setDateOfCounsel(counsel.getDateOfCounsel());
-            counselDto.setInsuranceType(counsel.getInsuranceType());
-            counselDto.setStatusOfCounsel(counsel.getStatusOfCounsel());
-            counselDto.setTimeOfCounsel(counsel.getTimeOfCounsel());
-            if(counsel.getEmployee() != null)
-                counselDto.setEmployeeId(counsel.getEmployee().getEmployeeId());
-            else
-                counselDto.setEmployeeId(null);
-            counselDto.setCustomerId(counsel.getCustomer().getCustomerID());
-
-            counselList.add(counselDto);
-        }
-        return counselList;
+        List<Counsel> counselList = counselRepository.findByCustomer(customer);
+        return counselList.stream()
+                .map(CustomerRequestedCounselDto::new)
+                .collect(Collectors.toList());
     }
 
     //// 상담신청 일정 관리 카테고리
     // 신청된 상담 일정 조회
-    public List<CounselDto> showRequestedCounselList() {
+    public List<RequestedCounselDto> showRequestedCounselList() {
         List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(false);
-        return getCounselDtoList(requestedCounselList);
+        return requestedCounselList.stream()
+                .map(RequestedCounselDto::new)
+                .collect(Collectors.toList());
     }
 
     // 확정된 상담 일정 조회
-    public List<CounselDto> showConfirmedCounselList() {
-        List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(true);
-        return getCounselDtoList(requestedCounselList);
+    public List<ConfirmedCounselDto> showConfirmedCounselList() {
+        List<Counsel> confirmedCounselList = counselRepository.findByStatusOfCounsel(true);
+        return confirmedCounselList.stream()
+                .map(ConfirmedCounselDto::new)
+                .collect(Collectors.toList());
     }
 
     // 상담 일정 확정
@@ -115,10 +99,12 @@ public class CounselService {
 
     //// 상담 내역 관리 카테고리
     // 상담 내역 조회
-    public List<CounselDto> showConsultedCounselList(Integer employeeId) {
+    public List<CounselHistoryDto> showConsultedCounselList(Integer employeeId) {
         Employee employee = employeeService.findEmployeeById(employeeId);
         List<Counsel> counselList = counselRepository.findByEmployee(employee);
-        return getCounselDtoList(counselList);
+        return counselList.stream()
+                .map(CounselHistoryDto::new)
+                .collect(Collectors.toList());
     }
 
     // 상담 내용 추가
@@ -142,21 +128,6 @@ public class CounselService {
         counselSuggestDto.setEmployeeName(counsel.getEmployee().getName());
         counselSuggestDto.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateFormat)));
         return counselSuggestDto;
-    }
-
-    private List<CounselDto> getCounselDtoList(List<Counsel> requestedCounselList) {
-        List<CounselDto> counselList = new ArrayList<>();
-        for(Counsel counsel : requestedCounselList){
-            CounselDto counselDto = new CounselDto();
-            counselDto.setCounselId(counsel.getCounselId());
-            counselDto.setCustomerId(counsel.getCustomer().getCustomerID());
-            counselDto.setInsuranceType(counsel.getInsuranceType());
-            counselDto.setTimeOfCounsel(counsel.getTimeOfCounsel());
-            counselDto.setDateOfCounsel(counsel.getDateOfCounsel());
-            counselDto.setStatusOfCounsel(counsel.getStatusOfCounsel());
-            counselList.add(counselDto);
-        }
-        return counselList;
     }
 
     public Counsel findCounselById(Integer counselId) {

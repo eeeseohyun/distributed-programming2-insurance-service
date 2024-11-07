@@ -20,4 +20,8 @@ public class CancerHealthDto {
                 .categoryOfCancer(this.categoryOfCancer)
                 .build();
     }
+
+    public CancerHealthDto(CancerHealth cancerHealth) {
+        this.categoryOfCancer = cancerHealth.getCategoryOfCancer();
+    }
 }

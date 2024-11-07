@@ -26,4 +26,11 @@ public class CarDto {
                 .priceOfCar(this.priceOfCar)
                 .build();
     }
+
+    public CarDto(Car car) {
+        this.hasBlackBox = car.getHasBlackBox();
+        this.vin = car.getVin();
+        this.model = car.getModel();
+        this.priceOfCar = car.getPriceOfCar();
+    }
 }

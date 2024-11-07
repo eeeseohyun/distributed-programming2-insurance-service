@@ -26,13 +26,13 @@ public class InsuranceController {
     //// 보험 상품 종류 카테고리
     // 보험 상품 카테고리별 조회
     @GetMapping("/list/{category}")
-    public List<Insurance> showInsuranceTypeList(@PathVariable String category){
+    public List<InsuranceCategoryViewDto> showInsuranceTypeList(@PathVariable String category){
         return insuranceService.showInsuranceTypeList(category);
     }
 
     // 보험 상품 상세 내용 조회
     @GetMapping("/detail/{id}")
-    public Insurance showInsuranceDetail(@PathVariable Integer id){
+    public InsuranceDetailDto showInsuranceDetail(@PathVariable Integer id){
         return insuranceService.showInsuranceDetail(id);
     }
 

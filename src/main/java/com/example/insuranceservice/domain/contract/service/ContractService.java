@@ -1,11 +1,8 @@
 package com.example.insuranceservice.domain.contract.service;
-import com.example.insuranceservice.domain.InternationalTravel.dto.InternationalTravelDto;
 import com.example.insuranceservice.domain.automatic.dto.AutomaticRequestDto;
 import com.example.insuranceservice.domain.automatic.entity.Automatic;
 import com.example.insuranceservice.domain.bank.dto.BankRequestDto;
 import com.example.insuranceservice.domain.bank.entity.Bank;
-import com.example.insuranceservice.domain.cancerHealth.dto.CancerHealthDto;
-import com.example.insuranceservice.domain.car.dto.CarDto;
 import com.example.insuranceservice.domain.card.dto.CardRequestDto;
 import com.example.insuranceservice.domain.card.entity.Card;
 import com.example.insuranceservice.domain.contract.dto.*;
@@ -14,14 +11,11 @@ import com.example.insuranceservice.domain.contract.repository.ContractRepositor
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
 import com.example.insuranceservice.domain.customer.service.CustomerService;
-import com.example.insuranceservice.domain.houseFire.dto.HouseFireDto;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRequestDto;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
-import com.example.insuranceservice.exception.DuplicateIDException;
 import com.example.insuranceservice.global.constant.Constant;
-import jakarta.validation.constraints.Null;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -335,59 +329,36 @@ public class ContractService {
 
     //// 보유 계약 조회 카테고리
     // 보유 계약 조회
-    public List<ContractDto> showConcludedContractList(Integer customerId) {
+    public List<ConcludedContractDto> showConcludedContractList(Integer customerId) {
         Customer customer = customerService.findCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus5);
-        return getContractDtoList(contractList);
+        return contractList.stream()
+                .map(contract -> new ConcludedContractDto(
+                        contract.getId(),
+                        contract.getInsurance().getInsuranceName(),
+                        contract.getCustomer().getCustomerID(),
+                        contract.getContractStatus()
+                )).collect(Collectors.toList());
     }
 
     // 신청한 계약 조회
-    public List<ContractDto> showRequestedContractList(Integer customerId) {
+    public List<RequestedContractDto> showRequestedContractList(Integer customerId) {
         Customer customer = customerService.findCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus1);
-        return getContractDtoList(contractList);
+        return contractList.stream()
+                .map(contract -> new RequestedContractDto(
+                        contract.getId(),
+                        contract.getInsurance().getInsuranceName(),
+                        contract.getCustomer().getCustomerID()
+                )).collect(Collectors.toList());
     }
 
     // 상세 내용 조회
     public ContractDetailDto showContractDetail(Integer contractId) {
         Contract contract = findContractById(contractId);
-        ContractDetailDto contractDetailDto = new ContractDetailDto();
-        contractDetailDto.setId(contract.getId());
-        contractDetailDto.setInsuranceName(contract.getInsurance().getInsuranceName());
-        contractDetailDto.setCustomerId(contract.getCustomer().getCustomerID());
-        contractDetailDto.setCustomerName(contract.getCustomer().getName());
-        contractDetailDto.setCustomerPhone(contract.getCustomer().getPhone());
-        contractDetailDto.setMonthlyPremium(contract.getMonthlyPremium());
-        contractDetailDto.setCreatedDate(contract.getCreatedDate());
-        contractDetailDto.setExpirationDate(contract.getExpirationDate());
-        contractDetailDto.setContractStatus(contract.getContractStatus());
-        String insuranceCategory = contract.getInsurance().getCategory();
-
-        if (insuranceCategory.equals(Constant.CarInsurance)) {
-            CarDto carDto = new CarDto();
-            carDto.setModel(contract.getInsurance().getCar().getModel());
-            carDto.setPriceOfCar(contract.getInsurance().getCar().getPriceOfCar());
-            contractDetailDto.setCarDto(carDto);
-        }
-        else if(insuranceCategory.equals(Constant.HouseFireInsurance)) {
-            HouseFireDto houseFireDto = new HouseFireDto();
-            houseFireDto.setCategoryOfHouse(contract.getInsurance().getHouseFire().getCategoryOfHouse());
-            houseFireDto.setPriceOfHouse(contract.getInsurance().getHouseFire().getPriceOfHouse());
-            contractDetailDto.setHouseFireDto(houseFireDto);
-        }
-        else if(insuranceCategory.equals(Constant.CancerHealthInsurance)) {
-            CancerHealthDto cancerHealthDto = new CancerHealthDto();
-            cancerHealthDto.setCategoryOfCancer(contract.getInsurance().getCancerHealth().getCategoryOfCancer());
-            contractDetailDto.setCancerHealthDto(cancerHealthDto);
-        }
-        else if(insuranceCategory.equals(Constant.InternationalTravelInsurance)) {
-            InternationalTravelDto internationalTravelDto = new InternationalTravelDto();
-            internationalTravelDto.setTravelCountry(contract.getInsurance().getInternationalTravel().getTravelCountry());
-            internationalTravelDto.setTravelPeriod(contract.getInsurance().getInternationalTravel().getTravelPeriod());
-            contractDetailDto.setInternationalDto(internationalTravelDto);
-        }
-        return contractDetailDto;
+        return new ContractDetailDto(contract);
     }
+
     // 계약을 해지한다
     public String cancelContract(Integer contractId) {
         Contract contract = findContractById(contractId);
@@ -395,17 +366,4 @@ public class ContractService {
         return "계약이 성공적으로 해지되었습니다.";
     }
     ////
-
-    private List<ContractDto> getContractDtoList(List<Contract> contractList) {
-        List<ContractDto> contractDtoList = new ArrayList<>();
-        for(Contract contract : contractList) {
-            ContractDto contractDto = new ContractDto();
-            contractDto.setId(contract.getId());
-            contractDto.setInsuranceName(contract.getInsurance().getInsuranceName());
-            contractDto.setCustomerId(contract.getCustomer().getCustomerID());
-            contractDto.setContractStatus(contract.getContractStatus());
-            contractDtoList.add(contractDto);
-        }
-        return contractDtoList;
-    }
 }

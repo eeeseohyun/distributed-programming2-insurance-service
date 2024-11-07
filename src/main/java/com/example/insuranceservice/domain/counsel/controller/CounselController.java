@@ -2,6 +2,7 @@ package com.example.insuranceservice.domain.counsel.controller;
 
 import com.example.insuranceservice.domain.counsel.dto.*;
 import com.example.insuranceservice.domain.counsel.service.CounselService;
+import com.example.insuranceservice.domain.customer.entity.Customer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,26 +20,26 @@ public class CounselController {
     //// 상담 신청 카테고리
     // 상담 신청
     @PostMapping("/create")
-    public CounselDto createCounsel(@RequestBody CounselRequestDto counselRequestDto){
+    public String createCounsel(@RequestBody CounselRequestDto counselRequestDto){
         return counselService.createCounsel(counselRequestDto);
     }
 
     // 상담 신청 내역 조회
     @GetMapping("/list/{customerId}")
-    public List<CounselDto> showCounselList(@PathVariable Integer customerId){
+    public List<CustomerRequestedCounselDto> showCounselList(@PathVariable Integer customerId){
         return counselService.showCounselList(customerId);
     }
 
     //// 상담신청 일정 관리 카테고리
     // 신청된 상담 일정 조회
     @GetMapping("/requested/list")
-    public List<CounselDto> showRequestedCounselList(){
+    public List<RequestedCounselDto> showRequestedCounselList(){
         return counselService.showRequestedCounselList();
     }
 
     // 확정된 상담 일정 조회
     @GetMapping("/confirmed/list")
-    public List<CounselDto> showConcludedCounselList(){
+    public List<ConfirmedCounselDto> showConcludedCounselList(){
         return counselService.showConfirmedCounselList();
     }
 
@@ -52,7 +53,7 @@ public class CounselController {
     //// 상담 내역 관리 카테고리
     // 상담 내역 조회
     @GetMapping("/consulted/list/{employeeId}")
-    public List<CounselDto> showConsultedCounselList(@PathVariable Integer employeeId){
+    public List<CounselHistoryDto> showConsultedCounselList(@PathVariable Integer employeeId){
         return counselService.showConsultedCounselList(employeeId);
     }
 

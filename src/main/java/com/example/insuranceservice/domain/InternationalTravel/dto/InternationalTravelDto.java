@@ -22,4 +22,9 @@ public class InternationalTravelDto {
                 .travelPeriod(this.travelPeriod)
                 .build();
     }
+
+    public InternationalTravelDto(InternationalTravel internationalTravel) {
+        this.travelCountry = internationalTravel.getTravelCountry();
+        this.travelPeriod = internationalTravel.getTravelPeriod();
+    }
 }
