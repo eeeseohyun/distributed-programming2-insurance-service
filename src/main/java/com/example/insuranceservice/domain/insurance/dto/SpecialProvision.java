@@ -1,5 +1,6 @@
 package com.example.insuranceservice.domain.insurance.dto;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

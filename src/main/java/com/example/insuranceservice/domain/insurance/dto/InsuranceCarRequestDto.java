@@ -13,7 +13,17 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Builder
 @Slf4j
-public class InsuranceCarRequestDto extends InsuranceDto {
+public class InsuranceCarRequestDto  {
+    private String insuranceName;
+    private String category;
+    private int insuranceRate;
+    private int minimumPeriod;
+    private int minimumPremium;
+    private String notice;
+    private String processOfCompensation;
+    private String processOfSubscription;
+    protected SpecialProvision specialProvision;
+    protected Guarantee guarantee;
     private Boolean hasBlackBox;
     private String vin;
     private String model;
