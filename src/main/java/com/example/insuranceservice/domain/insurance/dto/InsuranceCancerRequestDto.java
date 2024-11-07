@@ -13,7 +13,18 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Builder
 @Slf4j
-public class InsuranceCancerRequestDto extends InsuranceDto{
+public class InsuranceCancerRequestDto {
+    private String insuranceName;
+    private String category;
+    private int insuranceRate;
+    private int minimumPeriod;
+    private int minimumPremium;
+    private String notice;
+    private String processOfCompensation;
+    private String processOfSubscription;
+    protected SpecialProvision specialProvision;
+    protected Guarantee guarantee;
+
     private String categoryOfCancer;
 
     public CancerHealth toCancerEntity() {

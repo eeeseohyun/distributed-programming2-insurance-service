@@ -66,25 +66,25 @@ public class InsuranceService {
                 Optional<Car> car = carRepository.findById(carId);
                 if(!car.isPresent()){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
                 InsuranceCarRequestDto dto = insurance.toCarDto(car.get());
-                dtoList.add(dto);
+//                dtoList.add(dto);
             }else if(insurance.getCategory().equals(CancerHealthInsurance)){
                 int cancerId =insurance.getCancerHealth().getCancerId();
                 Optional<CancerHealth> cancer = cancerHealthRepository.findById(cancerId);
                 if(!cancer.isPresent()){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
                 InsuranceCancerRequestDto dto = insurance.toCancerDto(cancer.get());
-                dtoList.add(dto);
+//                dtoList.add(dto);
             }else if(insurance.getCategory().equals(HouseFireInsurance)){
                 int houseFireId =insurance.getHouseFire().getHouseFireId();
                 Optional<HouseFire> houseFire = houseFireRepository.findById(houseFireId);
                 if(!houseFire.isPresent()){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
                 InsuranceHouseFireRequestDto dto = insurance.toHouseFireDto(houseFire.get());
-                dtoList.add(dto);
+//                dtoList.add(dto);
             }else if(insurance.getCategory().equals(InternationalTravelInsurance)){
                 int internationalId =insurance.getInternationalTravel().getTravelId();
                 Optional<InternationalTravel> internationalTravel = internationalRepository.findById(internationalId);
                 if(!internationalTravel.isPresent()){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
                 InsuranceInternationalRequestDto dto = insurance.toInternationalDto(internationalTravel.get());
-                dtoList.add(dto);
+//                dtoList.add(dto);
             }else{
                 throw new RuntimeException("존재하지 않는 보험 상품 종류입니다");
             }
