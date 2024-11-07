@@ -36,113 +36,17 @@ public class Insurance {
     private int maxCoverage;
     private String guaranteeDescription;
     @OneToOne
-    @JoinColumn(name="carId")
+    @JoinColumn(name = "carId")
     private Car car;
     @OneToOne
-    @JoinColumn(name="cancerHealthId")
+    @JoinColumn(name = "cancerHealthId")
     private CancerHealth cancerHealth;
     @OneToOne
-    @JoinColumn(name="internationalTravelId")
+    @JoinColumn(name = "internationalTravelId")
     private com.example.insuranceservice.domain.InternationalTravel.entity.InternationalTravel InternationalTravel;
     @OneToOne
-    @JoinColumn(name="houseFireID")
+    @JoinColumn(name = "houseFireID")
     private HouseFire houseFire;
-    public InsuranceDto toDto() {
-        return InsuranceDto.builder()
-                .insuranceName(this.insuranceName)
-                .category(this.category)
-                .insuranceRate(this.insuranceRate)
-                .minimumPeriod(this.minimumPeriod)
-                .minimumPremium(this.minimumPremium)
-                .notice(this.notice)
-                .processOfCompensation(this.processOfCompensation)
-                .processOfSubscription(this.processOfSubscription)
-//                .rateOfDiscount(this.rateOfDiscount)
-//                .specialProvisionName(this.specialProvisionName)
-//                .guaranteeName(this.guaranteeName)
-//                .maxCoverage(this.maxCoverage)
-//                .guaranteeDescription(this.guaranteeDescription)
-                .build();
-    }
 
-    public InsuranceCarRequestDto toCarDto(Car car) {
-        return InsuranceCarRequestDto.builder()
-//                .insuranceName(this.insuranceName)
-//                .category(this.category)
-//                .insuranceRate(this.insuranceRate)
-//                .minimumPeriod(this.minimumPeriod)
-//                .minimumPremium(this.minimumPremium)
-//                .notice(this.notice)
-//                .processOfCompensation(this.processOfCompensation)
-//                .processOfSubscription(this.processOfSubscription)
-//                .rateOfDiscount(this.rateOfDiscount)
-//                .specialProvisionName(this.specialProvisionName)
-//                .guaranteeName(this.guaranteeName)
-//                .maxCoverage(this.maxCoverage)
-//                .guaranteeDescription(this.guaranteeDescription)
-                .priceOfCar(car.getPriceOfCar())
-                .vin(car.getVin())
-                .model(car.getModel())
-                .hasBlackBox(car.getHasBlackBox())
-                .build();
-    }
 
-    public InsuranceCancerRequestDto toCancerDto(CancerHealth cancerHealth) {
-        return InsuranceCancerRequestDto.builder()
-//                .insuranceName(this.insuranceName)
-//                .category(this.category)
-//                .insuranceRate(this.insuranceRate)
-//                .minimumPeriod(this.minimumPeriod)
-//                .minimumPremium(this.minimumPremium)
-//                .notice(this.notice)
-//                .processOfCompensation(this.processOfCompensation)
-//                .processOfSubscription(this.processOfSubscription)
-//                .rateOfDiscount(this.rateOfDiscount)
-//                .specialProvisionName(this.specialProvisionName)
-//                .guaranteeName(this.guaranteeName)
-//                .maxCoverage(this.maxCoverage)
-//                .guaranteeDescription(this.guaranteeDescription)
-                .categoryOfCancer(cancerHealth.getCategoryOfCancer())
-                .build();
-    }
-
-    public InsuranceHouseFireRequestDto toHouseFireDto(HouseFire houseFire) {
-        return InsuranceHouseFireRequestDto.builder()
-//                .insuranceName(this.insuranceName)
-//                .category(this.category)
-//                .insuranceRate(this.insuranceRate)
-//                .minimumPeriod(this.minimumPeriod)
-//                .minimumPremium(this.minimumPremium)
-//                .notice(this.notice)
-//                .processOfCompensation(this.processOfCompensation)
-//                .processOfSubscription(this.processOfSubscription)
-//                .rateOfDiscount(this.rateOfDiscount)
-//                .specialProvisionName(this.specialProvisionName)
-//                .guaranteeName(this.guaranteeName)
-//                .maxCoverage(this.maxCoverage)
-//                .guaranteeDescription(this.guaranteeDescription)
-                .priceOfHouse(houseFire.getPriceOfHouse())
-                .categoryOfHouse(houseFire.getCategoryOfHouse())
-                .build();
-    }
-
-    public InsuranceInternationalRequestDto toInternationalDto(InternationalTravel internationalTravel) {
-        return InsuranceInternationalRequestDto.builder()
-//                .insuranceName(this.insuranceName)
-//                .category(this.category)
-//                .insuranceRate(this.insuranceRate)
-//                .minimumPeriod(this.minimumPeriod)
-//                .minimumPremium(this.minimumPremium)
-//                .notice(this.notice)
-//                .processOfCompensation(this.processOfCompensation)
-//                .processOfSubscription(this.processOfSubscription)
-//                .rateOfDiscount(this.rateOfDiscount)
-//                .specialProvisionName(this.specialProvisionName)
-//                .guaranteeName(this.guaranteeName)
-//                .maxCoverage(this.maxCoverage)
-//                .guaranteeDescription(this.guaranteeDescription)
-                .travelCountry(internationalTravel.getTravelCountry())
-                .travelPeriod(internationalTravel.getTravelPeriod())
-                .build();
-    }
 }
