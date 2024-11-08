@@ -31,4 +31,9 @@ public class Counsel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    public String isConfirmedCounsel(){
+        if(statusOfCounsel) return "확정됨";
+        else return "대기중";
+    }
 }

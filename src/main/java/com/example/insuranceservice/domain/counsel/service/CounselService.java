@@ -41,9 +41,10 @@ public class CounselService {
         counsel.setInsuranceType(counselRequestDto.getInsuranceType());
         counsel.setTimeOfCounsel(counselRequestDto.getTimeOfCounsel());
         counsel.setDateOfCounsel(counselRequestDto.getDateOfCounsel());
+        counsel.setStatusOfCounsel(false);
+
         Customer customer = findCustomerById(counselRequestDto.getCustomerId());
         counsel.setCustomer(customer);
-        counsel.setStatusOfCounsel(false);
         counselRepository.save(counsel);
 
         return "[success] 상담 신청이 완료되었습니다.";

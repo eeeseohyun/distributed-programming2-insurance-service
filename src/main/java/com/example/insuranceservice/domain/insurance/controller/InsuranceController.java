@@ -36,6 +36,11 @@ public class InsuranceController {
         return insuranceService.showInsuranceDetail(id);
     }
 
+    @GetMapping("/retrieve/{id}")
+    public InsuranceRetrieveDto retrieveInsurance(@PathVariable Integer id){
+        return insuranceService.retrieveInsurance(id);
+    }
+
     // 상품을 개발한다. - 차 보험 디테일
     @PostMapping("/createCar")
     private String createCarInsurance(@RequestBody InsuranceCarRequestDto dto) {

@@ -50,6 +50,11 @@ public class InsuranceService {
         return new InsuranceDetailDto(insurance);
     }
 
+    public InsuranceRetrieveDto retrieveInsurance(Integer insuranceId) {
+        Insurance insurance = findInsuranceById(insuranceId);
+        return new InsuranceRetrieveDto(insurance);
+    }
+
     public Insurance findInsuranceById(Integer insuranceId) {
         Optional<Insurance> insurance = insuranceRepository.findById(insuranceId);
         if(insurance.isPresent())
