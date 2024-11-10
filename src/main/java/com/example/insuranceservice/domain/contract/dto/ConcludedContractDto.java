@@ -7,12 +7,10 @@ public class ConcludedContractDto {
     private Integer id;
     private String insuranceName;
     private Integer customerId;
-    private String contractStatus;
 
-    public ConcludedContractDto(Integer id, String insuranceName, Integer customerId, String contractStatus) {
+    public ConcludedContractDto(Integer id, String insuranceName, Integer customerId) {
         this.id = id;
         this.insuranceName = insuranceName;
         this.customerId = customerId;
-        this.contractStatus = contractStatus;
     }
 }

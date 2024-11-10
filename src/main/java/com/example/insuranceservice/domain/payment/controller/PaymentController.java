@@ -2,6 +2,7 @@ package com.example.insuranceservice.domain.payment.controller;
 
 import com.example.insuranceservice.domain.card.dto.CardRequestDto;
 import com.example.insuranceservice.domain.payment.dto.PaymentDto;
+import com.example.insuranceservice.domain.payment.dto.PaymentRetrieveDto;
 import com.example.insuranceservice.domain.payment.service.PaymentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,11 @@ public class PaymentController {
     @PutMapping("/pay/{paymentId}")
     public String payPremium(@PathVariable Integer paymentId, @RequestBody CardRequestDto cardRequestDto){
         return paymentService.payPremium(paymentId, cardRequestDto);
+    }
+
+    @GetMapping("/retrieve/{paymentId}")
+    public PaymentRetrieveDto retrievePayment(@PathVariable Integer paymentId){
+        return paymentService.retrievePayment(paymentId);
     }
 
 }

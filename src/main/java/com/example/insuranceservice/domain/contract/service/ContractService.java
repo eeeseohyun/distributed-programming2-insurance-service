@@ -336,8 +336,7 @@ public class ContractService {
                 .map(contract -> new ConcludedContractDto(
                         contract.getId(),
                         contract.getInsurance().getInsuranceName(),
-                        contract.getCustomer().getCustomerID(),
-                        contract.getContractStatus()
+                        contract.getCustomer().getCustomerID()
                 )).collect(Collectors.toList());
     }
 
@@ -349,7 +348,8 @@ public class ContractService {
                 .map(contract -> new RequestedContractDto(
                         contract.getId(),
                         contract.getInsurance().getInsuranceName(),
-                        contract.getCustomer().getCustomerID()
+                        contract.getCustomer().getCustomerID(),
+                        contract.getContractStatus()
                 )).collect(Collectors.toList());
     }
 
@@ -361,9 +361,19 @@ public class ContractService {
 
     // 계약을 해지한다
     public String cancelContract(Integer contractId) {
+//        Contract contract = findContractById(contractId);
+        Optional<Contract> contract = contractRepository.findById(contractId);
+        if (contract.isPresent()){
+            contractRepository.delete(contract.get());
+            return "[success] 보험 계약이 해지되었습니다.";
+        }
+        else
+            return "[error] 계약 ID가 존재하지 않습니다.";
+    }
+
+    public ContractRetrieveDto retrieveContract(Integer contractId) {
         Contract contract = findContractById(contractId);
-        contractRepository.delete(contract);
-        return "계약이 성공적으로 해지되었습니다.";
+        return new ContractRetrieveDto(contract);
     }
     ////
 }

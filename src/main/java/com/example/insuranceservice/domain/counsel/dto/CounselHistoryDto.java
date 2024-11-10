@@ -17,7 +17,7 @@ public class CounselHistoryDto {
     private String timeOfCounsel;
     private String note;
     private Integer employeeId;
-    private Boolean statusOfCounsel;
+    private String statusOfCounsel;
 
         public CounselHistoryDto(Counsel counsel){
             this.counselId = counsel.getCounselId();
@@ -32,7 +32,7 @@ public class CounselHistoryDto {
             this.timeOfCounsel = counsel.getTimeOfCounsel();
             this.note = counsel.getNote();
             this.employeeId = counsel.getEmployee().getEmployeeId();
-            this.statusOfCounsel = counsel.getStatusOfCounsel();
+            this.statusOfCounsel = counsel.isConfirmedCounsel();
         }
 
 }
