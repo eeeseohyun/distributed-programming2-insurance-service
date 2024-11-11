@@ -68,6 +68,11 @@ public class CounselController {
     public CounselSuggestDto suggestInsurance(@PathVariable Integer counselId, @RequestBody Integer insuranceId){
         return counselService.suggestInsurance(counselId, insuranceId);
     }
+
+    @GetMapping("/retrieve/{counselId}")
+    public CounselRetrieveDto retrieveCounsel(@PathVariable Integer counselId){
+        return counselService.retrieveCounsel(counselId);
+    }
     ////
 
 }

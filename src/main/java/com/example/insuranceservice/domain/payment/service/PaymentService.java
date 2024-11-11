@@ -4,6 +4,7 @@ import com.example.insuranceservice.domain.card.dto.CardRequestDto;
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.service.CustomerService;
 import com.example.insuranceservice.domain.payment.dto.PaymentDto;
+import com.example.insuranceservice.domain.payment.dto.PaymentRetrieveDto;
 import com.example.insuranceservice.domain.payment.entity.Payment;
 import com.example.insuranceservice.domain.payment.repository.PaymentRepository;
 import com.example.insuranceservice.global.constant.Constant;
@@ -68,4 +69,8 @@ public class PaymentService {
         }
     }
 
+    public PaymentRetrieveDto retrievePayment(Integer paymentId) {
+        Payment payment = findPaymentById(paymentId);
+        return new PaymentRetrieveDto(payment);
+    }
 }

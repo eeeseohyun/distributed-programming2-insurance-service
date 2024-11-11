@@ -141,4 +141,9 @@ public class ContractController {
         return contractService.cancelContract(contractId);
     }
 
+    @GetMapping("/retrieve/{contractId}")
+    public ContractRetrieveDto retrieveContract(@PathVariable Integer contractId){
+        return contractService.retrieveContract(contractId);
+    }
+
 }

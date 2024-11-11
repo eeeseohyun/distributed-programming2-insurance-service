@@ -16,7 +16,7 @@ public class RequestedCounselDto {
     private String insuranceType;
     private String dateOfCounsel;
     private String timeOfCounsel;
-    private Boolean statusOfCounsel;
+    private String statusOfCounsel;
 
     public RequestedCounselDto(Counsel counsel){
         this.counselId = counsel.getCounselId();
@@ -30,6 +30,6 @@ public class RequestedCounselDto {
         this.insuranceType = counsel.getInsuranceType();
         this.dateOfCounsel = counsel.getDateOfCounsel();
         this.timeOfCounsel = counsel.getTimeOfCounsel();
-        this.statusOfCounsel = counsel.getStatusOfCounsel();
+        this.statusOfCounsel = counsel.isConfirmedCounsel();
     }
 }

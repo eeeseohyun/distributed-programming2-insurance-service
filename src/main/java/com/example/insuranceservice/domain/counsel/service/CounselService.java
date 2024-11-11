@@ -41,9 +41,10 @@ public class CounselService {
         counsel.setInsuranceType(counselRequestDto.getInsuranceType());
         counsel.setTimeOfCounsel(counselRequestDto.getTimeOfCounsel());
         counsel.setDateOfCounsel(counselRequestDto.getDateOfCounsel());
+        counsel.setStatusOfCounsel(false);
+
         Customer customer = findCustomerById(counselRequestDto.getCustomerId());
         counsel.setCustomer(customer);
-        counsel.setStatusOfCounsel(false);
         counselRepository.save(counsel);
 
         return "[success] 상담 신청이 완료되었습니다.";
@@ -88,12 +89,12 @@ public class CounselService {
         Employee employee = employeeService.findEmployeeById(employeeId);
 
         if(counsel.getStatusOfCounsel())
-            throw new RuntimeException("이미 처리완료된 상담입니다.");
+           return ResponseEntity.ok("[error] 이미 처리완료된 상담입니다.");
 
         counsel.setStatusOfCounsel(true);
         counsel.setEmployee(employee);
         counselRepository.save(counsel);
-        return ResponseEntity.ok("상담 일정이 확정되었습니다.");
+        return ResponseEntity.ok("[success] 상담 일정이 확정되었습니다.");
     }
     ////
 
@@ -137,4 +138,8 @@ public class CounselService {
         return tempCounsel.get();
     }
 
+    public CounselRetrieveDto retrieveCounsel(Integer counselId) {
+        Optional<Counsel> counsel = counselRepository.findById(counselId);
+        return counsel.map(CounselRetrieveDto::new).orElse(null);
+    }
 }
