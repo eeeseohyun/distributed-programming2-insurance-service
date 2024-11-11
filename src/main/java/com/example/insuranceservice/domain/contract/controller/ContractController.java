@@ -25,7 +25,7 @@ public class ContractController {
     private String manageLatePayment(@RequestParam int contractId){
         return contractService.manageLatePayment(contractId);
     }
-    // 부활관리한다.
+    // 부활관리한다.- 미구현
     @PutMapping("/revive")
     private String manageRevive(@RequestBody ContractDto contractDto){
          return contractService.manageRevive(contractDto);
@@ -44,7 +44,7 @@ public class ContractController {
     private String manageRenewalContract(@RequestParam int contractId){
        return contractService.manageRenewalContract(contractId);
     }
-    //배서를 관리한다.
+    //배서를 관리한다. -- 미구현
     @PutMapping("/update")
     private String manageUpdate(@RequestBody ContractDto contractDto){
         return contractService.manageUpdate(contractDto);

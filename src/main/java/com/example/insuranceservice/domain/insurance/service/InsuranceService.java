@@ -66,8 +66,12 @@ public class InsuranceService {
                 int carId =insurance.getCar().getCarId();
                 Optional<Car> cars = carRepository.findById(carId);
                 Car car = cars.get();
-                if(car!=null){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
+                if(car==null){ throw new RuntimeException("존재하지 않는 차 보험 상품 ID");}
                 InsuranceCarRequestDto dto = InsuranceMapper.insuranceMapper.toCarInsuranceDto(insurance);
+                Guarantee guarantee = new Guarantee(insurance.getGuaranteeName(),insurance.getMaxCoverage(),insurance.getGuaranteeDescription());
+                SpecialProvision specialProvision = new SpecialProvision(insurance.getRateOfDiscount(),insurance.getSpecialProvisionName());
+                dto.setGuarantee(guarantee);
+                dto.setSpecialProvision(specialProvision);
                 dto.setVin(car.getVin());
                 dto.setModel(car.getModel());
                 dto.setPriceOfCar(car.getPriceOfCar());
@@ -77,16 +81,24 @@ public class InsuranceService {
                 int cancerId =insurance.getCancerHealth().getCancerId();
                 Optional<CancerHealth> cancers = cancerHealthRepository.findById(cancerId);
                 CancerHealth cancer = cancers.get();
-                if(cancer!=null){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
+                if(cancer==null){ throw new RuntimeException("존재하지 않는 암 보험 상품 ID " +cancerId);}
                 InsuranceCancerRequestDto dto = InsuranceMapper.insuranceMapper.toCancerInsuranceDto(insurance);
+                Guarantee guarantee = new Guarantee(insurance.getGuaranteeName(),insurance.getMaxCoverage(),insurance.getGuaranteeDescription());
+                SpecialProvision specialProvision = new SpecialProvision(insurance.getRateOfDiscount(),insurance.getSpecialProvisionName());
+                dto.setGuarantee(guarantee);
+                dto.setSpecialProvision(specialProvision);
                 dto.setCategoryOfCancer(cancer.getCategoryOfCancer());
                 dtoList.add(dto);
             }else if(insurance.getCategory().equals(HouseFireInsurance)){
                 int houseFireId =insurance.getHouseFire().getHouseFireId();
                 Optional<HouseFire> houseFires = houseFireRepository.findById(houseFireId);
                 HouseFire houseFire = houseFires.get();
-                if(houseFire!=null){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
+                if(houseFire==null){ throw new RuntimeException("존재하지 않는 화재 보험 상품 ID");}
                 InsuranceHouseFireRequestDto dto = InsuranceMapper.insuranceMapper.toHouseFireInsuranceDto(insurance);
+                Guarantee guarantee = new Guarantee(insurance.getGuaranteeName(),insurance.getMaxCoverage(),insurance.getGuaranteeDescription());
+                SpecialProvision specialProvision = new SpecialProvision(insurance.getRateOfDiscount(),insurance.getSpecialProvisionName());
+                dto.setGuarantee(guarantee);
+                dto.setSpecialProvision(specialProvision);
                 dto.setCategoryOfHouse(houseFire.getCategoryOfHouse());
                 dto.setPriceOfHouse(houseFire.getPriceOfHouse());
                 dtoList.add(dto);
@@ -94,8 +106,12 @@ public class InsuranceService {
                 int internationalId =insurance.getInternationalTravel().getTravelId();
                 Optional<InternationalTravel> internationalTravels = internationalRepository.findById(internationalId);
                 InternationalTravel internationalTravel = internationalTravels.get();
-                if(internationalTravel!=null){ throw new RuntimeException("존재하지 않는 보험 상품 ID");}
+                if(internationalTravel==null){ throw new RuntimeException("존재하지 않는 여행 보험 상품 ID");}
                 InsuranceInternationalRequestDto dto = InsuranceMapper.insuranceMapper.toInternationalInsuranceDto(insurance);
+                Guarantee guarantee = new Guarantee(insurance.getGuaranteeName(),insurance.getMaxCoverage(),insurance.getGuaranteeDescription());
+                SpecialProvision specialProvision = new SpecialProvision(insurance.getRateOfDiscount(),insurance.getSpecialProvisionName());
+                dto.setGuarantee(guarantee);
+                dto.setSpecialProvision(specialProvision);
                 dto.setTravelCountry(internationalTravel.getTravelCountry());
                 dto.setTravelPeriod(internationalTravel.getTravelPeriod());
                 dtoList.add(dto);

@@ -2,9 +2,7 @@ package com.example.insuranceservice.domain.compensation.entity;
 
 import com.example.insuranceservice.domain.accident.entity.Accident;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Entity
@@ -12,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Builder
 @Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class Compensation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
