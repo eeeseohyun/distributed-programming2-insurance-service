@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -57,10 +58,11 @@ public class ContractService {
         if(!response) return "[success] 성공적으로 미납 관리가 되었습니다!";
         else return "[error] 미납자 정보가 지워지지 않았습니다!";
     }
-    // 부활관리한다.
+    // 부활관리한다...
+    //아직 미구현
     public String manageRevive(ContractDto contractDto) {
         Optional<Contract> contractOptional = contractRepository.findById(contractDto.getId());
-        if(!contractOptional.isPresent()){
+        if(contractOptional.get()==null){
             throw new NullPointerException();
         }
         Contract contract = contractOptional.get();
@@ -97,14 +99,20 @@ public class ContractService {
     // 재계약관리한다.
     public String manageRenewalContract(int contractId) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
-        if(!contractOptional.isPresent()){
+        if(contractOptional.get()==null){
             throw new NullPointerException();
         }
         Contract contract = contractOptional.get();
         if(contract.getRenewalStatus()) {
-            contract.setExpirationDate(new Date().getYear() + 2 + "-" + new Date().getMonth() + "-" + new Date().getDay());
-            contractRepository.deleteById(contractId);
-            contractRepository.save(contract);
+            LocalDate expirationDate = LocalDate.now().plusYears(2);
+
+            // 만약 날짜 포맷이 필요하다면 아래와 같이 포맷팅
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedDate = expirationDate.format(formatter);
+
+            // 설정한 날짜를 contract에 적용
+            contract.setExpirationDate(formattedDate);
+            contractRepository.updateExpirationDate(contractId, contract.getExpirationDate());
             return "[success] 성공적으로 재계약이 되었습니다!";
         }else{
             return "[error] 재계약에 동의하지 않아 재계약에 실패했습니다!";

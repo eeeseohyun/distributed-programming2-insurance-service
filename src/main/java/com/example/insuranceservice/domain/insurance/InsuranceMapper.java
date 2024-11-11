@@ -28,13 +28,26 @@ public interface InsuranceMapper {
     })
     Car toCarEntity(InsuranceCarRequestDto insuranceDto);
 
+    @Mappings({
+            @Mapping(source = "guarantee.guaranteeName", target = "guaranteeName"),
+            @Mapping(source = "guarantee.maxCoverage", target = "maxCoverage"),
+            @Mapping(source = "guarantee.guaranteeDescription", target = "guaranteeDescription"),
+            @Mapping(source = "specialProvision.rateOfDiscount", target = "rateOfDiscount"),
+            @Mapping(source = "specialProvision.specialProvisionName", target = "specialProvisionName")
+    })
     Insurance toCarInsuranceEntity(InsuranceCarRequestDto insuranceCarRequestDto);
 
     @Mappings({
             @Mapping(source = "categoryOfCancer", target = "categoryOfCancer")
     })
     CancerHealth toCancerEntity(InsuranceCancerRequestDto insuranceCancerRequestDto);
-
+    @Mappings({
+            @Mapping(source = "guarantee.guaranteeName", target = "guaranteeName"),
+            @Mapping(source = "guarantee.maxCoverage", target = "maxCoverage"),
+            @Mapping(source = "guarantee.guaranteeDescription", target = "guaranteeDescription"),
+            @Mapping(source = "specialProvision.rateOfDiscount", target = "rateOfDiscount"),
+            @Mapping(source = "specialProvision.specialProvisionName", target = "specialProvisionName")
+    })
     Insurance toCancerInsuranceEntity(InsuranceCancerRequestDto insuranceCancerRequestDto);
 
     @Mappings({
@@ -43,7 +56,13 @@ public interface InsuranceMapper {
             @Mapping(target = "houseFireId", ignore = true)
     })
     HouseFire toHouseFireEntity(InsuranceHouseFireRequestDto insuranceHouseFireRequestDto);
-
+    @Mappings({
+            @Mapping(source = "guarantee.guaranteeName", target = "guaranteeName"),
+            @Mapping(source = "guarantee.maxCoverage", target = "maxCoverage"),
+            @Mapping(source = "guarantee.guaranteeDescription", target = "guaranteeDescription"),
+            @Mapping(source = "specialProvision.rateOfDiscount", target = "rateOfDiscount"),
+            @Mapping(source = "specialProvision.specialProvisionName", target = "specialProvisionName")
+    })
     Insurance toHouseFireInsuranceEntity(InsuranceHouseFireRequestDto insuranceHouseFireRequestDto);
 
     @Mappings({
@@ -51,7 +70,13 @@ public interface InsuranceMapper {
             @Mapping(source = "travelPeriod", target = "travelPeriod"),
     })
     InternationalTravel toInternationalTravelEntity(InsuranceInternationalRequestDto insuranceInternationalRequestDto);
-
+    @Mappings({
+            @Mapping(source = "guarantee.guaranteeName", target = "guaranteeName"),
+            @Mapping(source = "guarantee.maxCoverage", target = "maxCoverage"),
+            @Mapping(source = "guarantee.guaranteeDescription", target = "guaranteeDescription"),
+            @Mapping(source = "specialProvision.rateOfDiscount", target = "rateOfDiscount"),
+            @Mapping(source = "specialProvision.specialProvisionName", target = "specialProvisionName")
+    })
     Insurance toInternationalTravelInsuranceEntity(InsuranceInternationalRequestDto insuranceInternationalRequestDto);
 
 ///
