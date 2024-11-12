@@ -47,7 +47,10 @@ public class PaymentInfoService {
 
         if (list.isPresent()) {
             PaymentInfo paymentInfo = list.get();
-            paymentInfo.setCardList(cardlist);
+            paymentInfo.setCardNum(card.getCardNum());
+            paymentInfo.setCvcNum(card.getCvcNum());
+            paymentInfo.setPassword(card.getPassword());
+//            paymentInfo.setCardList(cardlist);
         }
     }
 
@@ -60,7 +63,9 @@ public class PaymentInfoService {
 
         if (list.isPresent()) {
             PaymentInfo paymentInfo = list.get();
-            paymentInfo.setBankList(banklist);
+            paymentInfo.setPayerName(bank.getPayerName());
+            paymentInfo.setPayerPhoneNum(bank.getPayerPhoneNum());
+//            paymentInfo.setBankList(banklist);
         }
     }
 
@@ -73,7 +78,10 @@ public class PaymentInfoService {
 
         if (list.isPresent()) {
             PaymentInfo paymentInfo = list.get();
-            paymentInfo.setAutomaticList(autoList);
+            paymentInfo.setAccountNum(auto.getAccountNum());
+            paymentInfo.setApplicantName(auto.getApplicantName());
+            paymentInfo.setApplicantRRN(auto.getApplicantRRN());
+//            paymentInfo.setAutomaticList(autoList);
         }
     }
 }

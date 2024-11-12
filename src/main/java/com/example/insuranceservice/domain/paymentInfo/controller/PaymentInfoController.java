@@ -21,17 +21,17 @@ public class PaymentInfoController {
        return paymentInfoService.createPayment(paymentInfoDto);
     }
     @PostMapping("/setCardInfo")
-    private void setCardInfo(@RequestBody CardDto dto, @PathVariable int payementInfoId){
-        paymentInfoService.setCardInfo(dto,payementInfoId);
+    private void setCardInfo(@RequestBody CardDto dto, @PathVariable int paymentInfoId){
+        paymentInfoService.setCardInfo(dto,paymentInfoId);
 
     }
     @PostMapping("/setBankInfo")
-    private void setBankInfo(@RequestBody BankDto dto, @PathVariable int payementInfoId){
-        paymentInfoService.setBankInfo(dto,payementInfoId);
+    private void setBankInfo(@RequestBody BankDto dto, @PathVariable int paymentInfoId){
+        paymentInfoService.setBankInfo(dto,paymentInfoId);
     }
     @PostMapping("/setAutomaticInfo")
-    private void setAutomaticInfo(@RequestBody AutomaticDto dto, @PathVariable int payementInfoId){
-        paymentInfoService.setAutomaticInfo(dto,payementInfoId);
+    private void setAutomaticInfo(@RequestBody AutomaticDto dto, @PathVariable int paymentInfoId){
+        paymentInfoService.setAutomaticInfo(dto,paymentInfoId);
     }
 
 }

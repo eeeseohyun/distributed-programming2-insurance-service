@@ -52,7 +52,7 @@ public class ContractController {
 
     //// 보험 상품 종류 카테고리
     // 보험 가입 신청
-    @PostMapping("/request/{customerId}")
+        @PostMapping("/request/{customerId}")
     public String requestContract(@PathVariable Integer customerId, @RequestBody ContractRequestDto contractRequestDto){
         return contractService.requestContract(customerId, contractRequestDto);
     }

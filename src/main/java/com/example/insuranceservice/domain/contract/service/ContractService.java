@@ -15,6 +15,7 @@ import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRequestDto;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
+import com.example.insuranceservice.domain.paymentInfo.repository.PaymentInfoRepository;
 import com.example.insuranceservice.global.constant.Constant;
 import org.springframework.stereotype.Service;
 
@@ -36,12 +37,14 @@ public class ContractService {
     private CustomerService customerService;
     private InsuranceService insuranceService;
     private CustomerRepository customerRepository;
+    private PaymentInfoRepository paymentInfoRepository;
 
-    public ContractService(ContractRepository contractRepository, CustomerService customerService, InsuranceService insuranceService, CustomerRepository customerRepository) {
+    public ContractService(ContractRepository contractRepository, CustomerService customerService, InsuranceService insuranceService, CustomerRepository customerRepository, PaymentInfoRepository paymenInfoRepository) {
         this.contractRepository = contractRepository;;
         this.customerService = customerService;
         this.insuranceService = insuranceService;
         this.customerRepository = customerRepository;
+        this.paymentInfoRepository = paymenInfoRepository;
     }
 
     // 미납관리한다.
@@ -279,50 +282,6 @@ public class ContractService {
     // 보험 가입 신청
     public String requestContract(Integer customerId, ContractRequestDto contractRequestDto) {
         Contract contract = new Contract();
-        List<PaymentInfo> paymentInfoList = new ArrayList<>();
-        for(PaymentInfoRequestDto paymentInfoDto : contractRequestDto.getPaymentInfoRequestDtoList()){
-            PaymentInfo paymentInfo = new PaymentInfo();
-            paymentInfo.setFixedMonthlyPaymentDate(paymentInfoDto.getFixedMonthlyPaymentDate());
-            String paymentType = paymentInfoDto.getPaymentType();
-            paymentInfo.setPaymentType(paymentType);
-            paymentInfo.setContract(contract);
-            if(paymentType.equals(Constant.paymentInfoBank)) {
-                List<Card> cardList = new ArrayList<>();
-                for(CardRequestDto cardRequestDto : paymentInfoDto.getCardRequestDtoList()) {
-                    Card card = new Card();
-                    card.setCardNum(cardRequestDto.getCardNum());
-                    card.setCvcNum(cardRequestDto.getCvcNum());
-                    card.setPassword(cardRequestDto.getPassword());
-                    card.setPaymentInfo(paymentInfo);
-                    cardList.add(card);
-                }
-                paymentInfo.setCardList(cardList);
-            } else if (paymentType.equals(Constant.paymentInfoCard)) {
-                List<Bank> bankList = new ArrayList<>();
-                for(BankRequestDto bankRequestDto : paymentInfoDto.getBankRequestDtoList()) {
-                    Bank bank = new Bank();
-                    bank.setPayerName(bankRequestDto.getPayerName());
-                    bank.setPayerPhoneNum(bankRequestDto.getPayerPhoneNum());
-                    bank.setPaymentInfo(paymentInfo);
-                    bankList.add(bank);
-                }
-                paymentInfo.setBankList(bankList);
-            } else if (paymentType.equals(Constant.paymentInfoAutomatic)) {
-                List<Automatic> automaticList = new ArrayList<>();
-                for(AutomaticRequestDto automaticRequestDto : paymentInfoDto.getAutomaticRequestDtoList()) {
-                    Automatic automatic = new Automatic();
-                    automatic.setAccountNum(automaticRequestDto.getAccountNum());
-                    automatic.setApplicantName(automaticRequestDto.getApplicantName());
-                    automatic.setApplicantRRN(automaticRequestDto.getApplicantRRN());
-                    automatic.setPaymentCompanyName(automaticRequestDto.getPaymentCompanyName());
-                    automatic.setRelationshipToApplicant(automaticRequestDto.getRelationshipToApplicant());
-                    automatic.setPaymentInfo(paymentInfo);
-                    automaticList.add(automatic);
-                }
-                paymentInfo.setAutomaticList(automaticList);
-            }
-            paymentInfoList.add(paymentInfo);
-        }
         contract.setCustomer(customerService.findCustomerById(customerId));
         contract.setExpirationDate(contractRequestDto.getExpirationDate());
         contract.setInsurance(insuranceService.findInsuranceById(contractRequestDto.getInsuranceId()));
@@ -330,9 +289,82 @@ public class ContractService {
         contract.setIsConcluded(false);
         contract.setIsPassUW(false);
         contract.setContractStatus(Constant.contractStatus1);
-        contract.setPaymentInfoList(paymentInfoList);
-        contractRepository.save(contract);
+        contract = contractRepository.save(contract);
+
+        List<PaymentInfo> paymentInfoList = new ArrayList<>();
+        for (PaymentInfoRequestDto paymentInfoDto : contractRequestDto.getPaymentInfoRequestDtoList()) {
+            if (paymentInfoDto.getCardRequestDtoList() != null) {
+                for (CardRequestDto cardRequestDto : paymentInfoDto.getCardRequestDtoList()) {
+                    PaymentInfo paymentInfo = createPaymentInfoForCard(contract, paymentInfoDto, cardRequestDto);
+                    paymentInfoList.add(paymentInfo);
+                }
+            }
+
+            if (paymentInfoDto.getBankRequestDtoList() != null) {
+                for (BankRequestDto bankRequestDto : paymentInfoDto.getBankRequestDtoList()) {
+                    PaymentInfo paymentInfo = createPaymentInfoForBank(contract, paymentInfoDto, bankRequestDto);
+                    paymentInfoList.add(paymentInfo);
+                }
+            }
+
+            if (paymentInfoDto.getAutomaticRequestDtoList() != null) {
+                for (AutomaticRequestDto automaticRequestDto : paymentInfoDto.getAutomaticRequestDtoList()) {
+                    PaymentInfo paymentInfo = createPaymentInfoForAutomatic(contract, paymentInfoDto, automaticRequestDto);
+                    paymentInfoList.add(paymentInfo);
+                }
+            }
+        }
+
+        paymentInfoRepository.saveAll(paymentInfoList);
         return "보험 가입 신청이 완료되었습니다.";
+    }
+
+    private PaymentInfo createBasicPaymentInfo(Contract contract, PaymentInfoRequestDto paymentInfoDto) {
+        PaymentInfo paymentInfo = new PaymentInfo();
+        paymentInfo.setPaymentType(paymentInfoDto.getPaymentType());
+        paymentInfo.setFixedMonthlyPaymentDate(paymentInfoDto.getFixedMonthlyPaymentDate());
+        paymentInfo.setContract(contract);
+        return paymentInfo;
+    }
+
+    // 개별 카드 정보를 기반으로 PaymentInfo 생성
+    private PaymentInfo createPaymentInfoForCard(Contract contract, PaymentInfoRequestDto paymentInfoDto, CardRequestDto cardRequestDto) {
+        PaymentInfo paymentInfo = createBasicPaymentInfo(contract, paymentInfoDto);
+
+        // 카드 관련 정보 설정
+        paymentInfo.setCardNum(cardRequestDto.getCardNum());
+        paymentInfo.setCvcNum(cardRequestDto.getCvcNum());
+        paymentInfo.setPassword(cardRequestDto.getPassword());
+
+        paymentInfoRepository.save(paymentInfo);
+        return paymentInfo;
+    }
+
+    // 개별 은행 정보를 기반으로 PaymentInfo 생성
+    private PaymentInfo createPaymentInfoForBank(Contract contract, PaymentInfoRequestDto paymentInfoDto, BankRequestDto bankRequestDto) {
+        PaymentInfo paymentInfo = createBasicPaymentInfo(contract, paymentInfoDto);
+
+        // 은행 관련 정보 설정
+        paymentInfo.setPayerName(bankRequestDto.getPayerName());
+        paymentInfo.setPayerPhoneNum(bankRequestDto.getPayerPhoneNum());
+
+        paymentInfoRepository.save(paymentInfo);
+        return paymentInfo;
+    }
+
+    // 개별 자동이체 정보를 기반으로 PaymentInfo 생성
+    private PaymentInfo createPaymentInfoForAutomatic(Contract contract, PaymentInfoRequestDto paymentInfoDto, AutomaticRequestDto automaticRequestDto) {
+        PaymentInfo paymentInfo = createBasicPaymentInfo(contract, paymentInfoDto);
+
+        // 자동이체 관련 정보 설정
+        paymentInfo.setAccountNum(automaticRequestDto.getAccountNum());
+        paymentInfo.setApplicantName(automaticRequestDto.getApplicantName());
+        paymentInfo.setApplicantRRN(automaticRequestDto.getApplicantRRN());
+        paymentInfo.setPaymentCompanyName(automaticRequestDto.getPaymentCompanyName());
+        paymentInfo.setRelationshipToApplicant(automaticRequestDto.getRelationshipToApplicant());
+
+        paymentInfoRepository.save(paymentInfo);
+        return paymentInfo;
     }
 
     //// 보유 계약 조회 카테고리
