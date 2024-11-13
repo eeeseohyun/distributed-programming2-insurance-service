@@ -1,15 +1,11 @@
 package com.example.insuranceservice.domain.insurance.entity;
-
-import com.example.insuranceservice.domain.InternationalTravel.entity.InternationalTravel;
 import com.example.insuranceservice.domain.cancerHealth.entity.CancerHealth;
 import com.example.insuranceservice.domain.car.entity.Car;
 import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
-import com.example.insuranceservice.domain.insurance.dto.*;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -30,11 +26,6 @@ public class Insurance {
     private String notice;
     private String processOfCompensation;
     private String processOfSubscription;
-    private double rateOfDiscount;
-    private String specialProvisionName;
-    private String guaranteeName;
-    private int maxCoverage;
-    private String guaranteeDescription;
     @OneToOne
     @JoinColumn(name = "carId")
     private Car car;
@@ -47,6 +38,13 @@ public class Insurance {
     @OneToOne
     @JoinColumn(name = "houseFireID")
     private HouseFire houseFire;
+    @OneToOne
+    @JoinColumn(name = "guaranteeId")
+    private Guarantee guarantee;
+    @OneToOne
+    @JoinColumn(name = "specialProvisionId")
+    private SpecialProvision specialProvision;
+
 
 
 }

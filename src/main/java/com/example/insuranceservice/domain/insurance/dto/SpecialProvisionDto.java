@@ -1,6 +1,5 @@
 package com.example.insuranceservice.domain.insurance.dto;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Builder
 @Slf4j
-public class SpecialProvision {
+public class SpecialProvisionDto {
     private double rateOfDiscount;
     private String specialProvisionName;
 }

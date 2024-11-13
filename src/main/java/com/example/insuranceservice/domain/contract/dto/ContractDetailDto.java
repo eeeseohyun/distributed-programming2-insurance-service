@@ -31,7 +31,7 @@ public class ContractDetailDto {
         this.customerId = contract.getCustomer().getCustomerID();
         this.customerName = contract.getCustomer().getName();
         this.customerPhone = contract.getCustomer().getPhone();
-        this.guaranteeName = contract.getInsurance().getGuaranteeName();
+        this.guaranteeName = contract.getInsurance().getGuarantee().getGuaranteeName();
         this.monthlyPremium = contract.getMonthlyPremium();
         this.createdDate = contract.getCreatedDate();
         this.expirationDate = contract.getExpirationDate();

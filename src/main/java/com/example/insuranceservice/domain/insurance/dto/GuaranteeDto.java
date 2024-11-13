@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Builder
 @Slf4j
-public class Guarantee {
+public class GuaranteeDto {
     private String guaranteeName;
     private int maxCoverage;
     private String guaranteeDescription;

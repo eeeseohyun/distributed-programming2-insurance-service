@@ -18,7 +18,7 @@ public class InsuranceDetailDto{
         this.insuranceID = insurance.getInsuranceID();
         this.insuranceName = insurance.getInsuranceName();
         this.category = insurance.getCategory();
-        this.guaranteeName = insurance.getGuaranteeName();
+        this.guaranteeName = insurance.getGuarantee().getGuaranteeName();
         this.processOfSubscription = insurance.getProcessOfSubscription();
         this.processOfCompensation = insurance.getProcessOfCompensation();
         this.minimumPeriod = insurance.getMinimumPeriod();

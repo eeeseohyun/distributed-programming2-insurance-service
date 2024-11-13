@@ -19,7 +19,7 @@ public class InsuranceDto {
     private String notice;
     private String processOfCompensation;
     private String processOfSubscription;
-    protected SpecialProvision specialProvision;
-    protected Guarantee guarantee;
+    protected SpecialProvisionDto specialProvision;
+    protected GuaranteeDto guarantee;
 
 }
