@@ -1,6 +1,7 @@
 package com.example.insuranceservice.domain.car.dto;
 
 import com.example.insuranceservice.domain.car.entity.Car;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
