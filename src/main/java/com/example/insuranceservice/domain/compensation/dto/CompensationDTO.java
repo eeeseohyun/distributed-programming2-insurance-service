@@ -2,9 +2,7 @@ package com.example.insuranceservice.domain.compensation.dto;
 
 import com.example.insuranceservice.domain.accident.entity.Accident;
 import com.example.insuranceservice.domain.compensation.entity.Compensation;
-import jakarta.persistence.Id;
 import lombok.Data;
-
 
 @Data
 public class CompensationDTO {

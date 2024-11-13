@@ -1,6 +1,7 @@
 package com.example.insuranceservice.domain.cancerHealth.dto;
 
 import com.example.insuranceservice.domain.cancerHealth.entity.CancerHealth;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

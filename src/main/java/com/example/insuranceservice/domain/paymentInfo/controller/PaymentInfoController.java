@@ -5,33 +5,77 @@ import com.example.insuranceservice.domain.bank.dto.BankDto;
 import com.example.insuranceservice.domain.card.dto.CardDto;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoDto;
 import com.example.insuranceservice.domain.paymentInfo.service.PaymentInfoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/paymentInfo")
 @RestController
+@RequestMapping("/api/paymentInfo")
+@RequiredArgsConstructor
+@Tag(name = "결제 정보 API", description = "결제 수단 정보 관리 API")
 public class PaymentInfoController {
 
-    private PaymentInfoService paymentInfoService;
+    private final PaymentInfoService paymentInfoService;
 
-    private PaymentInfoController(PaymentInfoService paymentInfoService){
-        this.paymentInfoService = paymentInfoService;
-    }
+    @Operation(summary = "결제 정보 생성", description = "새로운 결제 정보를 생성합니다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "생성 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    })
     @PostMapping("/create")
-    private int createPayment(@RequestBody PaymentInfoDto paymentInfoDto){
-       return paymentInfoService.createPayment(paymentInfoDto);
+    private int createPayment(
+            @Parameter(description = "결제 정보", required = true)
+            @RequestBody PaymentInfoDto paymentInfoDto
+    ) {
+        return paymentInfoService.createPayment(paymentInfoDto);
     }
+
+    @Operation(summary = "카드 정보 등록", description = "결제 수단으로 카드 정보를 등록합니다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "등록 성공"),
+            @ApiResponse(responseCode = "404", description = "결제 정보를 찾을 수 없음")
+    })
     @PostMapping("/setCardInfo")
-    private void setCardInfo(@RequestBody CardDto dto, @PathVariable int payementInfoId){
-        paymentInfoService.setCardInfo(dto,payementInfoId);
-
+    private void setCardInfo(
+            @Parameter(description = "카드 정보", required = true)
+            @RequestBody CardDto dto,
+            @Parameter(description = "결제 정보 ID", required = true)
+            @PathVariable int payementInfoId
+    ) {
+        paymentInfoService.setCardInfo(dto, payementInfoId);
     }
+
+    @Operation(summary = "계좌 정보 등록", description = "결제 수단으로 계좌 정보를 등록합니다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "등록 성공"),
+            @ApiResponse(responseCode = "404", description = "결제 정보를 찾을 수 없음")
+    })
     @PostMapping("/setBankInfo")
-    private void setBankInfo(@RequestBody BankDto dto, @PathVariable int payementInfoId){
-        paymentInfoService.setBankInfo(dto,payementInfoId);
-    }
-    @PostMapping("/setAutomaticInfo")
-    private void setAutomaticInfo(@RequestBody AutomaticDto dto, @PathVariable int payementInfoId){
-        paymentInfoService.setAutomaticInfo(dto,payementInfoId);
+    private void setBankInfo(
+            @Parameter(description = "계좌 정보", required = true)
+            @RequestBody BankDto dto,
+            @Parameter(description = "결제 정보 ID", required = true)
+            @PathVariable int payementInfoId
+    ) {
+        paymentInfoService.setBankInfo(dto, payementInfoId);
     }
 
+    @Operation(summary = "자동이체 정보 등록", description = "결제 수단으로 자동이체 정보를 등록합니다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "등록 성공"),
+            @ApiResponse(responseCode = "404", description = "결제 정보를 찾을 수 없음")
+    })
+    @PostMapping("/setAutomaticInfo")
+    private void setAutomaticInfo(
+            @Parameter(description = "자동이체 정보", required = true)
+            @RequestBody AutomaticDto dto,
+            @Parameter(description = "결제 정보 ID", required = true)
+            @PathVariable int payementInfoId
+    ) {
+        paymentInfoService.setAutomaticInfo(dto, payementInfoId);
+    }
 }

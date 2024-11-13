@@ -3,76 +3,113 @@ package com.example.insuranceservice.domain.counsel.controller;
 import com.example.insuranceservice.domain.counsel.dto.*;
 import com.example.insuranceservice.domain.counsel.service.CounselService;
 import com.example.insuranceservice.domain.customer.entity.Customer;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/counsels")
+@RequestMapping("api/counsels")
+@RequiredArgsConstructor
+@Tag(name = "상담 API", description = "보험 상담 관련 API")
 public class CounselController {
-    private CounselService counselService;
-
-    public CounselController(CounselService counselService){
-        this.counselService = counselService;
-    }
+    private final CounselService counselService;
 
     //// 상담 신청 카테고리
     // 상담 신청
+    @Operation(summary = "상담 신청", description = "새로운 보험 상담을 신청합니다")
+    @ApiResponse(responseCode = "200", description = "신청 성공")
     @PostMapping("/create")
-    public String createCounsel(@RequestBody CounselRequestDto counselRequestDto){
+    public String createCounsel(
+            @Parameter(description = "상담 신청 정보") @RequestBody CounselRequestDto counselRequestDto
+    ) {
         return counselService.createCounsel(counselRequestDto);
     }
 
     // 상담 신청 내역 조회
+    @Operation(summary = "상담 신청 내역 조회", description = "고객의 상담 신청 내역을 조회합니다")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/list/{customerId}")
-    public List<CustomerRequestedCounselDto> showCounselList(@PathVariable Integer customerId){
+    public List<CustomerRequestedCounselDto> showCounselList(
+            @Parameter(description = "고객 ID") @PathVariable Integer customerId
+    ) {
         return counselService.showCounselList(customerId);
     }
 
     //// 상담신청 일정 관리 카테고리
     // 신청된 상담 일정 조회
+    @Operation(summary = "신청된 상담 일정 조회", description = "신청된 모든 상담 일정을 조회합니다")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/requested/list")
-    public List<RequestedCounselDto> showRequestedCounselList(){
+    public List<RequestedCounselDto> showRequestedCounselList() {
         return counselService.showRequestedCounselList();
     }
 
     // 확정된 상담 일정 조회
+    @Operation(summary = "확정된 상담 일정 조회", description = "확정된 모든 상담 일정을 조회합니다")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/confirmed/list")
-    public List<ConfirmedCounselDto> showConcludedCounselList(){
+    public List<ConfirmedCounselDto> showConcludedCounselList() {
         return counselService.showConfirmedCounselList();
     }
 
     // 상담 일정 확정
+    @Operation(summary = "상담 일정 확정", description = "상담 일정을 확정합니다")
+    @ApiResponse(responseCode = "200", description = "확정 성공")
     @PutMapping("/confirm/{counselId}")
-    public ResponseEntity<String> confirmCounsel(@PathVariable Integer counselId, @RequestBody Integer employeeId){
+    public ResponseEntity<String> confirmCounsel(
+            @Parameter(description = "상담 ID") @PathVariable Integer counselId,
+            @Parameter(description = "직원 ID") @RequestBody Integer employeeId
+    ) {
         return counselService.confirmCounsel(counselId, employeeId);
     }
-    ////
 
     //// 상담 내역 관리 카테고리
     // 상담 내역 조회
+    @Operation(summary = "상담 내역 조회", description = "직원별 상담 내역을 조회합니다")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/consulted/list/{employeeId}")
-    public List<CounselHistoryDto> showConsultedCounselList(@PathVariable Integer employeeId){
+    public List<CounselHistoryDto> showConsultedCounselList(
+            @Parameter(description = "직원 ID") @PathVariable Integer employeeId
+    ) {
         return counselService.showConsultedCounselList(employeeId);
     }
 
     // 상담 내용 추가
+    @Operation(summary = "상담 내용 추가", description = "상담 내용을 추가/수정합니다")
+    @ApiResponse(responseCode = "200", description = "추가 성공")
     @PutMapping("/update/{counselId}")
-    public String updateCounsel(@PathVariable Integer counselId, @RequestBody CounselUpdateDto counselUpdateDto){
+    public String updateCounsel(
+            @Parameter(description = "상담 ID") @PathVariable Integer counselId,
+            @Parameter(description = "상담 내용 정보") @RequestBody CounselUpdateDto counselUpdateDto
+    ) {
         return counselService.updateCounsel(counselId, counselUpdateDto);
     }
 
     // 상담 보험 제안
+    @Operation(summary = "보험 상품 제안", description = "상담에서 보험 상품을 제안합니다")
+    @ApiResponse(responseCode = "200", description = "제안 성공")
     @PostMapping("/suggest/{counselId}")
-    public CounselSuggestDto suggestInsurance(@PathVariable Integer counselId, @RequestBody Integer insuranceId){
+    public CounselSuggestDto suggestInsurance(
+            @Parameter(description = "상담 ID") @PathVariable Integer counselId,
+            @Parameter(description = "보험 상품 ID") @RequestBody Integer insuranceId
+    ) {
         return counselService.suggestInsurance(counselId, insuranceId);
     }
 
+    @Operation(summary = "상담 정보 조회", description = "특정 상담의 상세 정보를 조회합니다")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/retrieve/{counselId}")
-    public CounselRetrieveDto retrieveCounsel(@PathVariable Integer counselId){
+    public CounselRetrieveDto retrieveCounsel(
+            @Parameter(description = "상담 ID") @PathVariable Integer counselId
+    ) {
         return counselService.retrieveCounsel(counselId);
     }
-    ////
 
+    ////
 }
