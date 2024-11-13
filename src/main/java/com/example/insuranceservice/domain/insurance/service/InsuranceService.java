@@ -137,11 +137,16 @@ public class InsuranceService {
     public String createCarInsurance(InsuranceCarRequestDto dto) {
         Car car = InsuranceMapper.insuranceMapper.toCarEntity(dto);
         Insurance insurance = InsuranceMapper.insuranceMapper.toCarInsuranceEntity(dto);
-
+        Guarantee guarantee = InsuranceMapper.insuranceMapper.toGuarantee(dto.getGuarantee());
+        SpecialProvision specialProvision = InsuranceMapper.insuranceMapper.toSpecialProvision(dto.getSpecialProvision());
         insurance.setCar(car);
+        insurance.setGuarantee(guarantee);
+        insurance.setSpecialProvision(specialProvision);
         Car response =carRepository.save(car);
+        Guarantee guaranteeResponse = guaranteeRepository.save(guarantee);
+        SpecialProvision specialProvisionResponse = specialProvisionRepository.save(specialProvision);
         Insurance insuranceResponse=insuranceRepository.save(insurance);
-        if(response!=null&&insuranceResponse!=null) return "[success] 성공적으로 차 보험 상품이 생성되었습니다!";
+        if(response!=null&&insuranceResponse!=null&&guaranteeResponse!=null&&specialProvisionResponse!=null) return "[success] 성공적으로 차 보험 상품이 생성되었습니다!";
         else throw new NullPointerException();
     }
     // 상품을 개발한다. - 암 보험
@@ -149,9 +154,14 @@ public class InsuranceService {
     public String createCancerInsurance(InsuranceCancerRequestDto dto) {
         CancerHealth cancerHealth = InsuranceMapper.insuranceMapper.toCancerEntity(dto);
         Insurance insurance = InsuranceMapper.insuranceMapper.toCancerInsuranceEntity(dto);
-
+        Guarantee guarantee = InsuranceMapper.insuranceMapper.toGuarantee(dto.getGuarantee());
+        SpecialProvision specialProvision = InsuranceMapper.insuranceMapper.toSpecialProvision(dto.getSpecialProvision());
         insurance.setCancerHealth(cancerHealth);
+        insurance.setGuarantee(guarantee);
+        insurance.setSpecialProvision(specialProvision);
         CancerHealth response =cancerHealthRepository.save(cancerHealth);
+        Guarantee guaranteeResponse = guaranteeRepository.save(guarantee);
+        SpecialProvision specialProvisionResponse = specialProvisionRepository.save(specialProvision);
         Insurance insuranceResponse=insuranceRepository.save(insurance);
         if(response!=null&&insuranceResponse!=null) return "[success] 성공적으로 암 보험 상품이 생성되었습니다!";
         else throw new NullPointerException();
@@ -161,9 +171,14 @@ public class InsuranceService {
     public String createHousefireInsurance(InsuranceHouseFireRequestDto dto) {
         HouseFire houseFire = InsuranceMapper.insuranceMapper.toHouseFireEntity(dto);
         Insurance insurance = InsuranceMapper.insuranceMapper.toHouseFireInsuranceEntity(dto);
+        Guarantee guarantee = InsuranceMapper.insuranceMapper.toGuarantee(dto.getGuarantee());
+        SpecialProvision specialProvision = InsuranceMapper.insuranceMapper.toSpecialProvision(dto.getSpecialProvision());
         insurance.setHouseFire(houseFire);
-
+        insurance.setGuarantee(guarantee);
+        insurance.setSpecialProvision(specialProvision);
         HouseFire response = houseFireRepository.save(houseFire);
+        Guarantee guaranteeResponse = guaranteeRepository.save(guarantee);
+        SpecialProvision specialProvisionResponse = specialProvisionRepository.save(specialProvision);
         Insurance insuranceResponse=insuranceRepository.save(insurance);
         if(response!=null&&insuranceResponse!=null) return "[success] 성공적으로 화재 보험 상품이 생성되었습니다!";
         else throw new NullPointerException();
@@ -172,9 +187,14 @@ public class InsuranceService {
     public String createInternationalInsurance(InsuranceInternationalRequestDto dto) {
         InternationalTravel internationalTravel = InsuranceMapper.insuranceMapper.toInternationalTravelEntity(dto);
         Insurance insurance = InsuranceMapper.insuranceMapper.toInternationalTravelInsuranceEntity(dto);
+        Guarantee guarantee = InsuranceMapper.insuranceMapper.toGuarantee(dto.getGuarantee());
+        SpecialProvision specialProvision = InsuranceMapper.insuranceMapper.toSpecialProvision(dto.getSpecialProvision());
         insurance.setInternationalTravel(internationalTravel);
-
+        insurance.setGuarantee(guarantee);
+        insurance.setSpecialProvision(specialProvision);
         InternationalTravel response = internationalRepository.save(internationalTravel);
+        Guarantee guaranteeResponse = guaranteeRepository.save(guarantee);
+        SpecialProvision specialProvisionResponse = specialProvisionRepository.save(specialProvision);
         Insurance insuranceResponse=insuranceRepository.save(insurance);
         if(response!=null&&insuranceResponse!=null) return "[success] 성공적으로 여행 보험 상품이 생성되었습니다!";
         else throw new NullPointerException();

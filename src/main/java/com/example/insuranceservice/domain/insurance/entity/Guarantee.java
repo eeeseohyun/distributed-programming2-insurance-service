@@ -23,6 +23,12 @@ public class Guarantee {
     private int maxCoverage;
     private String guaranteeDescription;
 
+    public Guarantee(String guaranteeName, String guaranteeDescription, int maxCoverage) {
+        this.guaranteeName=guaranteeName;
+        this.guaranteeDescription=guaranteeDescription;
+        this.maxCoverage=maxCoverage;
+    }
+
     public GuaranteeDto toDto() {
         GuaranteeDto dto = new GuaranteeDto();
         dto.setGuaranteeName(this.guaranteeName);

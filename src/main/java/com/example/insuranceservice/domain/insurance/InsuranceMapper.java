@@ -4,11 +4,10 @@ import com.example.insuranceservice.domain.InternationalTravel.entity.Internatio
 import com.example.insuranceservice.domain.cancerHealth.entity.CancerHealth;
 import com.example.insuranceservice.domain.car.entity.Car;
 import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceCancerRequestDto;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceCarRequestDto;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceHouseFireRequestDto;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceInternationalRequestDto;
+import com.example.insuranceservice.domain.insurance.dto.*;
+import com.example.insuranceservice.domain.insurance.entity.Guarantee;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
+import com.example.insuranceservice.domain.insurance.entity.SpecialProvision;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -73,4 +72,7 @@ public interface InsuranceMapper {
     InsuranceHouseFireRequestDto toHouseFireInsuranceDto(Insurance insurance);
     InsuranceInternationalRequestDto toInternationalInsuranceDto (Insurance insurance);
 
+    SpecialProvision toSpecialProvision(SpecialProvisionDto dto);
+
+    Guarantee toGuarantee(GuaranteeDto guarantee);
 }
