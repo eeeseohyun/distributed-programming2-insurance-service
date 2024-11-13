@@ -54,7 +54,7 @@ public class PaymentInfoController {
             @ApiResponse(responseCode = "200", description = "등록 성공"),
             @ApiResponse(responseCode = "404", description = "결제 정보를 찾을 수 없음")
     })
-    @PostMapping("/setBankInfo")
+
     private void setBankInfo(
             @Parameter(description = "계좌 정보", required = true)
             @RequestBody BankDto dto,
@@ -69,7 +69,6 @@ public class PaymentInfoController {
             @ApiResponse(responseCode = "200", description = "등록 성공"),
             @ApiResponse(responseCode = "404", description = "결제 정보를 찾을 수 없음")
     })
-    @PostMapping("/setAutomaticInfo")
     private void setAutomaticInfo(
             @Parameter(description = "자동이체 정보", required = true)
             @RequestBody AutomaticDto dto,

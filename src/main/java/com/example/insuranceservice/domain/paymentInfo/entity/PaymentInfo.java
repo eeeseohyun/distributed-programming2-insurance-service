@@ -1,23 +1,15 @@
 package com.example.insuranceservice.domain.paymentInfo.entity;
 
-import com.example.insuranceservice.domain.automatic.entity.Automatic;
-import com.example.insuranceservice.domain.bank.entity.Bank;
-import com.example.insuranceservice.domain.card.entity.Card;
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.Getter;
-import lombok.Setter;
-import java.util.List;
 
 @Entity
 @Data
 @Builder
-@Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentInfo {
@@ -29,18 +21,24 @@ public class PaymentInfo {
     private String fixedMonthlyPaymentDate;
     private Integer fixedMonthlyPayment;
 
+    // Card
+    private String cardNum;
+    private String cvcNum;
+    private String password;
+
+    // Bank
+    private String payerName;
+    private String payerPhoneNum;
+
+
+    // Automatic
+    private String accountNum;
+    private String applicantName;
+    private String applicantRRN;
+    private String paymentCompanyName;
+    private String relationshipToApplicant;
+
     @ManyToOne
     @JoinColumn(name = "contract_id")
     private Contract contract;
-
-    @OneToMany(mappedBy = "paymentInfo", cascade = CascadeType.ALL)
-    private List<Card> cardList;
-
-    @OneToMany(mappedBy = "paymentInfo", cascade = CascadeType.ALL)
-    private List<Bank> bankList;
-
-    @OneToMany(mappedBy = "paymentInfo", cascade = CascadeType.ALL)
-    private List<Automatic> automaticList;
-
 }
-
