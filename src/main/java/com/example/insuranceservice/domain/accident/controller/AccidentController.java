@@ -8,50 +8,77 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
-@RequestMapping("/api/accidents")
+@RequestMapping("api/accidents")
 @RequiredArgsConstructor
+@Tag(name = "사고접수 API", description = "사고접수 관련 API")
 public class AccidentController {
     private final AccidentService accidentService;
 
     //// 사고접수 카테고리
-    // 사고접수 조회 - 모든 사고 조회
+    // 사고접수 조회 - 모든 사고접수 조회
+    @Operation(summary = "전체 사고접수 조회", description = "모든 사고접수 내역을 조회합니다")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping
     public ResponseEntity<List<AccidentDTO>> getAllAccidents() {
         return ResponseEntity.ok(accidentService.getAllAccidents());
     }
 
     // 사고접수 조회 - accidentID 이용
+    @Operation(summary = "사고접수 단건 조회", description = "사고접수 ID로 특정 사고를 조회합니다")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/{accidentID}")
-    public ResponseEntity<AccidentDTO> getAccidentById(@PathVariable int accidentID) {
+    public ResponseEntity<AccidentDTO> getAccidentById(
+            @Parameter(description = "사고접수 ID") @PathVariable int accidentID
+    ) {
         return ResponseEntity.ok(accidentService.getAccidentById(accidentID));
     }
 
     // 사고접수 조회 - customerID 이용
+    @Operation(summary = "고객별 사고접수 조회", description = "고객 ID로 해당 고객의 모든 사고접수를 조회합니다")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/customer/{customerID}")
-    public ResponseEntity<List<AccidentDTO>> getAccidentsByCustomerId(@PathVariable int customerID) {
+    public ResponseEntity<List<AccidentDTO>> getAccidentsByCustomerId(
+            @Parameter(description = "고객 ID") @PathVariable int customerID
+    ) {
         return ResponseEntity.ok(accidentService.getAccidentsByCustomerId(customerID));
     }
 
     // 사고접수 신청
+    @Operation(summary = "사고접수 생성", description = "새로운 사고를 접수합니다")
+    @ApiResponse(responseCode = "201", description = "사고접수 생성 성공")
     @PostMapping
-    public ResponseEntity<AccidentDTO> createAccident(@RequestBody AccidentDTO accidentDTO) {
+    public ResponseEntity<AccidentDTO> createAccident(
+            @Parameter(description = "사고접수 정보") @RequestBody AccidentDTO accidentDTO
+    ) {
         return new ResponseEntity<>(accidentService.createAccident(accidentDTO), HttpStatus.CREATED);
     }
 
     // 사고접수 수정
+    @Operation(summary = "사고접수 수정", description = "기존 사고접수 내용을 수정합니다")
+    @ApiResponse(responseCode = "200", description = "수정 성공")
     @PutMapping("/{accidentID}")
     public ResponseEntity<AccidentDTO> updateAccident(
-            @PathVariable int accidentID,
-            @RequestBody AccidentDTO accidentDTO) {
+            @Parameter(description = "사고접수 ID") @PathVariable int accidentID,
+            @Parameter(description = "수정할 사고접수 정보") @RequestBody AccidentDTO accidentDTO
+    ) {
         return ResponseEntity.ok(accidentService.updateAccident(accidentID, accidentDTO));
     }
 
     // 사고접수 삭제 - 직원만 가능
+    @Operation(summary = "사고접수 삭제", description = "사고접수를 삭제합니다 (직원 전용)")
+    @ApiResponse(responseCode = "204", description = "삭제 성공")
     @DeleteMapping("/{accidentID}")
-    public ResponseEntity<Void> deleteAccident(@PathVariable int accidentID) {
+    public ResponseEntity<Void> deleteAccident(
+            @Parameter(description = "사고접수 ID") @PathVariable int accidentID
+    ) {
         accidentService.deleteAccident(accidentID);
         return ResponseEntity.noContent().build();
     }
-    ////
 }
