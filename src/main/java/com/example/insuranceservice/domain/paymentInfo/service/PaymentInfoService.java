@@ -10,14 +10,18 @@ import com.example.insuranceservice.domain.card.dto.CardDto;
 import com.example.insuranceservice.domain.card.entity.Card;
 import com.example.insuranceservice.domain.card.repository.CardRepository;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoDto;
+import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRetrieveDto;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import com.example.insuranceservice.domain.paymentInfo.repository.PaymentInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentInfoService {
@@ -83,5 +87,34 @@ public class PaymentInfoService {
             paymentInfo.setApplicantRRN(auto.getApplicantRRN());
 //            paymentInfo.setAutomaticList(autoList);
         }
+    }
+    public List<PaymentInfoRetrieveDto> getAllPaymentInfo() {
+//        List<PaymentInfo> paymentInfos = paymentInfoRepository.findAll();
+
+        Pageable pageable = PageRequest.of(0, 100);
+        List<PaymentInfo> paymentInfos = paymentInfoRepository.findAll(pageable).getContent();
+
+        return paymentInfos.stream()
+//                .limit(100)
+                .map(this::toRetrieveDto)
+                .collect(Collectors.toList());
+    }
+
+    private PaymentInfoRetrieveDto toRetrieveDto(PaymentInfo paymentInfo) {
+        return PaymentInfoRetrieveDto.builder()
+                .paymentType(paymentInfo.getPaymentType())
+                .fixedMonthlyPaymentDate(paymentInfo.getFixedMonthlyPaymentDate())
+                .fixedMonthlyPayment(paymentInfo.getFixedMonthlyPayment())
+                .cardNum(paymentInfo.getCardNum())
+                .cvcNum(paymentInfo.getCvcNum())
+                .password(paymentInfo.getPassword())
+                .payerName(paymentInfo.getPayerName())
+                .payerPhoneNum(paymentInfo.getPayerPhoneNum())
+                .accountNum(paymentInfo.getAccountNum())
+                .applicantName(paymentInfo.getApplicantName())
+                .applicantRRN(paymentInfo.getApplicantRRN())
+                .paymentCompanyName(paymentInfo.getPaymentCompanyName())
+                .relationshipToApplicant(paymentInfo.getRelationshipToApplicant())
+                .build();
     }
 }
