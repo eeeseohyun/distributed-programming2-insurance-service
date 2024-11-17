@@ -1,10 +1,10 @@
 package com.example.insuranceservice.domain.contract.dto;
 
-import com.example.insuranceservice.domain.insurance.cancerHealth.dto.CancerHealthDto;
-import com.example.insuranceservice.domain.insurance.car.dto.CarDto;
+import com.example.insuranceservice.domain.cancerHealth.dto.CancerHealthDto;
+import com.example.insuranceservice.domain.car.dto.CarDto;
 import com.example.insuranceservice.domain.contract.entity.Contract;
-import com.example.insuranceservice.domain.insurance.houseFire.dto.HouseFireDto;
-import com.example.insuranceservice.domain.insurance.InternationalTravel.dto.InternationalTravelDto;
+import com.example.insuranceservice.domain.houseFire.dto.HouseFireDto;
+import com.example.insuranceservice.domain.InternationalTravel.dto.InternationalTravelDto;
 import com.example.insuranceservice.global.constant.Constant;
 import lombok.Data;
 

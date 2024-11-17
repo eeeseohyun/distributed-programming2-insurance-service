@@ -8,7 +8,7 @@ import com.example.insuranceservice.domain.contract.repository.ContractRepositor
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
 import com.example.insuranceservice.domain.customer.service.CustomerService;
-import com.example.insuranceservice.domain.insurance.main.service.InsuranceService;
+import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRequestDto;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
@@ -44,86 +44,63 @@ public class ContractService {
         this.paymentInfoRepository = paymenInfoRepository;
     }
 
-    // 미납관리한다.
+    // 미납관리한다. - delete
     public String manageLatePayment(int contractId) {
-        Optional<Contract> contractOptional = contractRepository.findById(contractId);
-        if(!contractOptional.isPresent()){
-          throw new NullPointerException();
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new NullPointerException("Contract not found"));
+        if(contract.getNonPaymentPeriod() >= Constant.maximumLatePaymentPeriod) {
+            contractRepository.deleteById(contractId);
         }
-        Contract contract = contractOptional.get();
-        if(contract.getNonPaymentPeriod()>= Constant.maximumLatePaymentPeriod) {
-          contractRepository.deleteById(contractId);
-        }
-        Boolean response = contractRepository.existsById(contractId);
+        boolean response = contractRepository.existsById(contractId);
         if(!response) return "[success] 성공적으로 미납 관리가 되었습니다!";
         else return "[error] 미납자 정보가 지워지지 않았습니다!";
     }
-    // 부활관리한다...
-    //아직 미구현
+
+    // 부활관리한다. - update
     public String manageRevive(ContractDto contractDto) {
-        Optional<Contract> contractOptional = contractRepository.findById(contractDto.getId());
-        if(contractOptional.get()==null){
-            throw new NullPointerException();
-        }
-        Contract contract = contractOptional.get();
+        Contract contract = contractRepository.findById(contractDto.getId())
+                .orElseThrow(() -> new NullPointerException("Contract not found"));
         contract.revive(contractDto);
-        contractRepository.deleteById(contractDto.getId());
         Contract response = contractRepository.save(contract);
         if(response!=null)  return "[success] 성공적으로 부활관리가 되었습니다!";
         else return "[error] 계약이 부활되지 않았습니다!";
-
     }
-
-    // 만기관리하다.
+    // 만기관리하다.- delete
     public String manageExpirationContract(int contractId) throws ParseException {
-        Optional<Contract> contractOptional = contractRepository.findById(contractId);
-        if(!contractOptional.isPresent()){
-            throw new NullPointerException();
-        }
-        Contract contract = contractOptional.get();
-        SimpleDateFormat dateFormat =new SimpleDateFormat(Constant.dateFormat);
-        Date date = dateFormat.parse(contract.getExpirationDate());
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new NullPointerException("Contract not found"));
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Constant.dateFormat);
+        Date expirationDate = dateFormat.parse(contract.getExpirationDate());
         Date today = new Date();
-        if(!date.before(today)) {
+        if (!expirationDate.before(today)) {
             return "[error] 만기되지 않은 계약입니다!";
         }
-        if(contract.getRenewalStatus()) {
+        if (contract.getRenewalStatus()) {
             return "[error] 재계약 진행 희망자로 만기할 수 없는 계약입니다!";
         }
         contractRepository.deleteById(contractId);
-        Boolean response = contractRepository.existsById(contractId);
+        boolean response= contractRepository.existsById(contractId);
         if(!response) return "[success] 성공적으로 만기 관리가 되었습니다!";
         else return "[error] 만기계약이 지워지지 않았습니다!";
     }
 
-    // 재계약관리한다.
+    // 재계약관리한다. - update
     public String manageRenewalContract(int contractId) {
-        Optional<Contract> contractOptional = contractRepository.findById(contractId);
-        if(contractOptional.get()==null){
-            throw new NullPointerException();
-        }
-        Contract contract = contractOptional.get();
-        if(contract.getRenewalStatus()) {
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new NullPointerException("Contract not found"));
+        if (contract.getRenewalStatus()) {
             LocalDate expirationDate = LocalDate.now().plusYears(2);
-
-            // 만약 날짜 포맷이 필요하다면 아래와 같이 포맷팅
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String formattedDate = expirationDate.format(formatter);
-
-            // 설정한 날짜를 contract에 적용
+            String formattedDate = expirationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             contract.setExpirationDate(formattedDate);
-            contractRepository.updateExpirationDate(contractId, contract.getExpirationDate());
+            contractRepository.save(contract);
             return "[success] 성공적으로 재계약이 되었습니다!";
-        }else{
+        } else {
             return "[error] 재계약에 동의하지 않아 재계약에 실패했습니다!";
-
         }
-
     }
 
-    // 배서관리한다.
+    // 배서관리한다. - update
     public String manageUpdate(ContractDto contractDto) {
-        contractRepository.deleteById(contractDto.getId());
         contractRepository.save(contractDto.toEntity());
         Boolean response = contractRepository.existsById(contractDto.getId());
         if(response) return "[success] 성공적으로 배서가 반영 되었습니다!";
