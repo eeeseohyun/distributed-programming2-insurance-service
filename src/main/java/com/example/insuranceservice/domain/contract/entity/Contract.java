@@ -4,7 +4,7 @@ package com.example.insuranceservice.domain.contract.entity;
 import com.example.insuranceservice.domain.contract.dto.ContractDto;
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.employee.entity.Employee;
-import com.example.insuranceservice.domain.insurance.entity.Insurance;
+import com.example.insuranceservice.domain.insurance.main.entity.Insurance;
 import com.example.insuranceservice.domain.payment.entity.Payment;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import jakarta.persistence.*;

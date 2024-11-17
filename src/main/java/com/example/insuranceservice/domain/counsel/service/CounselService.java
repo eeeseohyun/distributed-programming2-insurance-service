@@ -1,6 +1,5 @@
 package com.example.insuranceservice.domain.counsel.service;
 
-import com.example.insuranceservice.domain.contract.dto.ConcludedContractDto;
 import com.example.insuranceservice.domain.counsel.dto.*;
 import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import com.example.insuranceservice.domain.counsel.repository.CounselRepository;
@@ -8,15 +7,14 @@ import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
 import com.example.insuranceservice.domain.employee.entity.Employee;
 import com.example.insuranceservice.domain.employee.service.EmployeeService;
-import com.example.insuranceservice.domain.insurance.entity.Insurance;
-import com.example.insuranceservice.domain.insurance.service.InsuranceService;
+import com.example.insuranceservice.domain.insurance.main.entity.Insurance;
+import com.example.insuranceservice.domain.insurance.main.service.InsuranceService;
 import com.example.insuranceservice.global.constant.Constant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
