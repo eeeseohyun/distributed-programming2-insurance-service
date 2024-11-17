@@ -1,49 +1,35 @@
-package com.example.insuranceservice.domain.paymentInfo.entity;
+package com.example.insuranceservice.domain.paymentInfo.dto;
 
-import com.example.insuranceservice.domain.contract.entity.Contract;
-import com.example.insuranceservice.domain.paymentInfo.dto.UpdatePaymentInfoDto;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.example.insuranceservice.domain.automatic.dto.AutomaticRequestDto;
+import com.example.insuranceservice.domain.bank.dto.BankRequestDto;
+import com.example.insuranceservice.domain.card.dto.CardRequestDto;
+import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.List;
+
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class PaymentInfo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "payment_info_id")
+public class UpdatePaymentInfoDto {
     private Integer id;
     private String paymentType;
     private String fixedMonthlyPaymentDate;
     private Integer fixedMonthlyPayment;
 
-    // Card
     private String cardNum;
     private String cvcNum;
     private String password;
 
-    // Bank
     private String payerName;
     private String payerPhoneNum;
 
-    // Automatic
     private String accountNum;
     private String applicantName;
     private String applicantRRN;
     private String paymentCompanyName;
     private String relationshipToApplicant;
 
-    @ManyToOne
-    @JoinColumn(name = "contract_id")
-    private Contract contract;
-
-    public UpdatePaymentInfoDto toUpdatePaymentInfoDto() {
-        UpdatePaymentInfoDto paymentInfo = new UpdatePaymentInfoDto();
+    public PaymentInfo toEntity() {
+        PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setId(id);
         paymentInfo.setPaymentType(paymentType);
         paymentInfo.setFixedMonthlyPaymentDate(fixedMonthlyPaymentDate);

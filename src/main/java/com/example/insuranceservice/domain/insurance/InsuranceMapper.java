@@ -1,14 +1,14 @@
 package com.example.insuranceservice.domain.insurance;
 
-import com.example.insuranceservice.domain.insurance.InternationalTravel.entity.InternationalTravel;
-import com.example.insuranceservice.domain.insurance.cancerHealth.entity.CancerHealth;
-import com.example.insuranceservice.domain.insurance.car.entity.Car;
-import com.example.insuranceservice.domain.insurance.houseFire.entity.HouseFire;
-import com.example.insuranceservice.domain.insurance.main.dto.InsuranceCancerRequestDto;
-import com.example.insuranceservice.domain.insurance.main.dto.InsuranceCarRequestDto;
-import com.example.insuranceservice.domain.insurance.main.dto.InsuranceHouseFireRequestDto;
-import com.example.insuranceservice.domain.insurance.main.dto.InsuranceInternationalRequestDto;
-import com.example.insuranceservice.domain.insurance.main.entity.Insurance;
+import com.example.insuranceservice.domain.InternationalTravel.entity.InternationalTravel;
+import com.example.insuranceservice.domain.cancerHealth.entity.CancerHealth;
+import com.example.insuranceservice.domain.car.entity.Car;
+import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
+import com.example.insuranceservice.domain.insurance.dto.InsuranceCancerRequestDto;
+import com.example.insuranceservice.domain.insurance.dto.InsuranceCarRequestDto;
+import com.example.insuranceservice.domain.insurance.dto.InsuranceHouseFireRequestDto;
+import com.example.insuranceservice.domain.insurance.dto.InsuranceInternationalRequestDto;
+import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

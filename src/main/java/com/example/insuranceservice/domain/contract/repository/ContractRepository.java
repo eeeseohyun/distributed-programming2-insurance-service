@@ -12,8 +12,4 @@ import java.util.List;
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
     List<Contract> findByContractStatus(String contractStatus);
     List<Contract> findByCustomerAndContractStatusIs(Customer customer, String contractStatus);
-    @Modifying
-    @Transactional
-    @Query("UPDATE Contract c SET c.expirationDate = :expirationDate WHERE c.id = :contractId")
-    void updateExpirationDate(int contractId, String expirationDate);
 }

@@ -11,6 +11,7 @@ import com.example.insuranceservice.domain.card.entity.Card;
 import com.example.insuranceservice.domain.card.repository.CardRepository;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoDto;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRetrieveDto;
+import com.example.insuranceservice.domain.paymentInfo.dto.UpdatePaymentInfoDto;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import com.example.insuranceservice.domain.paymentInfo.repository.PaymentInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,5 +117,11 @@ public class PaymentInfoService {
                 .paymentCompanyName(paymentInfo.getPaymentCompanyName())
                 .relationshipToApplicant(paymentInfo.getRelationshipToApplicant())
                 .build();
+    }
+
+    public UpdatePaymentInfoDto setPaymentInfo(UpdatePaymentInfoDto updatePaymentInfoDto) {
+        PaymentInfo paymentInfo = updatePaymentInfoDto.toEntity();
+        UpdatePaymentInfoDto response = paymentInfoRepository.save(paymentInfo).toUpdatePaymentInfoDto();
+        return response;
     }
 }
