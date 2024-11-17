@@ -79,10 +79,46 @@ public interface InsuranceMapper {
     })
     Insurance toInternationalTravelInsuranceEntity(InsuranceInternationalRequestDto insuranceInternationalRequestDto);
 
-///
-    InsuranceCarRequestDto toCarInsuranceDto(Insurance insurance);
-    InsuranceCancerRequestDto toCancerInsuranceDto(Insurance insurance);
-    InsuranceHouseFireRequestDto toHouseFireInsuranceDto(Insurance insurance);
-    InsuranceInternationalRequestDto toInternationalInsuranceDto (Insurance insurance);
+    @Mappings({
+            @Mapping(source = "insurance.guaranteeName", target = "guarantee.guaranteeName"),
+            @Mapping(source = "insurance.maxCoverage", target = "guarantee.maxCoverage"),
+            @Mapping(source = "insurance.guaranteeDescription", target = "guarantee.guaranteeDescription"),
+            @Mapping(source = "insurance.rateOfDiscount", target = "specialProvision.rateOfDiscount"),
+            @Mapping(source = "insurance.specialProvisionName", target = "specialProvision.specialProvisionName"),
+            @Mapping(source = "car.model", target = "model"),
+            @Mapping(source = "car.vin", target = "vin"),
+            @Mapping(source = "car.priceOfCar", target = "priceOfCar"),
+            @Mapping(source = "car.hasBlackBox", target = "hasBlackBox")
+    })
+    InsuranceCarRequestDto toCarInsuranceDto(Insurance insurance, Car car);
+    @Mappings({
+            @Mapping(source = "insurance.guaranteeName", target = "guarantee.guaranteeName"),
+            @Mapping(source = "insurance.maxCoverage", target = "guarantee.maxCoverage"),
+            @Mapping(source = "insurance.guaranteeDescription", target = "guarantee.guaranteeDescription"),
+            @Mapping(source = "insurance.rateOfDiscount", target = "specialProvision.rateOfDiscount"),
+            @Mapping(source = "insurance.specialProvisionName", target = "specialProvision.specialProvisionName"),
+            @Mapping(source = "cancerHealth.categoryOfCancer", target = "categoryOfCancer")
+    })
+    InsuranceCancerRequestDto toCancerInsuranceDto(Insurance insurance, CancerHealth cancerHealth);
+    @Mappings({
+            @Mapping(source = "insurance.guaranteeName", target = "guarantee.guaranteeName"),
+            @Mapping(source = "insurance.maxCoverage", target = "guarantee.maxCoverage"),
+            @Mapping(source = "insurance.guaranteeDescription", target = "guarantee.guaranteeDescription"),
+            @Mapping(source = "insurance.rateOfDiscount", target = "specialProvision.rateOfDiscount"),
+            @Mapping(source = "insurance.specialProvisionName", target = "specialProvision.specialProvisionName"),
+            @Mapping(source = "houseFire.categoryOfHouse", target = "categoryOfHouse"),
+            @Mapping(source = "houseFire.priceOfHouse", target = "priceOfHouse")
+    })
+    InsuranceHouseFireRequestDto toHouseFireInsuranceDto(Insurance insurance, HouseFire houseFire);
+    @Mappings({
+            @Mapping(source = "insurance.guaranteeName", target = "guarantee.guaranteeName"),
+            @Mapping(source = "insurance.maxCoverage", target = "guarantee.maxCoverage"),
+            @Mapping(source = "insurance.guaranteeDescription", target = "guarantee.guaranteeDescription"),
+            @Mapping(source = "insurance.rateOfDiscount", target = "specialProvision.rateOfDiscount"),
+            @Mapping(source = "insurance.specialProvisionName", target = "specialProvision.specialProvisionName"),
+            @Mapping(source = "internationalTravel.travelCountry", target = "travelCountry"),
+            @Mapping(source = "internationalTravel.travelPeriod", target = "travelPeriod")
+    })
+    InsuranceInternationalRequestDto toInternationalInsuranceDto (Insurance insurance, InternationalTravel internationalTravel);
 
 }
