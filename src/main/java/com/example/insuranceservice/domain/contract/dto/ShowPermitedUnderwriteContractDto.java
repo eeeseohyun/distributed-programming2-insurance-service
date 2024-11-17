@@ -1,7 +1,6 @@
 package com.example.insuranceservice.domain.contract.dto;
 
 import com.example.insuranceservice.domain.contract.entity.Contract;
-import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

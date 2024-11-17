@@ -1,15 +1,11 @@
 package com.example.insuranceservice.domain.contract.dto;
 
 import com.example.insuranceservice.domain.contract.entity.Contract;
-import com.example.insuranceservice.domain.insurance.entity.Insurance;
-import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @Data
 @Builder
