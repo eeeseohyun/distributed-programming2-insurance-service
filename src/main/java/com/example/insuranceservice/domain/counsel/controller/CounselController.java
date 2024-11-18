@@ -53,7 +53,7 @@ public class CounselController {
     @Operation(summary = "확정된 상담 일정 조회", description = "확정된 모든 상담 일정을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/confirmed/list")
-    public List<ShowConcludedCounselDto> showConcludedCounselList() {
+    public List<ShowConfirmedCounselDto> showConfirmedCounselList() {
         return counselService.showConfirmedCounselList();
     }
 

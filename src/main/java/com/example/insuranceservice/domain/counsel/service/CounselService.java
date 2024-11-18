@@ -74,10 +74,10 @@ public class CounselService {
     }
 
     // 확정된 상담 일정 조회
-    public List<ShowConcludedCounselDto> showConfirmedCounselList() {
+    public List<ShowConfirmedCounselDto> showConfirmedCounselList() {
         List<Counsel> confirmedCounselList = counselRepository.findByStatusOfCounsel(true);
         return confirmedCounselList.stream()
-                .map(ShowConcludedCounselDto::new)
+                .map(ShowConfirmedCounselDto::new)
                 .collect(Collectors.toList());
     }
 

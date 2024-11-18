@@ -3,8 +3,8 @@ package com.example.insuranceservice.domain.payment.service;
 import com.example.insuranceservice.domain.card.dto.CardRequestDto;
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.service.CustomerService;
-import com.example.insuranceservice.domain.payment.dto.PaymentDto;
-import com.example.insuranceservice.domain.payment.dto.PaymentRetrieveDto;
+import com.example.insuranceservice.domain.payment.dto.ShowPaymentDto;
+import com.example.insuranceservice.domain.payment.dto.RetrievePaymentDto;
 import com.example.insuranceservice.domain.payment.entity.Payment;
 import com.example.insuranceservice.domain.payment.repository.PaymentRepository;
 import com.example.insuranceservice.global.constant.Constant;
@@ -29,22 +29,22 @@ public class PaymentService {
 
     //// 보험료 납부 카테고리
     // 보험료 납부 리스트 조회
-    public List<PaymentDto> showPaymentList(Integer customerId) {
+    public List<ShowPaymentDto> showPaymentList(Integer customerId) {
         Customer customer = customerService.findCustomerById(customerId);
         List<Payment> paymentList = paymentRepository.findByCustomerAndStatusOfPayment(customer, false);
-        List<PaymentDto> paymentDtoList = new ArrayList<>();
+        List<ShowPaymentDto> showPaymentDtoList = new ArrayList<>();
         for(Payment payment: paymentList){
-            PaymentDto paymentDto = new PaymentDto();
-            paymentDto.setId(payment.getId());
-            paymentDto.setContractId(payment.getContract().getId());
-            paymentDto.setCustomerId(payment.getCustomer().getCustomerID());
-            paymentDto.setAmount(payment.getAmount());
-            paymentDto.setDueDateOfPayment(payment.getDueDateOfPayment());
-            paymentDto.setStatusOfPayment(payment.isStatusOfPayment());
+            ShowPaymentDto showPaymentDto = new ShowPaymentDto();
+            showPaymentDto.setId(payment.getId());
+            showPaymentDto.setContractId(payment.getContract().getId());
+            showPaymentDto.setCustomerId(payment.getCustomer().getCustomerID());
+            showPaymentDto.setAmount(payment.getAmount());
+            showPaymentDto.setDueDateOfPayment(payment.getDueDateOfPayment());
+            showPaymentDto.setStatusOfPayment(payment.isStatusOfPayment());
 
-            paymentDtoList.add(paymentDto);
+            showPaymentDtoList.add(showPaymentDto);
         }
-        return paymentDtoList;
+        return showPaymentDtoList;
     }
 
     // 보험료 납부
@@ -69,8 +69,8 @@ public class PaymentService {
         }
     }
 
-    public PaymentRetrieveDto retrievePayment(Integer paymentId) {
+    public RetrievePaymentDto retrievePayment(Integer paymentId) {
         Payment payment = findPaymentById(paymentId);
-        return new PaymentRetrieveDto(payment);
+        return new RetrievePaymentDto(payment);
     }
 }

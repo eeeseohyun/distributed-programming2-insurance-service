@@ -4,7 +4,7 @@ import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import lombok.Data;
 
 @Data
-public class InsuranceDetailDto{
+public class ShowInsuranceDetailDto {
     private Integer insuranceID;
     private String insuranceName;
     private String category;
@@ -14,7 +14,7 @@ public class InsuranceDetailDto{
     private Integer minimumPeriod;
     private Integer minimumPremium;
 
-    public InsuranceDetailDto(Insurance insurance){
+    public ShowInsuranceDetailDto(Insurance insurance){
         this.insuranceID = insurance.getInsuranceID();
         this.insuranceName = insurance.getInsuranceName();
         this.category = insurance.getCategory();

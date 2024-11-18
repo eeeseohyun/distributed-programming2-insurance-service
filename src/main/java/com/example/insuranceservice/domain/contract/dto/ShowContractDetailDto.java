@@ -9,7 +9,7 @@ import com.example.insuranceservice.global.constant.Constant;
 import lombok.Data;
 
 @Data
-public class ContractDetailDto {
+public class ShowContractDetailDto {
     private Integer id;
     private String insuranceName;
     private Integer customerId;
@@ -25,7 +25,7 @@ public class ContractDetailDto {
     private InternationalTravelDto internationalDto;
     private CancerHealthDto cancerHealthDto;
 
-    public ContractDetailDto(Contract contract) {
+    public ShowContractDetailDto(Contract contract) {
         this.id = contract.getId();
         this.insuranceName = contract.getInsurance().getInsuranceName();
         this.customerId = contract.getCustomer().getCustomerID();

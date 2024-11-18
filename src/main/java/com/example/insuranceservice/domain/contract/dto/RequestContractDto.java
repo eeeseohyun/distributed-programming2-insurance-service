@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ContractRequestDto {
+public class RequestContractDto {
     // 계약 신청 정보
 //    private Integer customerId;
     private String expirationDate;
