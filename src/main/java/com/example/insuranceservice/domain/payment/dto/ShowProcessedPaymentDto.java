@@ -4,7 +4,7 @@ import com.example.insuranceservice.domain.payment.entity.Payment;
 import lombok.Data;
 
 @Data
-public class ShowPaymentDto {
+public class ShowProcessedPaymentDto {
     private Integer id;
     private Integer contractId;
     private Integer customerId;
@@ -12,7 +12,7 @@ public class ShowPaymentDto {
     private String dueDateOfPayment;
     private String statusOfPayment;
 
-    public ShowPaymentDto(Payment payment){
+    public ShowProcessedPaymentDto(Payment payment){
         this.id = payment.getId();
         this.contractId = payment.getContract().getId();
         this.customerId = payment.getContract().getCustomer().getCustomerID();
