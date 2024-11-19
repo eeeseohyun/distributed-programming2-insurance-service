@@ -1,6 +1,7 @@
 package com.example.insuranceservice.domain.accident.entity;
 import com.example.insuranceservice.domain.compensation.entity.Compensation;
 import com.example.insuranceservice.domain.customer.entity.Customer;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,5 +26,6 @@ public class Accident {
     private int carNumber;
 
     @OneToMany(mappedBy = "accident", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Compensation> compensations;
 }

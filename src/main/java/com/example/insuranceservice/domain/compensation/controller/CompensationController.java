@@ -28,20 +28,20 @@ public class CompensationController {
     // 모든 보상 조회
     @Operation(summary = "전체 보상 조회", description = "모든 보상 내역을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping
-    public List<Compensation> getAllCompensations() {
-        return compensationService.getAllCompensations();
+    @GetMapping("/showAllCompensationList")
+    public List<Compensation> showAllCompensationList() {
+        return compensationService.showAllCompensationList();
     }
 
     // 보상 조회
-    @Operation(summary = "보상 단건 조회", description = "특정 보상 정보를 조회합니다")
+    @Operation(summary = "고객 보상 조회", description = "특정 고객의 모든 사고와 관련된 보상 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/{compensationId}")
-    public Compensation getCompensationById(
-            @Parameter(description = "보상 ID") @PathVariable int compensationId
+    @GetMapping("/showCompensationList/{customerId}")
+    public List<Compensation> showCompensationList(
+            @Parameter(description = "고객 ID") @PathVariable int customerId
     ) {
         try {
-            return compensationService.getCompensationById(compensationId);
+            return compensationService.showCompensationList(customerId);
         } catch (NotFoundProfileException e) {
             throw new RuntimeException(e);
         }
@@ -64,7 +64,7 @@ public class CompensationController {
     // 보상 수정
     @Operation(summary = "보상 정보 수정", description = "기존 보상 정보를 수정합니다")
     @ApiResponse(responseCode = "200", description = "수정 성공")
-    @PutMapping("/{compensationID}")
+    @PutMapping("/updateCompensation")
     public String updateCompensation(
             @Parameter(description = "수정할 보상 정보") @RequestBody CompensationUpdateDTO compensation
     ) {
@@ -78,7 +78,7 @@ public class CompensationController {
     // 보상 삭제
     @Operation(summary = "보상 삭제", description = "보상 정보를 삭제합니다")
     @ApiResponse(responseCode = "200", description = "삭제 성공")
-    @DeleteMapping("/{compensationID}")
+    @DeleteMapping("/deleteCompensation/{compensationID}")
     public String deleteCompensation(
             @Parameter(description = "보상 ID") @PathVariable int compensationID
     ) {
@@ -120,7 +120,7 @@ public class CompensationController {
     // 보험금 산출
     @Operation(summary = "보험금 산출", description = "보험금을 산출합니다")
     @ApiResponse(responseCode = "200", description = "산출 성공")
-    @GetMapping("/calculateInsuranceAmount")
+    @GetMapping("/calculateInsuranceAmount/{compensationId}")
     private String calculateInsuranceAmount(
             @Parameter(description = "보상 ID") @PathVariable int compensationId
     ) {
@@ -134,7 +134,7 @@ public class CompensationController {
     // 보험금 지급
     @Operation(summary = "보험금 지급", description = "보험금을 지급합니다")
     @ApiResponse(responseCode = "200", description = "지급 성공")
-    @GetMapping("/giveInsuranceAmount")
+    @GetMapping("/giveInsuranceAmount/{compensationId}")
     private String giveInsuranceAmount(
             @Parameter(description = "보상 ID") @PathVariable int compensationId
     ) {
