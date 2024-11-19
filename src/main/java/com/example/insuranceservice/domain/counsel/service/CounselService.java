@@ -43,7 +43,7 @@ public class CounselService {
 
         Customer customer = findCustomerById(createCounselDto.getCustomerId());
         counsel.setCustomer(customer);
-        Counsel savedCounsel = counselRepository.save(counsel);
+        counselRepository.save(counsel);
         return "[success] 상담 신청이 완료되었습니다.";
     }
 

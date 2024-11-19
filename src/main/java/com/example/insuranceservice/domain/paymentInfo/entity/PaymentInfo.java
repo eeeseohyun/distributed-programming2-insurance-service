@@ -38,7 +38,7 @@ public class PaymentInfo {
     private String paymentCompanyName;
     private String relationshipToApplicant;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id")
     private Contract contract;
 

@@ -17,7 +17,7 @@ public class Compensation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int compensationID;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accidentID", nullable = false)
     private Accident accident;
 
