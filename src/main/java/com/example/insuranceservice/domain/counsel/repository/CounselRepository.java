@@ -12,4 +12,6 @@ public interface CounselRepository  extends JpaRepository<Counsel, Integer> {
     List<Counsel> findByCustomer(Customer customer);
     List<Counsel> findByStatusOfCounsel(boolean statusOfCounsel);
     List<Counsel> findByEmployee(Employee employee);
+    List<Counsel> findByCustomer_CustomerID(Integer customerId);
+    List<Counsel> findByEmployeeAndStatusOfCounsel(Employee employee, boolean b);
 }
