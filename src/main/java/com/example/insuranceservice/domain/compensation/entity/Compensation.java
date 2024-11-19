@@ -1,6 +1,7 @@
 package com.example.insuranceservice.domain.compensation.entity;
 
 import com.example.insuranceservice.domain.accident.entity.Accident;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ public class Compensation {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accidentID", nullable = false)
+    @JsonBackReference
     private Accident accident;
 
     private int insuranceAmount;
