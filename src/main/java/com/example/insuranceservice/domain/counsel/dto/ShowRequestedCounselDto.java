@@ -4,7 +4,7 @@ import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import lombok.Data;
 
 @Data
-public class RequestedCounselDto {
+public class ShowRequestedCounselDto {
     private Integer counselId;
     private Integer customerId;
     private String name;
@@ -18,7 +18,7 @@ public class RequestedCounselDto {
     private String timeOfCounsel;
     private String statusOfCounsel;
 
-    public RequestedCounselDto(Counsel counsel){
+    public ShowRequestedCounselDto(Counsel counsel){
         this.counselId = counsel.getCounselId();
         this.customerId = counsel.getCustomer().getCustomerID();
         this.name = counsel.getCustomer().getName();

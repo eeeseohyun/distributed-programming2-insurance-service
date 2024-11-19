@@ -1,18 +1,13 @@
 package com.example.insuranceservice.domain.insurance.entity;
 
-import com.example.insuranceservice.domain.InternationalTravel.entity.InternationalTravel;
 import com.example.insuranceservice.domain.cancerHealth.entity.CancerHealth;
 import com.example.insuranceservice.domain.car.entity.Car;
 import com.example.insuranceservice.domain.houseFire.entity.HouseFire;
-import com.example.insuranceservice.domain.insurance.dto.*;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Optional;
-
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

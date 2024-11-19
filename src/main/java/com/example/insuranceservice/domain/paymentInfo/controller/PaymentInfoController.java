@@ -5,6 +5,7 @@ import com.example.insuranceservice.domain.bank.dto.BankDto;
 import com.example.insuranceservice.domain.card.dto.CardDto;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoDto;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRetrieveDto;
+import com.example.insuranceservice.domain.paymentInfo.dto.UpdatePaymentInfoDto;
 import com.example.insuranceservice.domain.paymentInfo.service.PaymentInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,7 +37,6 @@ public class PaymentInfoController {
     ) {
         return paymentInfoService.createPayment(paymentInfoDto);
     }
-
     @Operation(summary = "카드 정보 등록", description = "결제 수단으로 카드 정보를 등록합니다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "등록 성공"),
@@ -89,5 +89,11 @@ public class PaymentInfoController {
     @GetMapping("/getAllPaymentInfo")
     public List<PaymentInfoRetrieveDto> getAllPaymentInfo() {
         return paymentInfoService.getAllPaymentInfo();
+    }
+
+    // 수금을 관리한다.
+    @PutMapping("/updatePaymentInfo")
+    public UpdatePaymentInfoDto setPaymentInfo(@RequestBody UpdatePaymentInfoDto updatePaymentInfoDto){
+       return paymentInfoService.setPaymentInfo(updatePaymentInfoDto);
     }
 }

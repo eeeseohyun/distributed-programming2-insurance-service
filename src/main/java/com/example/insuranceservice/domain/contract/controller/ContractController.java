@@ -28,18 +28,16 @@ public class ContractController {
     @ApiResponse(responseCode = "200", description = "처리 성공")
     @PostMapping("/latePayment")
     private String manageLatePayment(
-            @Parameter(description = "계약 ID") @RequestParam int contractId
-    ) {
+            @Parameter(description = "계약 ID") @RequestParam int contractId) {
         return contractService.manageLatePayment(contractId);
     }
 
-    // 부활관리한다.- 미구현
+    // 부활관리한다.
     @Operation(summary = "계약 부활 관리", description = "만료된 계약의 부활을 관리합니다")
     @ApiResponse(responseCode = "200", description = "처리 성공")
     @PutMapping("/revive")
     private String manageRevive(
-            @Parameter(description = "계약 정보") @RequestBody ContractDto contractDto
-    ) {
+            @Parameter(description = "계약 정보") @RequestBody ContractDto contractDto) {
         return contractService.manageRevive(contractDto);
     }
 
@@ -47,9 +45,7 @@ public class ContractController {
     @Operation(summary = "만기 계약 관리", description = "만기된 계약을 관리합니다")
     @ApiResponse(responseCode = "200", description = "처리 성공")
     @PostMapping("/expire")
-    private String manageExpirationContract(
-            @Parameter(description = "계약 ID") @RequestParam int contractId
-    ) {
+    private String manageExpirationContract(@Parameter(description = "계약 ID") @RequestParam int contractId) {
         try {
             return contractService.manageExpirationContract(contractId);
         } catch (ParseException e) {
@@ -84,9 +80,9 @@ public class ContractController {
     @PostMapping("/request/{customerId}")
     public String requestContract(
             @Parameter(description = "고객 ID") @PathVariable Integer customerId,
-            @Parameter(description = "계약 신청 정보") @RequestBody ContractRequestDto contractRequestDto
+            @Parameter(description = "계약 신청 정보") @RequestBody RequestContractDto requestContractDto
     ) {
-        return contractService.requestContract(customerId, contractRequestDto);
+        return contractService.requestContract(customerId, requestContractDto);
     }
 
     //// 계약체결 카테고리 - 계약을 체결한다.
@@ -191,7 +187,7 @@ public class ContractController {
     @Operation(summary = "체결된 계약 목록 조회", description = "고객의 체결된 계약 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/concluded/{customerId}")
-    public List<ConcludedContractDto> showConcludedContractList(
+    public List<ShowConcludedContractDto> showConcludedContractList(
             @Parameter(description = "고객 ID") @PathVariable Integer customerId
     ) {
         return contractService.showConcludedContractList(customerId);
@@ -201,7 +197,7 @@ public class ContractController {
     @Operation(summary = "신청한 계약 목록 조회", description = "고객이 신청한 계약 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/requested/{customerId}")
-    public List<RequestedContractDto> showRequestedContractList(
+    public List<ShowRequestedContractDto> showRequestedContractList(
             @Parameter(description = "고객 ID") @PathVariable Integer customerId
     ) {
         return contractService.showRequestedContractList(customerId);
@@ -211,7 +207,7 @@ public class ContractController {
     @Operation(summary = "계약 상세 조회", description = "특정 계약의 상세 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/detail/{contractId}")
-    public ContractDetailDto showContractDetail(
+    public ShowContractDetailDto showContractDetail(
             @Parameter(description = "계약 ID") @PathVariable Integer contractId
     ) {
         return contractService.showContractDetail(contractId);

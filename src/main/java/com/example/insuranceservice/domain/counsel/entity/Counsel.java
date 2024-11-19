@@ -36,4 +36,10 @@ public class Counsel {
         if(statusOfCounsel) return "확정됨";
         else return "대기중";
     }
+
+    public boolean updateCounsel(String counselDetail, String note) {
+        this.counselDetail = counselDetail;
+        this.note = note;
+        return true;
+    }
 }

@@ -1,10 +1,7 @@
 package com.example.insuranceservice.domain.contract.service;
 import com.example.insuranceservice.domain.automatic.dto.AutomaticRequestDto;
-import com.example.insuranceservice.domain.automatic.entity.Automatic;
 import com.example.insuranceservice.domain.bank.dto.BankRequestDto;
-import com.example.insuranceservice.domain.bank.entity.Bank;
 import com.example.insuranceservice.domain.card.dto.CardRequestDto;
-import com.example.insuranceservice.domain.card.entity.Card;
 import com.example.insuranceservice.domain.contract.dto.*;
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.contract.repository.ContractRepository;
@@ -47,86 +44,63 @@ public class ContractService {
         this.paymentInfoRepository = paymenInfoRepository;
     }
 
-    // 미납관리한다.
+    // 미납관리한다. - delete
     public String manageLatePayment(int contractId) {
-        Optional<Contract> contractOptional = contractRepository.findById(contractId);
-        if(!contractOptional.isPresent()){
-          throw new NullPointerException();
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new NullPointerException("Contract not found"));
+        if(contract.getNonPaymentPeriod() >= Constant.maximumLatePaymentPeriod) {
+            contractRepository.deleteById(contractId);
         }
-        Contract contract = contractOptional.get();
-        if(contract.getNonPaymentPeriod()>= Constant.maximumLatePaymentPeriod) {
-          contractRepository.deleteById(contractId);
-        }
-        Boolean response = contractRepository.existsById(contractId);
+        boolean response = contractRepository.existsById(contractId);
         if(!response) return "[success] 성공적으로 미납 관리가 되었습니다!";
         else return "[error] 미납자 정보가 지워지지 않았습니다!";
     }
-    // 부활관리한다...
-    //아직 미구현
+
+    // 부활관리한다. - update
     public String manageRevive(ContractDto contractDto) {
-        Optional<Contract> contractOptional = contractRepository.findById(contractDto.getId());
-        if(contractOptional.get()==null){
-            throw new NullPointerException();
-        }
-        Contract contract = contractOptional.get();
+        Contract contract = contractRepository.findById(contractDto.getId())
+                .orElseThrow(() -> new NullPointerException("Contract not found"));
         contract.revive(contractDto);
-        contractRepository.deleteById(contractDto.getId());
         Contract response = contractRepository.save(contract);
         if(response!=null)  return "[success] 성공적으로 부활관리가 되었습니다!";
         else return "[error] 계약이 부활되지 않았습니다!";
-
     }
-
-    // 만기관리하다.
+    // 만기관리하다.- delete
     public String manageExpirationContract(int contractId) throws ParseException {
-        Optional<Contract> contractOptional = contractRepository.findById(contractId);
-        if(!contractOptional.isPresent()){
-            throw new NullPointerException();
-        }
-        Contract contract = contractOptional.get();
-        SimpleDateFormat dateFormat =new SimpleDateFormat(Constant.dateFormat);
-        Date date = dateFormat.parse(contract.getExpirationDate());
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new NullPointerException("Contract not found"));
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Constant.dateFormat);
+        Date expirationDate = dateFormat.parse(contract.getExpirationDate());
         Date today = new Date();
-        if(!date.before(today)) {
+        if (!expirationDate.before(today)) {
             return "[error] 만기되지 않은 계약입니다!";
         }
-        if(contract.getRenewalStatus()) {
+        if (contract.getRenewalStatus()) {
             return "[error] 재계약 진행 희망자로 만기할 수 없는 계약입니다!";
         }
         contractRepository.deleteById(contractId);
-        Boolean response = contractRepository.existsById(contractId);
+        boolean response= contractRepository.existsById(contractId);
         if(!response) return "[success] 성공적으로 만기 관리가 되었습니다!";
         else return "[error] 만기계약이 지워지지 않았습니다!";
     }
 
-    // 재계약관리한다.
+    // 재계약관리한다. - update
     public String manageRenewalContract(int contractId) {
-        Optional<Contract> contractOptional = contractRepository.findById(contractId);
-        if(contractOptional.get()==null){
-            throw new NullPointerException();
-        }
-        Contract contract = contractOptional.get();
-        if(contract.getRenewalStatus()) {
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new NullPointerException("Contract not found"));
+        if (contract.getRenewalStatus()) {
             LocalDate expirationDate = LocalDate.now().plusYears(2);
-
-            // 만약 날짜 포맷이 필요하다면 아래와 같이 포맷팅
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String formattedDate = expirationDate.format(formatter);
-
-            // 설정한 날짜를 contract에 적용
+            String formattedDate = expirationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             contract.setExpirationDate(formattedDate);
-            contractRepository.updateExpirationDate(contractId, contract.getExpirationDate());
+            contractRepository.save(contract);
             return "[success] 성공적으로 재계약이 되었습니다!";
-        }else{
+        } else {
             return "[error] 재계약에 동의하지 않아 재계약에 실패했습니다!";
-
         }
-
     }
 
-    // 배서관리한다.
+    // 배서관리한다. - update
     public String manageUpdate(ContractDto contractDto) {
-        contractRepository.deleteById(contractDto.getId());
         contractRepository.save(contractDto.toEntity());
         Boolean response = contractRepository.existsById(contractDto.getId());
         if(response) return "[success] 성공적으로 배서가 반영 되었습니다!";
@@ -280,11 +254,11 @@ public class ContractService {
 
     //// 보험 상품 종류 카테고리
     // 보험 가입 신청
-    public String requestContract(Integer customerId, ContractRequestDto contractRequestDto) {
+    public String requestContract(Integer customerId, RequestContractDto requestContractDto) {
         Contract contract = new Contract();
         contract.setCustomer(customerService.findCustomerById(customerId));
-        contract.setExpirationDate(contractRequestDto.getExpirationDate());
-        contract.setInsurance(insuranceService.findInsuranceById(contractRequestDto.getInsuranceId()));
+        contract.setExpirationDate(requestContractDto.getExpirationDate());
+        contract.setInsurance(insuranceService.findInsuranceById(requestContractDto.getInsuranceId()));
         contract.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateTimeFormat)));
         contract.setIsConcluded(false);
         contract.setIsPassUW(false);
@@ -292,7 +266,7 @@ public class ContractService {
         contract = contractRepository.save(contract);
 
         List<PaymentInfo> paymentInfoList = new ArrayList<>();
-        for (PaymentInfoRequestDto paymentInfoDto : contractRequestDto.getPaymentInfoRequestDtoList()) {
+        for (PaymentInfoRequestDto paymentInfoDto : requestContractDto.getPaymentInfoRequestDtoList()) {
             if (paymentInfoDto.getCardRequestDtoList() != null) {
                 for (CardRequestDto cardRequestDto : paymentInfoDto.getCardRequestDtoList()) {
                     PaymentInfo paymentInfo = createPaymentInfoForCard(contract, paymentInfoDto, cardRequestDto);
@@ -369,11 +343,11 @@ public class ContractService {
 
     //// 보유 계약 조회 카테고리
     // 보유 계약 조회
-    public List<ConcludedContractDto> showConcludedContractList(Integer customerId) {
+    public List<ShowConcludedContractDto> showConcludedContractList(Integer customerId) {
         Customer customer = customerService.findCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus5);
         return contractList.stream()
-                .map(contract -> new ConcludedContractDto(
+                .map(contract -> new ShowConcludedContractDto(
                         contract.getId(),
                         contract.getInsurance().getInsuranceName(),
                         contract.getCustomer().getCustomerID()
@@ -381,11 +355,11 @@ public class ContractService {
     }
 
     // 신청한 계약 조회
-    public List<RequestedContractDto> showRequestedContractList(Integer customerId) {
+    public List<ShowRequestedContractDto> showRequestedContractList(Integer customerId) {
         Customer customer = customerService.findCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus1);
         return contractList.stream()
-                .map(contract -> new RequestedContractDto(
+                .map(contract -> new ShowRequestedContractDto(
                         contract.getId(),
                         contract.getInsurance().getInsuranceName(),
                         contract.getCustomer().getCustomerID(),
@@ -394,9 +368,9 @@ public class ContractService {
     }
 
     // 상세 내용 조회
-    public ContractDetailDto showContractDetail(Integer contractId) {
+    public ShowContractDetailDto showContractDetail(Integer contractId) {
         Contract contract = findContractById(contractId);
-        return new ContractDetailDto(contract);
+        return new ShowContractDetailDto(contract);
     }
 
     // 계약을 해지한다

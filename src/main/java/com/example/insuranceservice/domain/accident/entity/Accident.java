@@ -15,7 +15,7 @@ public class Accident {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int accidentID;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerID", nullable = false)
     private Customer customer;
 

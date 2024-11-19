@@ -1,6 +1,5 @@
 package com.example.insuranceservice.domain.counsel.service;
 
-import com.example.insuranceservice.domain.contract.dto.ConcludedContractDto;
 import com.example.insuranceservice.domain.counsel.dto.*;
 import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import com.example.insuranceservice.domain.counsel.repository.CounselRepository;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,17 +34,16 @@ public class CounselService {
     }
 
     // 상담 신청
-    public String createCounsel(CounselRequestDto counselRequestDto) {
+    public String createCounsel(CreateCounselDto createCounselDto) {
         Counsel counsel = new Counsel();
-        counsel.setInsuranceType(counselRequestDto.getInsuranceType());
-        counsel.setTimeOfCounsel(counselRequestDto.getTimeOfCounsel());
-        counsel.setDateOfCounsel(counselRequestDto.getDateOfCounsel());
+        counsel.setInsuranceType(createCounselDto.getInsuranceType());
+        counsel.setTimeOfCounsel(createCounselDto.getTimeOfCounsel());
+        counsel.setDateOfCounsel(createCounselDto.getDateOfCounsel());
         counsel.setStatusOfCounsel(false);
 
-        Customer customer = findCustomerById(counselRequestDto.getCustomerId());
+        Customer customer = findCustomerById(createCounselDto.getCustomerId());
         counsel.setCustomer(customer);
         counselRepository.save(counsel);
-
         return "[success] 상담 신청이 완료되었습니다.";
     }
 
@@ -58,33 +55,39 @@ public class CounselService {
     }
 
     // 상담 신청 내역 조회
-    public List<CustomerRequestedCounselDto> showCounselList(Integer customerId) {
-        Customer customer = findCustomerById(customerId);
-        List<Counsel> counselList = counselRepository.findByCustomer(customer);
-        return counselList.stream()
-                .map(CustomerRequestedCounselDto::new)
+    public List<ShowCounselDto> showCounselList(Integer customerId) {
+//        Customer customer = findCustomerById(customerId);
+//        List<Counsel> counselList = counselRepository.findByCustomer(customer);
+        List<Counsel> customerCounselList = counselRepository.findByCustomer_CustomerID(customerId);
+        return customerCounselList.stream()
+                .map(ShowCounselDto::new)
                 .collect(Collectors.toList());
     }
 
     //// 상담신청 일정 관리 카테고리
     // 신청된 상담 일정 조회
-    public List<RequestedCounselDto> showRequestedCounselList() {
-        List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(false);
+    public List<ShowRequestedCounselDto> showRequestedCounselList() {
+        // employee 권한 미구현 - Sales
+//        List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(false);
+        List<Counsel> requestedCounselList = counselRepository.findAll();
         return requestedCounselList.stream()
-                .map(RequestedCounselDto::new)
+                .map(ShowRequestedCounselDto::new)
                 .collect(Collectors.toList());
     }
 
     // 확정된 상담 일정 조회
-    public List<ConfirmedCounselDto> showConfirmedCounselList() {
-        List<Counsel> confirmedCounselList = counselRepository.findByStatusOfCounsel(true);
+    public List<ShowConfirmedCounselDto> showConfirmedCounselList(Integer employeeId) {
+        // employee 권한 미구현 - Sales
+        Employee employee = employeeService.findEmployeeById(employeeId);
+        List<Counsel> confirmedCounselList = counselRepository.findByEmployeeAndStatusOfCounsel(employee, true);
         return confirmedCounselList.stream()
-                .map(ConfirmedCounselDto::new)
+                .map(ShowConfirmedCounselDto::new)
                 .collect(Collectors.toList());
     }
 
     // 상담 일정 확정
     public ResponseEntity<String> confirmCounsel(Integer counselId, Integer employeeId) {
+        // employee 권한 미구현 - Sales
         Counsel counsel = findCounselById(counselId);
         Employee employee = employeeService.findEmployeeById(employeeId);
 
@@ -100,35 +103,44 @@ public class CounselService {
 
     //// 상담 내역 관리 카테고리
     // 상담 내역 조회
-    public List<CounselHistoryDto> showConsultedCounselList(Integer employeeId) {
+    public List<ShowConsultedCounselDto> showConsultedCounselList(Integer employeeId) {
+        // employee 권한 미구현 - Sales
+
         Employee employee = employeeService.findEmployeeById(employeeId);
         List<Counsel> counselList = counselRepository.findByEmployee(employee);
         return counselList.stream()
-                .map(CounselHistoryDto::new)
+                .map(ShowConsultedCounselDto::new)
                 .collect(Collectors.toList());
     }
 
     // 상담 내용 추가
-    public String updateCounsel(Integer counselId, CounselUpdateDto counselUpdateDto) {
+    public ResponseEntity<String> updateCounsel(Integer counselId, CounselUpdateDto counselUpdateDto) {
+        // employee 권한 미구현 - Sales
+
         Counsel counsel = findCounselById(counselId);
-        counsel.setCounselDetail(counselUpdateDto.getCounselDetail());
-        counsel.setNote(counselUpdateDto.getNote());
-        counselRepository.save(counsel);
-        return "상담 내용이 추가되었습니다.";
+        if(counsel.updateCounsel(counselUpdateDto.getCounselDetail(), counselUpdateDto.getNote())){
+            counselRepository.save(counsel);
+            return ResponseEntity.ok("[success] 상담 내용이 추가되었습니다.");
+        }
+        else
+            return ResponseEntity.ok("[error] 상담 내용 추가에 실패하였습니다.");
+
+//        counsel.setCounselDetail(counselUpdateDto.getCounselDetail());
+//        counsel.setNote(counselUpdateDto.getNote());
     }
 
     // 상담 보험 제안
-    public CounselSuggestDto suggestInsurance(Integer counselId, Integer insuranceId) {
+    public SuggestInsuranceDto suggestInsurance(Integer counselId, Integer insuranceId) {
         Counsel counsel = findCounselById(counselId);
         Insurance insurance = insuranceService.findInsuranceById(insuranceId);
-        CounselSuggestDto counselSuggestDto = new CounselSuggestDto();
-        counselSuggestDto.setCustomerName(counsel.getCustomer().getName());
-        counselSuggestDto.setPhone(counsel.getCustomer().getPhone());
-        counselSuggestDto.setEmail(counsel.getCustomer().getEmail());
-        counselSuggestDto.setInsuranceName(insurance.getInsuranceName());
-        counselSuggestDto.setEmployeeName(counsel.getEmployee().getName());
-        counselSuggestDto.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateFormat)));
-        return counselSuggestDto;
+        SuggestInsuranceDto suggestInsuranceDto = new SuggestInsuranceDto();
+        suggestInsuranceDto.setCustomerName(counsel.getCustomer().getName());
+        suggestInsuranceDto.setPhone(counsel.getCustomer().getPhone());
+        suggestInsuranceDto.setEmail(counsel.getCustomer().getEmail());
+        suggestInsuranceDto.setInsuranceName(insurance.getInsuranceName());
+        suggestInsuranceDto.setEmployeeName(counsel.getEmployee().getName());
+        suggestInsuranceDto.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateFormat)));
+        return suggestInsuranceDto;
     }
 
     public Counsel findCounselById(Integer counselId) {
@@ -138,8 +150,8 @@ public class CounselService {
         return tempCounsel.get();
     }
 
-    public CounselRetrieveDto retrieveCounsel(Integer counselId) {
+    public RetrieveCounselDto retrieveCounsel(Integer counselId) {
         Optional<Counsel> counsel = counselRepository.findById(counselId);
-        return counsel.map(CounselRetrieveDto::new).orElse(null);
+        return counsel.map(RetrieveCounselDto::new).orElse(null);
     }
 }
