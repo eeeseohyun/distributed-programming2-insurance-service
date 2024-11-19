@@ -52,9 +52,10 @@ public class CounselController {
     // 확정된 상담 일정 조회
     @Operation(summary = "확정된 상담 일정 조회", description = "확정된 모든 상담 일정을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/confirmed/list")
-    public List<ShowConfirmedCounselDto> showConfirmedCounselList() {
-        return counselService.showConfirmedCounselList();
+    @GetMapping("/confirmed/list/{employeeId}")
+    public List<ShowConfirmedCounselDto> showConfirmedCounselList(
+            @Parameter(description = "직원 ID") @PathVariable Integer employeeId) {
+        return counselService.showConfirmedCounselList(employeeId);
     }
 
     // 상담 일정 확정
@@ -83,7 +84,7 @@ public class CounselController {
     @Operation(summary = "상담 내용 추가", description = "상담 내용을 추가/수정합니다")
     @ApiResponse(responseCode = "200", description = "추가 성공")
     @PutMapping("/update/{counselId}")
-    public String updateCounsel(
+    public ResponseEntity<String> updateCounsel(
             @Parameter(description = "상담 ID") @PathVariable Integer counselId,
             @Parameter(description = "상담 내용 정보") @RequestBody CounselUpdateDto counselUpdateDto
     ) {

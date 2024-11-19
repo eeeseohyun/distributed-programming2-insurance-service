@@ -43,8 +43,7 @@ public class CounselService {
 
         Customer customer = findCustomerById(createCounselDto.getCustomerId());
         counsel.setCustomer(customer);
-        counselRepository.save(counsel);
-
+        Counsel savedCounsel = counselRepository.save(counsel);
         return "[success] 상담 신청이 완료되었습니다.";
     }
 
@@ -57,9 +56,10 @@ public class CounselService {
 
     // 상담 신청 내역 조회
     public List<ShowCounselDto> showCounselList(Integer customerId) {
-        Customer customer = findCustomerById(customerId);
-        List<Counsel> counselList = counselRepository.findByCustomer(customer);
-        return counselList.stream()
+//        Customer customer = findCustomerById(customerId);
+//        List<Counsel> counselList = counselRepository.findByCustomer(customer);
+        List<Counsel> customerCounselList = counselRepository.findByCustomer_CustomerID(customerId);
+        return customerCounselList.stream()
                 .map(ShowCounselDto::new)
                 .collect(Collectors.toList());
     }
@@ -67,15 +67,19 @@ public class CounselService {
     //// 상담신청 일정 관리 카테고리
     // 신청된 상담 일정 조회
     public List<ShowRequestedCounselDto> showRequestedCounselList() {
-        List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(false);
+        // employee 권한 미구현 - Sales
+//        List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(false);
+        List<Counsel> requestedCounselList = counselRepository.findAll();
         return requestedCounselList.stream()
                 .map(ShowRequestedCounselDto::new)
                 .collect(Collectors.toList());
     }
 
     // 확정된 상담 일정 조회
-    public List<ShowConfirmedCounselDto> showConfirmedCounselList() {
-        List<Counsel> confirmedCounselList = counselRepository.findByStatusOfCounsel(true);
+    public List<ShowConfirmedCounselDto> showConfirmedCounselList(Integer employeeId) {
+        // employee 권한 미구현 - Sales
+        Employee employee = employeeService.findEmployeeById(employeeId);
+        List<Counsel> confirmedCounselList = counselRepository.findByEmployeeAndStatusOfCounsel(employee, true);
         return confirmedCounselList.stream()
                 .map(ShowConfirmedCounselDto::new)
                 .collect(Collectors.toList());
@@ -83,6 +87,7 @@ public class CounselService {
 
     // 상담 일정 확정
     public ResponseEntity<String> confirmCounsel(Integer counselId, Integer employeeId) {
+        // employee 권한 미구현 - Sales
         Counsel counsel = findCounselById(counselId);
         Employee employee = employeeService.findEmployeeById(employeeId);
 
@@ -99,6 +104,8 @@ public class CounselService {
     //// 상담 내역 관리 카테고리
     // 상담 내역 조회
     public List<ShowConsultedCounselDto> showConsultedCounselList(Integer employeeId) {
+        // employee 권한 미구현 - Sales
+
         Employee employee = employeeService.findEmployeeById(employeeId);
         List<Counsel> counselList = counselRepository.findByEmployee(employee);
         return counselList.stream()
@@ -107,12 +114,19 @@ public class CounselService {
     }
 
     // 상담 내용 추가
-    public String updateCounsel(Integer counselId, CounselUpdateDto counselUpdateDto) {
+    public ResponseEntity<String> updateCounsel(Integer counselId, CounselUpdateDto counselUpdateDto) {
+        // employee 권한 미구현 - Sales
+
         Counsel counsel = findCounselById(counselId);
-        counsel.setCounselDetail(counselUpdateDto.getCounselDetail());
-        counsel.setNote(counselUpdateDto.getNote());
-        counselRepository.save(counsel);
-        return "상담 내용이 추가되었습니다.";
+        if(counsel.updateCounsel(counselUpdateDto.getCounselDetail(), counselUpdateDto.getNote())){
+            counselRepository.save(counsel);
+            return ResponseEntity.ok("[success] 상담 내용이 추가되었습니다.");
+        }
+        else
+            return ResponseEntity.ok("[error] 상담 내용 추가에 실패하였습니다.");
+
+//        counsel.setCounselDetail(counselUpdateDto.getCounselDetail());
+//        counsel.setNote(counselUpdateDto.getNote());
     }
 
     // 상담 보험 제안
