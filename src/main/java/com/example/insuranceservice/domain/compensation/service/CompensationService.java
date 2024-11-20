@@ -83,7 +83,7 @@ public class CompensationService {
             return "[error] 보상 삭제를 실패하였습니다.";
         }
     }
-    //보험금 청구
+    //보험금 청구 - 부터
     public String requestInsuranceAmount(RequestInsuranceAmountDto billDTO) throws NotFoundProfileException {
         Optional<Compensation> optionalcompensation =compensationRepository.findById(billDTO.getCompensationID());
         if (optionalcompensation == null) {
@@ -108,11 +108,12 @@ public class CompensationService {
         Compensation com = compensation.get();
         com.setEmployeeOpinion(lossDto.getEmployeeOpinion());
         com.setLossAmount(lossDto.getLossAmount());
-        compensationRepository.deleteById(lossDto.getCompensationID());
-        compensationRepository.save(com);
-        String employeeOpinion = compensationRepository.findById(lossDto.getCompensationID()).get().getEmployeeOpinion();
-        int lossAmount = compensationRepository.findById(lossDto.getCompensationID()).get().getLossAmount();
-      return null;
+        Compensation response = compensationRepository.save(com);
+        if(response==null){
+            return "[error] 손해조사가 실패하였습니다.";
+        }else{
+            return "[success] 손해조사가 완료되었습니다.";
+        }
     }
 
     // 보험금 산출

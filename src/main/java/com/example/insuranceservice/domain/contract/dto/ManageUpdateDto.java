@@ -23,14 +23,10 @@ public class ManageUpdateDto {
     private String contractStatus;
     private String createdDate;
     private String evaluation;
-    private String expirationDate;
     private Boolean isConcluded;
-    private Boolean isPassUW;
     private Integer monthlyPremium;
     private Integer nonPaymentPeriod;
     private Boolean renewalStatus;
-    private String resurrectionDate;
-    private String resurrectionReason;
     private Integer underwritingEID;
     private String insuranceName;
     private Integer customerId;
@@ -43,14 +39,10 @@ public class ManageUpdateDto {
                 .contractStatus(this.contractStatus)
                 .createdDate(this.createdDate)
                 .evaluation(this.evaluation)
-                .expirationDate(this.expirationDate)
                 .isConcluded(this.isConcluded)
-                .isPassUW(this.isPassUW)
                 .monthlyPremium(this.monthlyPremium)
                 .nonPaymentPeriod(this.nonPaymentPeriod)
                 .renewalStatus(this.renewalStatus)
-                .resurrectionDate(this.resurrectionDate)
-                .resurrectionReason(this.resurrectionReason)
                 .underwritingEID(this.underwritingEID)
                 .build();
     }
@@ -61,14 +53,10 @@ public class ManageUpdateDto {
         this.contractStatus = contract.getContractStatus();
         this.createdDate = contract.getCreatedDate();
         this.evaluation = contract.getEvaluation();
-        this.expirationDate = contract.getExpirationDate();
         this.isConcluded = contract.getIsConcluded();
-        this.isPassUW = contract.getIsPassUW();
         this.monthlyPremium = contract.getMonthlyPremium();
         this.nonPaymentPeriod = contract.getNonPaymentPeriod();
         this.renewalStatus = contract.getRenewalStatus();
-        this.resurrectionDate = contract.getResurrectionDate();
-        this.resurrectionReason = contract.getResurrectionReason();
         this.underwritingEID = contract.getUnderwritingEID();
     }
 }
