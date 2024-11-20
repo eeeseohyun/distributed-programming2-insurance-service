@@ -18,4 +18,12 @@ public class MedicalHistoryDTO {
         this.diseasesName = medicalHistory.getDiseasesName();
         this.cured = medicalHistory.isCured();
     }
+
+    public MedicalHistory toEntity() {
+        return MedicalHistory.builder()
+                .curePeriod(this.curePeriod)
+                .diseasesName(this.diseasesName)
+                .isCured(this.cured)
+                .build();
+    }
 }

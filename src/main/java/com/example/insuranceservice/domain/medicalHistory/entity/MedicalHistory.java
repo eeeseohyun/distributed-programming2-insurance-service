@@ -2,12 +2,14 @@ package com.example.insuranceservice.domain.medicalHistory.entity;
 
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MedicalHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
