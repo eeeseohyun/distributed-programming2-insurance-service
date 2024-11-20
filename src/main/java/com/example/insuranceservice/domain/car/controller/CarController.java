@@ -1,7 +1,7 @@
 package com.example.insuranceservice.domain.car.controller;
 
 import com.example.insuranceservice.domain.car.service.CarService;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceCarRequestDto;
+import com.example.insuranceservice.domain.insurance.dto.CreateCarInsuranceDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,7 +28,7 @@ public class CarController {
     })
     @PostMapping("/createCar")
     private String createCarInsurance(
-            @Parameter(description = "자동차보험 상품 정보") @RequestBody InsuranceCarRequestDto dto
+            @Parameter(description = "자동차보험 상품 정보") @RequestBody CreateCarInsuranceDto dto
     ) {
         return carService.createCarInsurance(dto);
     }

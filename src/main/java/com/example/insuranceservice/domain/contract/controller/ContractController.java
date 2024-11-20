@@ -37,7 +37,7 @@ public class ContractController {
     @ApiResponse(responseCode = "200", description = "처리 성공")
     @PutMapping("/revive")
     private String manageRevive(
-            @Parameter(description = "계약 정보") @RequestBody ContractDto contractDto) {
+            @Parameter(description = "계약 정보") @RequestBody ManageReviveDto contractDto) {
         return contractService.manageRevive(contractDto);
     }
 
@@ -63,12 +63,12 @@ public class ContractController {
         return contractService.manageRenewalContract(contractId);
     }
 
-    //배서를 관리한다. -- 미구현
+    //배서를 관리한다.
     @Operation(summary = "계약 변경 관리", description = "계약 내용 변경을 관리합니다")
     @ApiResponse(responseCode = "200", description = "처리 성공")
-    @PutMapping("/update")
+    @PatchMapping("/update")
     private String manageUpdate(
-            @Parameter(description = "변경할 계약 정보") @RequestBody ContractDto contractDto
+            @Parameter(description = "변경할 계약 정보") @RequestBody ManageUpdateDto contractDto
     ) {
         return contractService.manageUpdate(contractDto);
     }

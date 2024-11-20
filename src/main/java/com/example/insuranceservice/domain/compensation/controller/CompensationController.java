@@ -1,9 +1,6 @@
 package com.example.insuranceservice.domain.compensation.controller;
 
-import com.example.insuranceservice.domain.compensation.dto.BillDTO;
-import com.example.insuranceservice.domain.compensation.dto.CompensationDTO;
-import com.example.insuranceservice.domain.compensation.dto.CompensationUpdateDTO;
-import com.example.insuranceservice.domain.compensation.dto.LossDto;
+import com.example.insuranceservice.domain.compensation.dto.*;
 import com.example.insuranceservice.domain.compensation.entity.Compensation;
 import com.example.insuranceservice.domain.compensation.service.CompensationService;
 import com.example.insuranceservice.exception.DuplicateIDException;
@@ -13,7 +10,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -52,7 +48,7 @@ public class CompensationController {
     @ApiResponse(responseCode = "201", description = "신청 성공")
     @PostMapping("/createCompensation")
     public String createCompensation(
-            @Parameter(description = "보상 신청 정보") @RequestBody CompensationDTO compensation
+            @Parameter(description = "보상 신청 정보") @RequestBody CreateCompensationDTO compensation
     ) {
         try {
             return compensationService.createCompensation(compensation);
@@ -66,7 +62,7 @@ public class CompensationController {
     @ApiResponse(responseCode = "200", description = "수정 성공")
     @PutMapping("/updateCompensation")
     public String updateCompensation(
-            @Parameter(description = "수정할 보상 정보") @RequestBody CompensationUpdateDTO compensation
+            @Parameter(description = "수정할 보상 정보") @RequestBody UpdateCompensationDto compensation
     ) {
         try {
             return compensationService.updateCompensation(compensation);
@@ -94,7 +90,7 @@ public class CompensationController {
     @ApiResponse(responseCode = "200", description = "청구 성공")
     @PostMapping("/requestInsuranceAmount")
     private String requestInsuranceAmount(
-            @Parameter(description = "보험금 청구 정보") @RequestBody BillDTO billDTO
+            @Parameter(description = "보험금 청구 정보") @RequestBody RequestInsuranceAmountDto billDTO
     ) {
         try {
             return compensationService.requestInsuranceAmount(billDTO);
@@ -108,7 +104,7 @@ public class CompensationController {
     @ApiResponse(responseCode = "200", description = "조사 성공")
     @PostMapping("/investigateLoss")
     private String investigateLoss(
-            @Parameter(description = "손해 조사 정보") @RequestBody LossDto lossDto
+            @Parameter(description = "손해 조사 정보") @RequestBody InvestigateLossDto lossDto
     ) {
         try {
             return compensationService.investigateLoss(lossDto);

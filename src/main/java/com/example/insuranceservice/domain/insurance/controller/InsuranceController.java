@@ -1,7 +1,7 @@
 package com.example.insuranceservice.domain.insurance.controller;
+import com.example.insuranceservice.domain.insurance.dto.GetAllInsuranceDto;
 import com.example.insuranceservice.domain.insurance.dto.ShowInsuranceTypeDto;
 import com.example.insuranceservice.domain.insurance.dto.ShowInsuranceDetailDto;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceDto;
 import com.example.insuranceservice.domain.insurance.dto.RetrieveInsuranceDto;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,7 +56,7 @@ public class InsuranceController {
     @Operation(summary = "전체 보험 상품 조회", description = "모든 보험 상품 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/getAll")
-    private List<InsuranceDto> getAllInsurance() {
+    private List<GetAllInsuranceDto> getAllInsurance() {
         return insuranceService.getAllInsurance();
     }
 }

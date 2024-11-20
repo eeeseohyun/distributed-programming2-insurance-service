@@ -57,7 +57,7 @@ public class ContractService {
     }
 
     // 부활관리한다. - update
-    public String manageRevive(ContractDto contractDto) {
+    public String manageRevive(ManageReviveDto contractDto) {
         Contract contract = contractRepository.findById(contractDto.getId())
                 .orElseThrow(() -> new NullPointerException("Contract not found"));
         contract.revive(contractDto);
@@ -100,7 +100,7 @@ public class ContractService {
     }
 
     // 배서관리한다. - update
-    public String manageUpdate(ContractDto contractDto) {
+    public String manageUpdate(ManageUpdateDto contractDto) {
         contractRepository.save(contractDto.toEntity());
         Boolean response = contractRepository.existsById(contractDto.getId());
         if(response) return "[success] 성공적으로 배서가 반영 되었습니다!";

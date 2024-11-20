@@ -1,7 +1,7 @@
 package com.example.insuranceservice.domain.contract.entity;
 
 
-import com.example.insuranceservice.domain.contract.dto.ContractDto;
+import com.example.insuranceservice.domain.contract.dto.ManageReviveDto;
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.employee.entity.Employee;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
@@ -58,7 +58,7 @@ public class Contract {
     @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
     private List<Payment> paymentList;
 
-    public void revive(ContractDto contractDto) {
+    public void revive(ManageReviveDto contractDto) {
         this.id = contractDto.getId();
         this.expirationDate = contractDto.getExpirationDate();
         this.resurrectionDate = contractDto.getResurrectionDate();

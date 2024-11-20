@@ -1,7 +1,7 @@
 package com.example.insuranceservice.domain.cancerHealth.controller;
 
 import com.example.insuranceservice.domain.cancerHealth.service.CancerService;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceCancerRequestDto;
+import com.example.insuranceservice.domain.insurance.dto.CreateCancerInsuranceDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,7 +28,7 @@ public class CancerHealthController {
     })
     @PostMapping("/createCancer")
     private String createCancerInsurance(
-            @Parameter(description = "암보험 상품 정보") @RequestBody InsuranceCancerRequestDto dto
+            @Parameter(description = "암보험 상품 정보") @RequestBody CreateCancerInsuranceDto dto
     ) {
         return cancerService.createCancerInsurance(dto);
     }
