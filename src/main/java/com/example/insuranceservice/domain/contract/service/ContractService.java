@@ -254,11 +254,11 @@ public class ContractService {
 
     //// 보험 상품 종류 카테고리
     // 보험 가입 신청
-    public String requestContract(Integer customerId, ContractRequestDto contractRequestDto) {
+    public String requestContract(Integer customerId, RequestContractDto requestContractDto) {
         Contract contract = new Contract();
         contract.setCustomer(customerService.findCustomerById(customerId));
-        contract.setExpirationDate(contractRequestDto.getExpirationDate());
-        contract.setInsurance(insuranceService.findInsuranceById(contractRequestDto.getInsuranceId()));
+        contract.setExpirationDate(requestContractDto.getExpirationDate());
+        contract.setInsurance(insuranceService.findInsuranceById(requestContractDto.getInsuranceId()));
         contract.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateTimeFormat)));
         contract.setIsConcluded(false);
         contract.setIsPassUW(false);
@@ -266,7 +266,7 @@ public class ContractService {
         contract = contractRepository.save(contract);
 
         List<PaymentInfo> paymentInfoList = new ArrayList<>();
-        for (PaymentInfoRequestDto paymentInfoDto : contractRequestDto.getPaymentInfoRequestDtoList()) {
+        for (PaymentInfoRequestDto paymentInfoDto : requestContractDto.getPaymentInfoRequestDtoList()) {
             if (paymentInfoDto.getCardRequestDtoList() != null) {
                 for (CardRequestDto cardRequestDto : paymentInfoDto.getCardRequestDtoList()) {
                     PaymentInfo paymentInfo = createPaymentInfoForCard(contract, paymentInfoDto, cardRequestDto);
@@ -343,11 +343,11 @@ public class ContractService {
 
     //// 보유 계약 조회 카테고리
     // 보유 계약 조회
-    public List<ConcludedContractDto> showConcludedContractList(Integer customerId) {
+    public List<ShowConcludedContractDto> showConcludedContractList(Integer customerId) {
         Customer customer = customerService.findCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus5);
         return contractList.stream()
-                .map(contract -> new ConcludedContractDto(
+                .map(contract -> new ShowConcludedContractDto(
                         contract.getId(),
                         contract.getInsurance().getInsuranceName(),
                         contract.getCustomer().getCustomerID()
@@ -355,11 +355,11 @@ public class ContractService {
     }
 
     // 신청한 계약 조회
-    public List<RequestedContractDto> showRequestedContractList(Integer customerId) {
+    public List<ShowRequestedContractDto> showRequestedContractList(Integer customerId) {
         Customer customer = customerService.findCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus1);
         return contractList.stream()
-                .map(contract -> new RequestedContractDto(
+                .map(contract -> new ShowRequestedContractDto(
                         contract.getId(),
                         contract.getInsurance().getInsuranceName(),
                         contract.getCustomer().getCustomerID(),
@@ -368,9 +368,9 @@ public class ContractService {
     }
 
     // 상세 내용 조회
-    public ContractDetailDto showContractDetail(Integer contractId) {
+    public ShowContractDetailDto showContractDetail(Integer contractId) {
         Contract contract = findContractById(contractId);
-        return new ContractDetailDto(contract);
+        return new ShowContractDetailDto(contract);
     }
 
     // 계약을 해지한다

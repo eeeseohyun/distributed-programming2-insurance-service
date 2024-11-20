@@ -1,8 +1,9 @@
 package com.example.insuranceservice.domain.payment.controller;
 
 import com.example.insuranceservice.domain.card.dto.CardRequestDto;
-import com.example.insuranceservice.domain.payment.dto.PaymentDto;
-import com.example.insuranceservice.domain.payment.dto.PaymentRetrieveDto;
+import com.example.insuranceservice.domain.payment.dto.ShowPaymentDto;
+import com.example.insuranceservice.domain.payment.dto.RetrievePaymentDto;
+import com.example.insuranceservice.domain.payment.dto.ShowProcessedPaymentDto;
 import com.example.insuranceservice.domain.payment.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,10 +28,10 @@ public class PaymentController {
     @Operation(summary = "보험료 납부 내역 조회", description = "고객의 보험료 납부 내역을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/list/{customerId}")
-    public List<PaymentDto> showPaymentList(
+    public List<ShowPaymentDto> showPaymentList(
             @Parameter(description = "고객 ID", required = true) @PathVariable Integer customerId
     ) {
-        return paymentService.showPaymentList(customerId);
+        return paymentService.retrieveUnprocessed(customerId);
     }
 
     // 보험료 납부
@@ -47,6 +48,16 @@ public class PaymentController {
     ) {
         return paymentService.payPremium(paymentId, cardRequestDto);
     }
+    // 납부한 보험료 리스트 조회
+    @Operation(summary = "납부한 보험료 리스트 조회", description = "고객의 납부한 보험료 내역을 조회합니다")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
+    @GetMapping("/processed/list/{customerId}")
+    public List<ShowProcessedPaymentDto> showProcessedPaymentList(
+            @Parameter(description = "고객 ID", required = true) @PathVariable Integer customerId
+    ) {
+        return paymentService.retrieveProcessed(customerId);
+    }
+
 
     @Operation(summary = "납부 정보 조회", description = "특정 납부 정보를 조회합니다")
     @ApiResponses({
@@ -54,7 +65,7 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "납부 정보를 찾을 수 없음")
     })
     @GetMapping("/retrieve/{paymentId}")
-    public PaymentRetrieveDto retrievePayment(
+    public RetrievePaymentDto retrievePayment(
             @Parameter(description = "납부 ID", required = true) @PathVariable Integer paymentId
     ) {
         return paymentService.retrievePayment(paymentId);

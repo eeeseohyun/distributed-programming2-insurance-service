@@ -1,8 +1,8 @@
 package com.example.insuranceservice.domain.insurance.controller;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceCategoryViewDto;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceDetailDto;
 import com.example.insuranceservice.domain.insurance.dto.GetAllInsuranceDto;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceRetrieveDto;
+import com.example.insuranceservice.domain.insurance.dto.ShowInsuranceTypeDto;
+import com.example.insuranceservice.domain.insurance.dto.ShowInsuranceDetailDto;
+import com.example.insuranceservice.domain.insurance.dto.RetrieveInsuranceDto;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,7 +26,7 @@ public class InsuranceController {
     @Operation(summary = "카테고리별 보험 상품 조회", description = "특정 카테고리의 보험 상품 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/list/{category}")
-    public List<InsuranceCategoryViewDto> showInsuranceTypeList(
+    public List<ShowInsuranceTypeDto> showInsuranceTypeList(
             @Parameter(description = "보험 카테고리 (car, cancer, houseFire, international)", example = "car")
             @PathVariable String category
     ) {
@@ -37,7 +37,7 @@ public class InsuranceController {
     @Operation(summary = "보험 상품 상세 조회", description = "특정 보험 상품의 상세 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/detail/{id}")
-    public InsuranceDetailDto showInsuranceDetail(
+    public ShowInsuranceDetailDto showInsuranceDetail(
             @Parameter(description = "보험 상품 ID") @PathVariable Integer id
     ) {
         return insuranceService.showInsuranceDetail(id);
@@ -46,7 +46,7 @@ public class InsuranceController {
     @Operation(summary = "보험 상품 조회", description = "특정 보험 상품 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/retrieve/{id}")
-    public InsuranceRetrieveDto retrieveInsurance(
+    public RetrieveInsuranceDto retrieveInsurance(
             @Parameter(description = "보험 상품 ID") @PathVariable Integer id
     ) {
         return insuranceService.retrieveInsurance(id);

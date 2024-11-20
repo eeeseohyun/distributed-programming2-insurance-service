@@ -37,21 +37,21 @@ public class InsuranceService {
         this.insuranceRepository = insuranceRepository;
     }
 
-    public List<InsuranceCategoryViewDto> showInsuranceTypeList(String category) {
+    public List<ShowInsuranceTypeDto> showInsuranceTypeList(String category) {
         List<Insurance> insuranceList = insuranceRepository.findByCategory(category);
         return insuranceList.stream()
-                .map(InsuranceCategoryViewDto::new)
+                .map(ShowInsuranceTypeDto::new)
                 .collect(Collectors.toList());
     }
 
-    public InsuranceDetailDto showInsuranceDetail(Integer insuranceId) {
+    public ShowInsuranceDetailDto showInsuranceDetail(Integer insuranceId) {
         Insurance insurance = findInsuranceById(insuranceId);
-        return new InsuranceDetailDto(insurance);
+        return new ShowInsuranceDetailDto(insurance);
     }
 
-    public InsuranceRetrieveDto retrieveInsurance(Integer insuranceId) {
+    public RetrieveInsuranceDto retrieveInsurance(Integer insuranceId) {
         Insurance insurance = findInsuranceById(insuranceId);
-        return new InsuranceRetrieveDto(insurance);
+        return new RetrieveInsuranceDto(insurance);
     }
 
     public Insurance findInsuranceById(Integer insuranceId) {

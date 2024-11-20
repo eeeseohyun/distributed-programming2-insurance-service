@@ -3,7 +3,7 @@ package com.example.insuranceservice.domain.counsel.dto;
 import lombok.Data;
 
 @Data
-public class CounselSuggestDto {
+public class SuggestInsuranceDto {
     private String customerName;
     private String phone;
     private String email;

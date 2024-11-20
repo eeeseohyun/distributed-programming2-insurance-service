@@ -4,11 +4,11 @@ import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import lombok.Data;
 
 @Data
-public class InsuranceRetrieveDto {
+public class RetrieveInsuranceDto {
     private Integer insuranceID;
     private String insuranceName;
 
-    public InsuranceRetrieveDto(Insurance insurance) {
+    public RetrieveInsuranceDto(Insurance insurance) {
         this.insuranceID = insurance.getInsuranceID();
         this.insuranceName = insurance.getInsuranceName();
     }
