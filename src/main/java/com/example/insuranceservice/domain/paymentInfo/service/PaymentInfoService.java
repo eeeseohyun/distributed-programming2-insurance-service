@@ -9,6 +9,7 @@ import com.example.insuranceservice.domain.bank.repository.BankRepository;
 import com.example.insuranceservice.domain.card.dto.CardDto;
 import com.example.insuranceservice.domain.card.entity.Card;
 import com.example.insuranceservice.domain.card.repository.CardRepository;
+import com.example.insuranceservice.domain.contract.repository.ContractRepository;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoDto;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRetrieveDto;
 import com.example.insuranceservice.domain.paymentInfo.dto.UpdatePaymentInfoDto;
@@ -27,7 +28,10 @@ import java.util.stream.Collectors;
 @Service
 public class PaymentInfoService {
 
+    @Autowired
     private PaymentInfoRepository paymentInfoRepository;
+    @Autowired
+    private ContractRepository contractRepository;
     @Autowired
     private CardRepository cardRepository;
     @Autowired
@@ -121,6 +125,7 @@ public class PaymentInfoService {
 
     public UpdatePaymentInfoDto setPaymentInfo(UpdatePaymentInfoDto updatePaymentInfoDto) {
         PaymentInfo paymentInfo = updatePaymentInfoDto.toEntity();
+        paymentInfo.setContract(contractRepository.findById(updatePaymentInfoDto.getContractId()).get());
         UpdatePaymentInfoDto response = paymentInfoRepository.save(paymentInfo).toUpdatePaymentInfoDto();
         return response;
     }

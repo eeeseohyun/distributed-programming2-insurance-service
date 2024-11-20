@@ -27,7 +27,7 @@ public class UpdatePaymentInfoDto {
     private String applicantRRN;
     private String paymentCompanyName;
     private String relationshipToApplicant;
-
+    private Integer contractId;
     public PaymentInfo toEntity() {
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setId(id);
