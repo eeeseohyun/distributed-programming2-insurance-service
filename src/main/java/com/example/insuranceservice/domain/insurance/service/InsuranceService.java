@@ -62,7 +62,7 @@ public class InsuranceService {
            throw new RuntimeException("존재하지 않는 보험 상품 ID");
     }
 
-    public List<InsuranceDto> getAllInsurance() {
+    public List<GetAllInsuranceDto> getAllInsurance() {
         return insuranceRepository.findAll().stream()
                 .map(insurance -> {
                     switch (insurance.getCategory()) {
@@ -70,28 +70,28 @@ public class InsuranceService {
                             int carId = insurance.getCar().getCarId();
                             Car car = carRepository.findById(carId)
                                     .orElseThrow(() -> new RuntimeException("존재하지 않는 차 보험 상품 ID"));
-                            InsuranceCarRequestDto dto = InsuranceMapper.insuranceMapper.toCarInsuranceDto(insurance, car);
+                            CreateCarInsuranceDto dto = InsuranceMapper.insuranceMapper.toCarInsuranceDto(insurance, car);
                             return dto;
                         }
                         case CancerHealthInsurance -> {
                             int cancerId = insurance.getCancerHealth().getCancerId();
                             CancerHealth cancerHealth = cancerHealthRepository.findById(cancerId)
                                     .orElseThrow(() -> new RuntimeException("존재하지 않는 암 보험 상품 ID "));
-                            InsuranceCancerRequestDto dto = InsuranceMapper.insuranceMapper.toCancerInsuranceDto(insurance, cancerHealth);
+                            CreateCancerInsuranceDto dto = InsuranceMapper.insuranceMapper.toCancerInsuranceDto(insurance, cancerHealth);
                             return dto;
                         }
                         case HouseFireInsurance -> {
                             int houseFireId = insurance.getHouseFire().getHouseFireId();
                             HouseFire houseFire = houseFireRepository.findById(houseFireId)
                                     .orElseThrow(() -> new RuntimeException("존재하지 않는 화재 보험 상품 ID"));
-                            InsuranceHouseFireRequestDto dto = InsuranceMapper.insuranceMapper.toHouseFireInsuranceDto(insurance, houseFire);
+                            CreateHousefireInsuranceDto dto = InsuranceMapper.insuranceMapper.toHouseFireInsuranceDto(insurance, houseFire);
                             return dto;
                         }
                         case InternationalTravelInsurance -> {
                             int internationalId = insurance.getInternationalTravel().getTravelId();
                             InternationalTravel internationalTravel = internationalRepository.findById(internationalId)
                                     .orElseThrow(() -> new RuntimeException("존재하지 않는 여행 보험 상품 ID"));
-                            InsuranceInternationalRequestDto dto = InsuranceMapper.insuranceMapper.toInternationalInsuranceDto(insurance, internationalTravel);
+                            CreateInternationalInsuranceDto dto = InsuranceMapper.insuranceMapper.toInternationalInsuranceDto(insurance, internationalTravel);
                             return dto;
                         }
                         default -> throw new RuntimeException("존재하지 않는 보험 상품 종류입니다");

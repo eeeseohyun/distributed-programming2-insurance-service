@@ -3,7 +3,7 @@ package com.example.insuranceservice.domain.cancerHealth.service;
 import com.example.insuranceservice.domain.cancerHealth.entity.CancerHealth;
 import com.example.insuranceservice.domain.insurance.InsuranceMapper;
 import com.example.insuranceservice.domain.cancerHealth.repository.CancerHealthRepository;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceCancerRequestDto;
+import com.example.insuranceservice.domain.insurance.dto.CreateCancerInsuranceDto;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class CancerService {
     private InsuranceRepository insuranceRepository;
     // 상품을 개발한다. - 암 보험
     // 암 보험 생성
-    public String createCancerInsurance(InsuranceCancerRequestDto dto) {
+    public String createCancerInsurance(CreateCancerInsuranceDto dto) {
         CancerHealth cancerHealth = InsuranceMapper.insuranceMapper.toCancerEntity(dto);
         Insurance insurance = InsuranceMapper.insuranceMapper.toCancerInsuranceEntity(dto);
 

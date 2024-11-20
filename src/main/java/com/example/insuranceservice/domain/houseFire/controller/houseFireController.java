@@ -1,6 +1,6 @@
 package com.example.insuranceservice.domain.houseFire.controller;
 
-import com.example.insuranceservice.domain.insurance.dto.InsuranceHouseFireRequestDto;
+import com.example.insuranceservice.domain.insurance.dto.CreateHousefireInsuranceDto;
 import com.example.insuranceservice.domain.houseFire.service.HouseFireService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,7 +34,7 @@ public class houseFireController {
     })
     @PostMapping("/createHousefire")
     private String createHousefireInsurance(
-            @Parameter(description = "화재보험 상품 정보") @RequestBody InsuranceHouseFireRequestDto dto
+            @Parameter(description = "화재보험 상품 정보") @RequestBody CreateHousefireInsuranceDto dto
     ) {
         return houseFireService.createHousefireInsurance(dto);
     }

@@ -6,7 +6,7 @@ import lombok.Data;
 
 
 @Data
-public class CompensationUpdateDTO {
+public class UpdateCompensationDto {
     private int compensationID;
     private int accidentID;
     private int insuranceAmount;

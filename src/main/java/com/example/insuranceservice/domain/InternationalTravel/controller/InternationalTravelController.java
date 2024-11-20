@@ -3,7 +3,7 @@ package com.example.insuranceservice.domain.InternationalTravel.controller;
 
 
 import com.example.insuranceservice.domain.InternationalTravel.service.InternationalService;
-import com.example.insuranceservice.domain.insurance.dto.InsuranceInternationalRequestDto;
+import com.example.insuranceservice.domain.insurance.dto.CreateInternationalInsuranceDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
     })
     @PostMapping("/createInternational")
     private String createInternationalInsurance(
-            @Parameter(description = "해외여행보험 상품 정보") @RequestBody InsuranceInternationalRequestDto dto) {
+            @Parameter(description = "해외여행보험 상품 정보") @RequestBody CreateInternationalInsuranceDto dto) {
         return internationalService.createInternationalInsurance(dto);
     }
 }

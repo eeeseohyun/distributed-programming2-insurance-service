@@ -1,10 +1,7 @@
 package com.example.insuranceservice.domain.compensation.service;
 import com.example.insuranceservice.domain.accident.entity.Accident;
 import com.example.insuranceservice.domain.accident.repository.AccidentRepository;
-import com.example.insuranceservice.domain.compensation.dto.BillDTO;
-import com.example.insuranceservice.domain.compensation.dto.CompensationDTO;
-import com.example.insuranceservice.domain.compensation.dto.CompensationUpdateDTO;
-import com.example.insuranceservice.domain.compensation.dto.LossDto;
+import com.example.insuranceservice.domain.compensation.dto.*;
 import com.example.insuranceservice.domain.compensation.entity.Compensation;
 import com.example.insuranceservice.domain.compensation.repository.CompensationRepository;
 import com.example.insuranceservice.exception.DuplicateIDException;
@@ -39,7 +36,7 @@ public class CompensationService {
     }
 
     //보상 신청
-    public String createCompensation(CompensationDTO compensation) throws DuplicateIDException {
+    public String createCompensation(CreateCompensationDTO compensation) throws DuplicateIDException {
         Optional<Accident> accident = accidentRepository.findById(compensation.getAccidentID());
         if(!accident.isPresent()){
             throw new RuntimeException("존재하지 않는 사고 ID 입니다.");
@@ -52,7 +49,7 @@ public class CompensationService {
         }
     }
     //보상 수정
-    public String updateCompensation(CompensationUpdateDTO compensation) throws NotFoundProfileException {
+    public String updateCompensation(UpdateCompensationDto compensation) throws NotFoundProfileException {
         if (!compensationRepository.existsById(compensation.getCompensationID())) {
             throw new NotFoundProfileException();
         }
@@ -61,7 +58,9 @@ public class CompensationService {
         if(!accident.isPresent()){
             throw new RuntimeException("존재하지 않는 사고 ID 입니다.");
         }
-        Compensation response =  compensationRepository.save(compensation.toEntity(accident.get()));
+        Compensation compensationEntity = compensation.toEntity(accident.get());
+        compensationEntity.setCompensationID(compensation.getCompensationID());
+        Compensation response =  compensationRepository.save(compensationEntity);
         if(response.equals(null)){
             throw new NullPointerException();
         }else{
@@ -82,7 +81,7 @@ public class CompensationService {
         }
     }
     //보험금 청구
-    public String requestInsuranceAmount(BillDTO billDTO) throws NotFoundProfileException {
+    public String requestInsuranceAmount(RequestInsuranceAmountDto billDTO) throws NotFoundProfileException {
         Optional<Compensation> compensation =compensationRepository.findById(billDTO.getCompensationID());
         if (compensation == null) {
             throw new NotFoundProfileException("[Exception] 해당 보상ID의 보상이 존재하지 않습니다. 다시 시도해주세요.");
@@ -96,7 +95,7 @@ public class CompensationService {
         else return "[success] 보험금 청구 신청이 완료되었습니다.";
     }
     // 손해조사
-    public String investigateLoss(LossDto lossDto) throws NotFoundProfileException {
+    public String investigateLoss(InvestigateLossDto lossDto) throws NotFoundProfileException {
         Optional<Compensation> compensation =compensationRepository.findById(lossDto.getCompensationID());
         if (compensation == null) {
             throw new NotFoundProfileException("[Exception] 해당 보상ID의 보상이 존재하지 않습니다. 다시 시도해주세요.");

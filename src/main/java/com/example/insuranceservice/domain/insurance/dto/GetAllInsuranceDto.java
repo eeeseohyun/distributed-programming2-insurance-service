@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @AllArgsConstructor
 @Slf4j
-public class InsuranceDto {
+public class GetAllInsuranceDto {
     private String insuranceName;
     private String category;
     private int insuranceRate;
