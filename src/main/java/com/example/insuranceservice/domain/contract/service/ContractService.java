@@ -36,7 +36,6 @@ public class ContractService {
     private final InsuranceRepository insuranceRepository;
     private final EmployeeRepository employeeRepository;
     private ContractRepository contractRepository;
-    private InsuranceRepository insuranceRepository;
     private CustomerService customerService;
     private InsuranceService insuranceService;
     private CustomerRepository customerRepository;
@@ -44,7 +43,6 @@ public class ContractService {
 
     public ContractService(ContractRepository contractRepository, CustomerService customerService, InsuranceService insuranceService, CustomerRepository customerRepository, PaymentInfoRepository paymentInfoRepository, InsuranceRepository insuranceRepository, EmployeeRepository employeeRepository) {
         this.contractRepository = contractRepository;;
-        this.insuranceRepository = insuranceRepository;
         this.customerService = customerService;
         this.insuranceService = insuranceService;
         this.customerRepository = customerRepository;
