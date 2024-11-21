@@ -101,7 +101,9 @@ public class ContractService {
 
     // 배서관리한다. - update
     public String manageUpdate(ManageUpdateDto contractDto) {
-        contractRepository.save(contractDto.toEntity());
+        Contract contract = contractDto.toEntity();
+        contract.setCustomer(customerRepository.findById(contractDto.getCustomerId()).get());
+        contractRepository.save(contract);
         Boolean response = contractRepository.existsById(contractDto.getId());
         if(response) return "[success] 성공적으로 배서가 반영 되었습니다!";
         else return "[error] 배서가 반영 되지 않았습니다!";
