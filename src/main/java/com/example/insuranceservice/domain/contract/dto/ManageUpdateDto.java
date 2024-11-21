@@ -28,8 +28,11 @@ public class ManageUpdateDto {
     private Integer nonPaymentPeriod;
     private Boolean renewalStatus;
     private Integer underwritingEID;
-    private String insuranceName;
     private Integer customerId;
+    private String expirationDate;
+    private Boolean isPassUW;
+    private Integer insuranceId;
+    private Integer employeeId;
 
     public Contract toEntity() {
         return Contract.builder()
@@ -44,6 +47,8 @@ public class ManageUpdateDto {
                 .nonPaymentPeriod(this.nonPaymentPeriod)
                 .renewalStatus(this.renewalStatus)
                 .underwritingEID(this.underwritingEID)
+                .expirationDate(this.expirationDate)
+                .isPassUW(this.isPassUW)
                 .build();
     }
     public ManageUpdateDto(Contract contract) {
