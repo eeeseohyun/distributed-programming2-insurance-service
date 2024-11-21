@@ -9,6 +9,7 @@ import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
 import com.example.insuranceservice.domain.customer.service.CustomerService;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
+import com.example.insuranceservice.domain.employee.repository.EmployeeRepository;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
 @Service
 public class ContractService {
 
+    private final InsuranceRepository insuranceRepository;
+    private final EmployeeRepository employeeRepository;
     private ContractRepository contractRepository;
     private InsuranceRepository insuranceRepository;
     private CustomerService customerService;
@@ -39,13 +42,15 @@ public class ContractService {
     private CustomerRepository customerRepository;
     private PaymentInfoRepository paymentInfoRepository;
 
-    public ContractService(ContractRepository contractRepository, CustomerService customerService, InsuranceService insuranceService, CustomerRepository customerRepository, PaymentInfoRepository paymenInfoRepository, InsuranceRepository insuranceRepository) {
-        this.contractRepository = contractRepository;
+    public ContractService(ContractRepository contractRepository, CustomerService customerService, InsuranceService insuranceService, CustomerRepository customerRepository, PaymentInfoRepository paymentInfoRepository, InsuranceRepository insuranceRepository, EmployeeRepository employeeRepository) {
+        this.contractRepository = contractRepository;;
         this.insuranceRepository = insuranceRepository;
         this.customerService = customerService;
         this.insuranceService = insuranceService;
         this.customerRepository = customerRepository;
-        this.paymentInfoRepository = paymenInfoRepository;
+        this.paymentInfoRepository = paymentInfoRepository;
+        this.insuranceRepository = insuranceRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     // 미납관리한다. - delete
@@ -107,6 +112,8 @@ public class ContractService {
     public String manageUpdate(ManageUpdateDto contractDto) {
         Contract contract = contractDto.toEntity();
         contract.setCustomer(customerRepository.findById(contractDto.getCustomerId()).get());
+        contract.setInsurance(insuranceRepository.findById(contractDto.getInsuranceId()).get());
+        contract.setEmployee(employeeRepository.findById(contractDto.getEmployeeId()).get());
         contractRepository.save(contract);
         Boolean response = contractRepository.existsById(contractDto.getId());
         if(response) return "[success] 성공적으로 배서가 반영 되었습니다!";

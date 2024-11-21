@@ -56,7 +56,7 @@ public class ContractController {
     // 재계약을 관리한다.
     @Operation(summary = "재계약 관리", description = "계약 갱신을 관리합니다")
     @ApiResponse(responseCode = "200", description = "처리 성공")
-    @PostMapping("renewal")
+    @PostMapping("/renewal")
     private String manageRenewalContract(
             @Parameter(description = "계약 ID") @RequestParam int contractId
     ) {
