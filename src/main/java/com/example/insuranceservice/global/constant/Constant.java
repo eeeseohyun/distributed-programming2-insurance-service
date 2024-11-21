@@ -1,8 +1,8 @@
 package com.example.insuranceservice.global.constant;
 
 public class Constant {
-    public static final String Customer = "C";
-    public static final String Employee = "E";
+    public static final String Customer = "C";//안씀
+    public static final String Employee = "E";//안씀
     public static final String Sales = "S";
     public static final String UnderWriting = "UW";
     public static final String CutomerInfomationManage = "CI";
