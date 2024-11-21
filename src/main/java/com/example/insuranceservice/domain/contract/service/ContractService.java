@@ -8,6 +8,7 @@ import com.example.insuranceservice.domain.contract.repository.ContractRepositor
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
 import com.example.insuranceservice.domain.customer.service.CustomerService;
+import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.employee.repository.EmployeeRepository;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
@@ -35,6 +36,7 @@ public class ContractService {
     private final InsuranceRepository insuranceRepository;
     private final EmployeeRepository employeeRepository;
     private ContractRepository contractRepository;
+    private InsuranceRepository insuranceRepository;
     private CustomerService customerService;
     private InsuranceService insuranceService;
     private CustomerRepository customerRepository;
@@ -42,6 +44,7 @@ public class ContractService {
 
     public ContractService(ContractRepository contractRepository, CustomerService customerService, InsuranceService insuranceService, CustomerRepository customerRepository, PaymentInfoRepository paymentInfoRepository, InsuranceRepository insuranceRepository, EmployeeRepository employeeRepository) {
         this.contractRepository = contractRepository;;
+        this.insuranceRepository = insuranceRepository;
         this.customerService = customerService;
         this.insuranceService = insuranceService;
         this.customerRepository = customerRepository;
@@ -268,7 +271,13 @@ public class ContractService {
         Contract contract = new Contract();
         contract.setCustomer(customerService.findCustomerById(customerId));
         contract.setExpirationDate(requestContractDto.getExpirationDate());
-        contract.setInsurance(insuranceService.findInsuranceById(requestContractDto.getInsuranceId()));
+        System.out.println(requestContractDto.getInsuranceId());
+        Optional<Insurance> optionalInsurance = insuranceRepository.findById(requestContractDto.getInsuranceId());
+        if (optionalInsurance.isPresent()) {
+            contract.setInsurance(optionalInsurance.get());
+        } else {
+            throw new RuntimeException("[errer] 존재하지 않는 보험 상품 ID: " + requestContractDto.getInsuranceId());
+        }
         contract.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateTimeFormat)));
         contract.setIsConcluded(false);
         contract.setIsPassUW(false);
