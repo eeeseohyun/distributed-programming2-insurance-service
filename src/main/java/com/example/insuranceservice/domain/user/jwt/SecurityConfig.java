@@ -38,7 +38,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // 해당 API에 대해서는 모든 요청을 허가
                         .requestMatchers("/api/users/login", "/api/users/signup", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("api/insurances/getAll").hasRole(Constant.Sales)
 
                         // USER 권한이 있어야 요청할 수 있음
 //                        .requestMatchers("/api/users/test").hasRole("Constant.")
