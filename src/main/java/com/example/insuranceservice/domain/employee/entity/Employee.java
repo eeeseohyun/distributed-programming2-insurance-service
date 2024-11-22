@@ -2,19 +2,21 @@ package com.example.insuranceservice.domain.employee.entity;
 
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.counsel.entity.Counsel;
+import com.example.insuranceservice.domain.user.dto.User;
+import com.example.insuranceservice.global.constant.Constant;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
+@Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "employee")
-public class Employee {
+public class Employee extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer employeeId;
@@ -31,4 +33,16 @@ public class Employee {
     @OneToMany(mappedBy = "employee")
     private List<Contract> contracts = new ArrayList<>();
 
+    @Override
+    public String getPW() {
+        return employeePW;
+    }
+    @Override
+    public String getEmail() {
+        return email;
+    }
+    @Override
+    public String getType(){
+        return type;
+    }
 }

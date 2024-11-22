@@ -2,8 +2,10 @@ package com.example.insuranceservice.domain.customer.dto;
 
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.medicalHistory.dto.MedicalHistoryDTO;
+import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,4 +50,5 @@ public class CustomerDTO {
                 .collect(Collectors.toList())
                 : null;
     }
+
 }

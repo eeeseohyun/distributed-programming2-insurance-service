@@ -2,8 +2,10 @@ package com.example.insuranceservice.domain.user.dto;
 
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.medicalHistory.dto.MedicalHistoryDTO;
+import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +15,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Data
 public class CustomerDTO {
-    private int customerID;
     private String account;
     private String address;
     private int age;
@@ -28,7 +29,6 @@ public class CustomerDTO {
     private int weight;
     private List<MedicalHistoryDTO> medicalHistories;
     public CustomerDTO(Customer customer) {
-        this.customerID = customer.getCustomerID();
         this.account = customer.getAccount();
         this.address = customer.getAddress();
         this.age = customer.getAge();
@@ -48,4 +48,32 @@ public class CustomerDTO {
                 .collect(Collectors.toList())
                 : null;
     }
+
+    public Customer toCustomerEntity() {
+        return Customer.builder()
+                .account(this.account)
+                .address(this.address)
+                .age(this.age)
+                .birthDate(this.birthDate)
+                .customerPW(this.customerPW)
+                .email(this.email)
+                .gender(this.gender)
+                .height(this.height)
+                .job(this.job)
+                .name(this.name)
+                .phone(this.phone)
+                .weight(this.weight)
+                .build();
+    }
+
+    public List<MedicalHistory> toMedicalEntity() {
+        return this.medicalHistories != null
+                ? this.medicalHistories.stream()
+                .map(dto -> MedicalHistory.builder()
+                        .curePeriod(dto.getCurePeriod())
+                        .diseasesName(dto.getDiseasesName())
+                        .isCured(dto.isCured())
+                        .build())
+                .collect(Collectors.toList())
+                : new ArrayList<>();    }
 }
