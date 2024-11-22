@@ -5,6 +5,8 @@ import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import com.example.insuranceservice.domain.contract.entity.Contract;
 import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import com.example.insuranceservice.domain.payment.entity.Payment;
+import com.example.insuranceservice.domain.user.dto.User;
+import com.example.insuranceservice.global.constant.Constant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Customer {
+public class Customer extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int customerID;
@@ -50,4 +52,15 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Payment> payments;
 
+    @Override
+    public String getPW() {
+        return customerPW;
+    }
+    public String getEmail(){
+        return email;
+    }
+    @Override
+    public String getType(){
+        return Constant.Customer;
+    }
 }

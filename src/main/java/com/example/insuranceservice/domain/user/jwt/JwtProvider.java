@@ -28,18 +28,19 @@ public class JwtProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
     public JwtToken generateToken(Authentication authentication, int customerId) {
-        // 사용자 엔티티에서 권한을 가져옴 (단일 권한의 경우)
+
         String role = authentication.getAuthorities().stream()
                 .findFirst() // 첫 번째 권한만 선택
                 .map(GrantedAuthority::getAuthority)
                 .orElse(""); // 권한이 없을 경우 빈 문자열
+
 
         long now = (new Date()).getTime();
         Date accessTokenExpiresIn = new Date(now + JwtConstant.ACCESS_TOKEN_EXPIRE_TIME);
 
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim("user", role) // 권한을 단일 문자열로 저장
+                .claim("role", role) // 권한을 단일 문자열로 저장
                 .claim("id", customerId)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -59,7 +60,7 @@ public class JwtProvider {
 
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
-        String role = claims.get("user", String.class);
+        String role = claims.get("role", String.class);
 
         if (role == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
@@ -92,7 +93,7 @@ public class JwtProvider {
         return false;
     }
 
-    private Claims parseClaims(String accessToken) {
+    Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)

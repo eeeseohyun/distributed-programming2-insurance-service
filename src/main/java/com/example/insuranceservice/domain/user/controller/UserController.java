@@ -1,7 +1,10 @@
 package com.example.insuranceservice.domain.user.controller;
 
-import com.example.insuranceservice.domain.customer.dto.CustomerDTO;
+
 import com.example.insuranceservice.domain.customer.entity.Customer;
+
+import com.example.insuranceservice.domain.user.dto.CustomerDTO;
+import com.example.insuranceservice.domain.user.dto.EmployeeDTO;
 import com.example.insuranceservice.domain.user.dto.LoginRequestDto;
 import com.example.insuranceservice.domain.user.jwt.JwtToken;
 import com.example.insuranceservice.domain.user.service.UserService;
@@ -24,17 +27,26 @@ public class UserController {
     private UserService userService;
 
     @Operation(summary = "회원가입 api", description = "사용자가 회원가입하면, 유효성검사후 회원가입합니다.")
-    @PostMapping("/signup")
+    @PostMapping("/customer/signup")
     public String addUser(@Valid @RequestBody CustomerDTO dto){
-        Customer entity = userService.createUser(dto);
-        return userService.join(entity);
+        return userService.join(dto);
     }
 
     @Operation(summary = "로그인 api", description = "사용자가 로그인하면 토큰을 반환합니다")
-    @PostMapping("/login")
+    @PostMapping("/customer/login")
     public JwtToken getMemberProfile(@Valid @RequestBody LoginRequestDto request) {
         JwtToken token = this.userService.login(request);
         return token;
     }
-
+    @Operation(summary = "회원가입 api", description = "사용자가 회원가입하면, 유효성검사후 회원가입합니다.")
+    @PostMapping("/employee/signup")
+    public String addUser(@Valid @RequestBody EmployeeDTO dto){
+        return userService.employeejoin(dto);
+    }
+    @Operation(summary = "로그인 api", description = "사용자가 로그인하면 토큰을 반환합니다")
+    @PostMapping("/employee/login")
+    public JwtToken getEmployeeMemberProfile(@Valid @RequestBody LoginRequestDto request) {
+        JwtToken token = this.userService.employeelogin(request);
+        return token;
+    }
 }

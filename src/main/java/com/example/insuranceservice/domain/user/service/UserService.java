@@ -1,33 +1,36 @@
 package com.example.insuranceservice.domain.user.service;
 
 
-import com.example.insuranceservice.domain.customer.dto.CustomerDTO;
+import com.example.insuranceservice.domain.contract.entity.Contract;
+import com.example.insuranceservice.domain.counsel.entity.Counsel;
 import com.example.insuranceservice.domain.customer.entity.Customer;
 import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
-import com.example.insuranceservice.domain.medicalHistory.dto.MedicalHistoryDTO;
+import com.example.insuranceservice.domain.employee.entity.Employee;
+import com.example.insuranceservice.domain.employee.repository.EmployeeRepository;
 import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import com.example.insuranceservice.domain.medicalHistory.repository.MedicalHistoryRepository;
+import com.example.insuranceservice.domain.user.dto.CustomerDTO;
+import com.example.insuranceservice.domain.user.dto.EmployeeDTO;
 import com.example.insuranceservice.domain.user.dto.LoginRequestDto;
 import com.example.insuranceservice.domain.user.jwt.JwtProvider;
 import com.example.insuranceservice.domain.user.jwt.JwtToken;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 
-public class UserService {
+public class UserService implements UserServiceInterFace {
     @Autowired
     private  CustomerRepository customerRepository;
     @Autowired
@@ -38,62 +41,73 @@ public class UserService {
     private  JwtProvider jwtProvider;
     @Autowired
     private  MedicalHistoryRepository medicalHistoryRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
 
-    public String join(Customer user) {
-        Optional<Customer> valiUser = customerRepository.findByEmail(user.getEmail());
+    @Override
+    public String join(@Valid CustomerDTO dto) {
+        Optional<Customer> valiUser = customerRepository.findByEmail(dto.getEmail());
         if (valiUser.isPresent()) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
-        // 비밀번호 해시 처리
-        user.setCustomerPW(encoder.encode(user.getCustomerPW()));
-        Customer customer = customerRepository.save(user);
-        if(customer!=null){
+        Customer customer = dto.toCustomerEntity();
+        customer.setCustomerPW(encoder.encode(customer.getCustomerPW()));
+        Customer response = customerRepository.save(customer);
+
+        List<MedicalHistory> list = dto.toMedicalEntity();
+        for(MedicalHistory medicalHistory : list){
+            medicalHistory.setCustomer(customerRepository.findByEmail(dto.getEmail()).get());
+            medicalHistoryRepository.save(medicalHistory);
+        }
+
+        if(response!=null){
             return "[success] 회원가입이 성공적으로 이루어졌습니다";
         }else{
             return "[error] 회원가입에 실패했습니다";
         }
     }
-
-
+    @Override
     public JwtToken login(LoginRequestDto dto) {
         String userId = dto.getEmail();
         String password = dto.getPassword();
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, password);
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(userId, password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        // 인증된 사용자 정보 가져오기
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        // JwtToken 생성
-        JwtToken jwtToken = jwtProvider.generateToken(authentication, this.customerRepository.findByEmail(dto.getEmail()).get().getCustomerID());
-        return jwtToken;
+        Customer customer = customerRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        return jwtProvider.generateToken(authentication, customer.getCustomerID());
     }
 
-    public Customer createUser(CustomerDTO dto) {
-        Customer user = Customer.builder()
-                .customerID(dto.getCustomerID())
-                .account(dto.getAccount())
-                .address(dto.getAddress())
-                .age(dto.getAge())
-                .birthDate(dto.getBirthDate())
-                .customerPW(dto.getCustomerPW())
-                .email(dto.getEmail())
-                .gender(dto.getGender())
-                .height(dto.getHeight())
-                .job(dto.getJob())
-                .name(dto.getName())
-                .phone(dto.getPhone())
-                .weight(dto.getWeight())
-                .build();
-        List<MedicalHistoryDTO> medicalHistoryList = dto.getMedicalHistories();
-        for(MedicalHistoryDTO medicalHistoryDTO :medicalHistoryList){
-            MedicalHistory entity =medicalHistoryDTO.toEntity();
-            entity.setCustomer(user);
-            medicalHistoryRepository.save(entity);
+    @Override
+    public String employeejoin(EmployeeDTO dto) {
+        Optional<Employee> valiUser = employeeRepository.findByEmail(dto.getEmail());
+        if (valiUser.isPresent()) {
+            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
-        customerRepository.save(user);
-        return user;
+        Employee employee = dto.toEmployeeEntity();
+        employee.setEmployeePW(encoder.encode(employee.getEmployeePW()));
+        Employee response = employeeRepository.save(employee);
+
+        if(response!=null){
+            return "[success] 회원가입이 성공적으로 이루어졌습니다";
+        }else{
+            return "[error] 회원가입에 실패했습니다";
+        }
     }
+    @Override
+    public JwtToken employeelogin(LoginRequestDto dto) {
+        String userId = dto.getEmail();
+        String password = dto.getPassword();
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(userId, password);
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
+        Employee employee = employeeRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
+        return jwtProvider.generateToken(authentication, employee.getEmployeeId());
+    }
 }
