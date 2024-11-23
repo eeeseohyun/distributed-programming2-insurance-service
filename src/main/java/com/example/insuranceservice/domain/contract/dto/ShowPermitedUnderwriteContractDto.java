@@ -17,14 +17,15 @@ public class ShowPermitedUnderwriteContractDto {
     private String contractStatus;
     private Integer customerId;
     private String createdDate;
-    private Integer insuranceID;
-    private Integer concludedEID;
+    private Integer insuranceId;
+    private Integer empolyeeId;
 
     public ShowPermitedUnderwriteContractDto(Contract contract) {
         this.id = contract.getId();
-        this.concludedEID = contract.getConcludedEID();
+        this.customerId = contract.getCustomer().getCustomerID();
+        this.empolyeeId = contract.getUnderwritingEID();
         this.contractStatus = contract.getContractStatus();
         this.createdDate = contract.getCreatedDate();
-        this.insuranceID = contract.getInsurance().getInsuranceID();
+        this.insuranceId = contract.getInsurance().getInsuranceID();
     }
 }

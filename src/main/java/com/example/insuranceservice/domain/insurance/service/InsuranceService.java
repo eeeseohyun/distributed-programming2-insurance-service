@@ -100,4 +100,13 @@ public class InsuranceService {
                 .collect(Collectors.toList());
     }
 
+    public List<ShowInsuranceListDto> showInsuranceList() {
+        return insuranceRepository.findAll().stream()
+                .map(insurance -> ShowInsuranceListDto.builder()
+                        .id(insurance.getInsuranceID())
+                        .insuranceName(insurance.getInsuranceName())
+                        .insuranceCategory(insurance.getCategory())
+                        .build())
+                .collect(Collectors.toList());
+    }
 }

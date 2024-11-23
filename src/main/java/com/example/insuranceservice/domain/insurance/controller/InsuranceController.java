@@ -1,8 +1,5 @@
 package com.example.insuranceservice.domain.insurance.controller;
-import com.example.insuranceservice.domain.insurance.dto.GetAllInsuranceDto;
-import com.example.insuranceservice.domain.insurance.dto.ShowInsuranceTypeDto;
-import com.example.insuranceservice.domain.insurance.dto.ShowInsuranceDetailDto;
-import com.example.insuranceservice.domain.insurance.dto.RetrieveInsuranceDto;
+import com.example.insuranceservice.domain.insurance.dto.*;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -58,5 +55,10 @@ public class InsuranceController {
     @GetMapping("/getAll")
     private List<GetAllInsuranceDto> getAllInsurance() {
         return insuranceService.getAllInsurance();
+    }
+
+    @GetMapping("/showInsuranceList")
+    private List<ShowInsuranceListDto> showInsuranceList(){
+        return insuranceService.showInsuranceList();
     }
 }
