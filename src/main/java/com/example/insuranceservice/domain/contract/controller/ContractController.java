@@ -91,9 +91,10 @@ public class ContractController {
     @PostMapping("/concludeContract")
     public ResponseEntity<String> concludeContract(
             @Parameter(description = "계약 ID") @RequestParam Integer contractId,
+            @Parameter(description = "계약 ID") @RequestParam Integer empolyeeId,
             @Parameter(description = "승인 여부") @RequestParam boolean approve
     ) {
-        String message = contractService.concludeContract(contractId, approve);
+        String message = contractService.concludeContract(contractId, empolyeeId, approve);
         return ResponseEntity.ok(message);
     }
 
@@ -157,10 +158,11 @@ public class ContractController {
     @PostMapping("/processUnderwriting")
     public ResponseEntity<String> processUnderwriting(
             @Parameter(description = "계약 ID") @RequestParam Integer contractId,
+            @Parameter(description = "직원 ID") @RequestParam Integer empolyeeId,
             @Parameter(description = "평가 내용") @RequestParam String evaluation,
             @Parameter(description = "승인 여부") @RequestParam boolean approve
     ) {
-        String message = contractService.processUnderwriting(contractId, evaluation, approve);
+        String message = contractService.processUnderwriting(contractId, empolyeeId, evaluation, approve);
         return ResponseEntity.ok(message);
     }
 
