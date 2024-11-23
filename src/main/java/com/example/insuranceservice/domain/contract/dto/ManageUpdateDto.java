@@ -33,6 +33,7 @@ public class ManageUpdateDto {
     private Boolean isPassUW;
     private Integer insuranceId;
     private Integer employeeId;
+    private List<PaymentInfo> paymentInfoList;
 
     public Contract toEntity() {
         return Contract.builder()
@@ -49,6 +50,7 @@ public class ManageUpdateDto {
                 .underwritingEID(this.underwritingEID)
                 .expirationDate(this.expirationDate)
                 .isPassUW(this.isPassUW)
+                .paymentInfoList(this.paymentInfoList)
                 .build();
     }
     public ManageUpdateDto(Contract contract) {
