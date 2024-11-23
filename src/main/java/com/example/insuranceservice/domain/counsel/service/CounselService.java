@@ -130,15 +130,16 @@ public class CounselService {
     }
 
     // 상담 보험 제안
-    public SuggestInsuranceDto suggestInsurance(Integer counselId, Integer insuranceId) {
+    public SuggestInsuranceDto suggestInsurance(Integer counselId, SuggestInsuranceRequestDto suggestInsuranceRequestDto) {
         Counsel counsel = findCounselById(counselId);
-        Insurance insurance = insuranceService.findInsuranceById(insuranceId);
+        Insurance insurance = insuranceService.findInsuranceById(suggestInsuranceRequestDto.getInsuranceId());
+        Employee employee = employeeService.findEmployeeById(suggestInsuranceRequestDto.getEmployeeId());
         SuggestInsuranceDto suggestInsuranceDto = new SuggestInsuranceDto();
         suggestInsuranceDto.setCustomerName(counsel.getCustomer().getName());
         suggestInsuranceDto.setPhone(counsel.getCustomer().getPhone());
         suggestInsuranceDto.setEmail(counsel.getCustomer().getEmail());
         suggestInsuranceDto.setInsuranceName(insurance.getInsuranceName());
-        suggestInsuranceDto.setEmployeeName(counsel.getEmployee().getName());
+        suggestInsuranceDto.setEmployeeName(employee.getName());
         suggestInsuranceDto.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateFormat)));
         return suggestInsuranceDto;
     }

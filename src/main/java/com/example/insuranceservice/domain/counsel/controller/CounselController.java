@@ -97,9 +97,9 @@ public class CounselController {
     @PostMapping("/suggest/{counselId}")
     public SuggestInsuranceDto suggestInsurance(
             @Parameter(description = "상담 ID") @PathVariable Integer counselId,
-            @Parameter(description = "보험 상품 ID") @RequestBody Integer insuranceId
+            @Parameter(description = "보험 상품 ID") @RequestBody SuggestInsuranceRequestDto suggestInsuranceRequestDto
     ) {
-        return counselService.suggestInsurance(counselId, insuranceId);
+        return counselService.suggestInsurance(counselId, suggestInsuranceRequestDto);
     }
 
     @Operation(summary = "상담 정보 조회", description = "특정 상담의 상세 정보를 조회합니다")
