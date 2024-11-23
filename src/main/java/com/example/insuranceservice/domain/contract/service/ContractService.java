@@ -216,10 +216,14 @@ public class ContractService {
             contract.setEvaluation(evaluation);
             if (approve) {
                 contract.setContractStatus("ReviewPermit");
+                contract.setEvaluation(evaluation);
+                contract.setIsPassUW(true);
                 contractRepository.save(contract);
                 return "[success] 인수심사를 완료하였습니다.";
             } else {
                 contract.setContractStatus("ReviewReject");
+                contract.setEvaluation(evaluation);
+                contract.setIsPassUW(false);
                 contractRepository.save(contract);
                 return "[info] 인수심사를 거절하였습니다. 해당 계약건을 인수 제한한 계약건으로 분류합니다";
             }

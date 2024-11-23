@@ -15,10 +15,17 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class ShowRejectedUnderwriteContractDto {
     private Integer id;
-    private String resurrectionReason;
+    private Integer customerId;
+    private String createDate;
+    private Integer insuranceId;
+    private String evaluation;
+
 
     public ShowRejectedUnderwriteContractDto(Contract contract) {
         this.id = contract.getId();
-        this.resurrectionReason = contract.getResurrectionReason();
+        this.customerId = contract.getCustomer().getCustomerID();
+        this.createDate = contract.getCreatedDate();
+        this.insuranceId = contract.getInsurance().getInsuranceID();
+        this.evaluation = contract.getEvaluation();
     }
 }
