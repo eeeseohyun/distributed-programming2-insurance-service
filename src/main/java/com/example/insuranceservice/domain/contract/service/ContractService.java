@@ -122,13 +122,13 @@ public class ContractService {
         List<Contract> permitContracts = contractRepository.findByContractStatus("ContractPermission");
         return permitContracts.stream().map(ShowPermitedUnderwriteContractDto::new).collect(Collectors.toList());
     }
-    public String concludeContract(Integer contractId, boolean approve) {
+    public String concludeContract(Integer contractId, Integer empolyeeId, boolean approve) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
         if (contractOptional.isPresent()) {
             Contract contract = contractOptional.get();
             if (approve) {
                 contract.setContractStatus("concluded");
-//                contract.setConcludeEID(this.employeeID); // 요건 로그인 되면 구현
+                contract.setConcludedEID(empolyeeId);
                 contract.setConcludedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
                 contract.setIsConcluded(true);
                 contractRepository.save(contract);
@@ -209,7 +209,7 @@ public class ContractService {
                 .isCured(medicalHistory != null && medicalHistory.isCured())
                 .build();
     }
-    public String processUnderwriting(Integer contractId, String evaluation, boolean approve) {
+    public String processUnderwriting(Integer contractId, Integer empolyeeId, String evaluation, boolean approve) {
         Optional<Contract> contractOptional = contractRepository.findById(contractId);
         if (contractOptional.isPresent()) {
             Contract contract = contractOptional.get();
@@ -217,12 +217,14 @@ public class ContractService {
             if (approve) {
                 contract.setContractStatus("ReviewPermit");
                 contract.setEvaluation(evaluation);
+                contract.setUnderwritingEID(empolyeeId);
                 contract.setIsPassUW(true);
                 contractRepository.save(contract);
                 return "[success] 인수심사를 완료하였습니다.";
             } else {
                 contract.setContractStatus("ReviewReject");
                 contract.setEvaluation(evaluation);
+                contract.setUnderwritingEID(empolyeeId);
                 contract.setIsPassUW(false);
                 contractRepository.save(contract);
                 return "[info] 인수심사를 거절하였습니다. 해당 계약건을 인수 제한한 계약건으로 분류합니다";
