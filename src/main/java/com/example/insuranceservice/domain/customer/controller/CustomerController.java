@@ -28,7 +28,7 @@ public class CustomerController {
             @ApiResponse(responseCode = "200", description = "등록 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    @PostMapping("/create")
+    @PostMapping("/createCustomer")
     public ResponseEntity<Void> createCustomer(
             @Parameter(description = "고객 정보", required = true) @RequestBody CustomerDTO customerDTO
     ) {
@@ -38,7 +38,7 @@ public class CustomerController {
 
     @Operation(summary = "전체 고객 목록 조회", description = "모든 고객 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/retrieve")
+    @GetMapping("/retrieveCustomer")
     public ResponseEntity<List<ShowCustomerList>> retrieveCustomer() {
         List<ShowCustomerList> customers = customerService.retrieveCustomer();
         return ResponseEntity.ok(customers);
@@ -49,7 +49,7 @@ public class CustomerController {
             @ApiResponse(responseCode = "200", description = "수정 성공"),
             @ApiResponse(responseCode = "404", description = "고객 정보를 찾을 수 없음")
     })
-    @PutMapping("/update/{customerId}")
+    @PutMapping("/updateCustomer/{customerId}")
     public ResponseEntity<Void> updateCustomer(
             @Parameter(description = "고객 ID", required = true) @PathVariable Integer customerId,
             @Parameter(description = "수정할 고객 정보", required = true) @RequestBody CustomerDTO customerDTO
@@ -63,7 +63,7 @@ public class CustomerController {
             @ApiResponse(responseCode = "200", description = "삭제 성공"),
             @ApiResponse(responseCode = "404", description = "고객 정보를 찾을 수 없음")
     })
-    @DeleteMapping("/delete/{customerId}")
+    @DeleteMapping("/deleteCustomer/{customerId}")
     public ResponseEntity<Void> deleteCustomer(
             @Parameter(description = "고객 ID", required = true) @PathVariable Integer customerId
     ) {
