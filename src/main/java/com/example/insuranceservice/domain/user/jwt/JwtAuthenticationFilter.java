@@ -31,6 +31,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             // 권한 정보를 콘솔에 출력
             if (authentication != null) {
                 System.out.println("User authenticated successfully!");
+                System.out.println("Authenticated User: " + authentication.getName());
                 System.out.println("Authorities: " + authentication.getAuthorities());
             }
         }

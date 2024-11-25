@@ -32,6 +32,7 @@ public class JwtProvider {
         String role = authentication.getAuthorities().stream()
                 .findFirst() // 첫 번째 권한만 선택
                 .map(GrantedAuthority::getAuthority)
+                .map(auth -> auth.startsWith("ROLE_") ? auth.substring(5) : auth)
                 .orElse(""); // 권한이 없을 경우 빈 문자열
 
 
