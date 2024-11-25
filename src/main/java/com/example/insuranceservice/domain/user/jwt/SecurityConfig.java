@@ -38,12 +38,13 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         // 해당 API에 대해서는 모든 요청을 허가
-                        .requestMatchers("/api/users/customer/login","/api/users/employee/login" ,"/api/users/customer/signup", "/api/users/employee/signup","/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/api/compensations/createCompensation","/api/compensations/showCompensationList/*","/api/compensations/requestInsuranceAmount").hasRole(Constant.Customer)
-                        .requestMatchers("/api/compensations/showAllCompensationList","/api/compensations/updateCompensation","/api/compensations/deleteCompensation/*","/api/compensations/investigateLoss","/api/compensations/calculateInsuranceAmount/*","/api/compensations/giveInsuranceAmount/*").hasRole(Constant.CompensationProcessing)
-                        .requestMatchers("/api/counsels/requested/list","/api/counsels/confirm/*","/api/counsels/confirmed/list/*","/api/counsels/consulted/list/*","/api/consulted/list/*","/api/update/*","/api/suggest/*").hasRole(Constant.Sales)
-                        .requestMatchers("/api/customers/createCustomer").hasRole(Constant.CutomerInfomationManage)
-                        .anyRequest().hasRole(Constant.Employee))
+//                        .requestMatchers("/api/users/customer/login","/api/users/employee/login" ,"/api/users/customer/signup", "/api/users/employee/signup","/swagger-ui/**", "/v3/api-docs/**").permitAll()
+//                        .requestMatchers("/api/compensations/createCompensation","/api/compensations/showCompensationList/*","/api/compensations/requestInsuranceAmount").hasRole(Constant.Customer)
+//                        .requestMatchers("/api/compensations/showAllCompensationList","/api/compensations/updateCompensation","/api/compensations/deleteCompensation/*","/api/compensations/investigateLoss","/api/compensations/calculateInsuranceAmount/*","/api/compensations/giveInsuranceAmount/*").hasRole(Constant.CompensationProcessing)
+//                        .requestMatchers("/api/counsels/requested/list","/api/counsels/confirm/*","/api/counsels/confirmed/list/*","/api/counsels/consulted/list/*","/api/consulted/list/*","/api/update/*","/api/suggest/*").hasRole(Constant.Sales)
+//                        .requestMatchers("/api/customers/createCustomer").hasRole(Constant.CutomerInfomationManage)
+//                        .anyRequest().hasRole(Constant.Employee))
+                        .anyRequest().permitAll())
                 // JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class
