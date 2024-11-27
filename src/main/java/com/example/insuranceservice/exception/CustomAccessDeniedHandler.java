@@ -26,8 +26,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         String token = resoleveToken(request);
         if (token != null) {
             try {
-                String id = jwtProvider.parseClaims(token).getId();
-               System.out.println("접근이 거부된 User의 ID = " + id + " | URI = " + request.getRequestURI());
+                String id = jwtProvider.parseClaims(token).getSubject();
+               System.out.println("접근이 거부된 User의 email = " + id + " | URI = " + request.getRequestURI());
             } catch (Exception e) {
                 System.out.println("디코딩된 토큰이 잘못되었습니다.: " + e.getMessage());
             }
