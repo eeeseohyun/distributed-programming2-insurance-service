@@ -26,7 +26,7 @@ public class ContractController {
     // 미납관리한다.
     @Operation(summary = "미납 관리", description = "계약의 미납을 관리합니다")
     @ApiResponse(responseCode = "200", description = "처리 성공")
-    @PostMapping("/latePayment")
+    @PostMapping("/manageLatePayment")
     private String manageLatePayment(
             @Parameter(description = "계약 ID") @RequestParam int contractId) {
         return contractService.manageLatePayment(contractId);
@@ -35,7 +35,7 @@ public class ContractController {
     // 부활관리한다.
     @Operation(summary = "계약 부활 관리", description = "만료된 계약의 부활을 관리합니다")
     @ApiResponse(responseCode = "200", description = "처리 성공")
-    @PutMapping("/revive")
+    @PutMapping("/manageRevive")
     private String manageRevive(
             @Parameter(description = "계약 정보") @RequestBody ManageReviveDto contractDto) {
         return contractService.manageRevive(contractDto);
@@ -44,7 +44,7 @@ public class ContractController {
     // 만기계약관리한다.
     @Operation(summary = "만기 계약 관리", description = "만기된 계약을 관리합니다")
     @ApiResponse(responseCode = "200", description = "처리 성공")
-    @PostMapping("/expire")
+    @PostMapping("/manageExpirationContract")
     private String manageExpirationContract(@Parameter(description = "계약 ID") @RequestParam int contractId) {
         try {
             return contractService.manageExpirationContract(contractId);
@@ -56,7 +56,7 @@ public class ContractController {
     // 재계약을 관리한다.
     @Operation(summary = "재계약 관리", description = "계약 갱신을 관리합니다")
     @ApiResponse(responseCode = "200", description = "처리 성공")
-    @PostMapping("/renewal")
+    @PostMapping("/manageRenewalContract")
     private String manageRenewalContract(
             @Parameter(description = "계약 ID") @RequestParam int contractId
     ) {
@@ -66,7 +66,7 @@ public class ContractController {
     //배서를 관리한다.
     @Operation(summary = "계약 변경 관리", description = "계약 내용 변경을 관리합니다")
     @ApiResponse(responseCode = "200", description = "처리 성공")
-    @PatchMapping("/update")
+    @PatchMapping("/manageUpdate")
     private String manageUpdate(
             @Parameter(description = "변경할 계약 정보") @RequestBody ManageUpdateDto contractDto
     ) {

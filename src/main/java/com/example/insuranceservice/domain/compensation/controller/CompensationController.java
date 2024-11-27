@@ -43,7 +43,7 @@ public class CompensationController {
         }
     }
 
-    // 보상 신청
+    // 보상 신청 - 수정함.
     @Operation(summary = "보상 신청", description = "새로운 보상을 신청합니다")
     @ApiResponse(responseCode = "201", description = "신청 성공")
     @PostMapping("/createCompensation")

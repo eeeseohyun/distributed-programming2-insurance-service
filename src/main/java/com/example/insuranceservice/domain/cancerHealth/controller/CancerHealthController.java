@@ -26,7 +26,7 @@ public class CancerHealthController {
             @ApiResponse(responseCode = "200", description = "생성 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    @PostMapping("/createCancer")
+    @PostMapping("/createCancerInsurance")
     private String createCancerInsurance(
             @Parameter(description = "암보험 상품 정보") @RequestBody CreateCancerInsuranceDto dto
     ) {
