@@ -26,13 +26,13 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         String token = resoleveToken(request);
         if (token != null) {
             try {
-                String id = jwtProvider.parseClaims(token).getSubject();
-               logger.error("접근이 거부된 User의 ID = " + id + " | URI = " + request.getRequestURI());
+                String id = jwtProvider.parseClaims(token).getId();
+               System.out.println("접근이 거부된 User의 ID = " + id + " | URI = " + request.getRequestURI());
             } catch (Exception e) {
-                logger.error("디코딩된 토큰이 잘못되었습니다.: " + e.getMessage());
+                System.out.println("디코딩된 토큰이 잘못되었습니다.: " + e.getMessage());
             }
         } else {
-            logger.error("토큰을 찾을수가 없습니다. | URI = " + request.getRequestURI());
+            System.out.println("토큰을 찾을수가 없습니다. | URI = " + request.getRequestURI());
         }
 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
