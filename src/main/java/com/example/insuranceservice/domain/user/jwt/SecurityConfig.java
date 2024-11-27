@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/compensations/createCompensation","/api/compensations/showCompensationList/*","/api/compensations/requestInsuranceAmount").hasRole(Constant.Customer)
                         .requestMatchers("/api/compensations/showAllCompensationList","/api/compensations/updateCompensation","/api/compensations/deleteCompensation/*","/api/compensations/investigateLoss","/api/compensations/calculateInsuranceAmount/*","/api/compensations/giveInsuranceAmount/*").hasRole(Constant.CompensationProcessing)
                         .requestMatchers("/api/counsels/requested/list","/api/counsels/confirm/*","/api/counsels/confirmed/list/*","/api/counsels/consulted/list/*","/api/consulted/list/*","/api/update/*","/api/suggest/*").hasRole(Constant.Sales)
+                        .requestMatchers("/api/accidents","/api/accidents/*","/api/accidents/customer/*").hasAnyRole(Constant.Employee,Constant.Customer)
                         .requestMatchers("/api/customers/createCustomer").hasRole(Constant.CutomerInfomationManage)
                         .anyRequest().hasRole(Constant.Employee))
                 // JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행
