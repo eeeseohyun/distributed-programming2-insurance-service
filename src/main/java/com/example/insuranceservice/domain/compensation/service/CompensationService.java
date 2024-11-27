@@ -73,17 +73,17 @@ public class CompensationService {
     //보상 삭제
     public String deleteCompensation(int compensationID) throws NotFoundProfileException {
         if (!compensationRepository.existsById(compensationID)) {
-            throw new NotFoundProfileException();
+            throw new NotFoundProfileException("[Exception] 해당 보상ID가 존재하지 않습니다.");
         }
         compensationRepository.deleteById(compensationID);
         boolean response = compensationRepository.existsById(compensationID);
         if(!response){
-            return "[success] 보상 삭제가 완료되었습니다.";
+            return "[success] 보상 신청이 삭제되었습니다.";
         }else{
             return "[error] 보상 삭제를 실패하였습니다.";
         }
     }
-    //보험금 청구 - 부터
+    //보험금 청구
     public String requestInsuranceAmount(RequestInsuranceAmountDto billDTO) throws NotFoundProfileException {
         Optional<Compensation> optionalcompensation =compensationRepository.findById(billDTO.getCompensationID());
         if (optionalcompensation == null) {

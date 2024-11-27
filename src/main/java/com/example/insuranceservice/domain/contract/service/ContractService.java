@@ -80,21 +80,21 @@ public class ContractService {
         Date expirationDate = dateFormat.parse(contract.getExpirationDate());
         Date today = new Date();
         if (!expirationDate.before(today)) {
-            return "[error] 만기되지 않은 계약입니다!";
+            return "[error] 만기된 계약이 아닙니다!";
         }
         if (contract.getRenewalStatus()) {
             return "[error] 재계약 진행 희망자로 만기할 수 없는 계약입니다!";
         }
         contractRepository.deleteById(contractId);
         boolean response= contractRepository.existsById(contractId);
-        if(!response) return "[success] 성공적으로 만기 관리가 되었습니다!";
-        else return "[error] 만기계약이 지워지지 않았습니다!";
+        if(!response) return "[success] 성공적으로 만기계약 관리가 되었습니다!";
+        else return "[error] 만기계약 관리에 실패하였습니다!";
     }
 
     // 재계약관리한다. - update
     public String manageRenewalContract(int contractId) {
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new NullPointerException("Contract not found"));
+                .orElseThrow(() -> new NullPointerException("[error] 존재하지 않는 계약 ID 입니다."));
         if (contract.getRenewalStatus()) {
             LocalDate expirationDate = LocalDate.now().plusYears(2);
             String formattedDate = expirationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));

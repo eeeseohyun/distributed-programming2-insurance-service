@@ -22,7 +22,7 @@ public class InsuranceController {
     // 보험 상품 카테고리별 조회
     @Operation(summary = "카테고리별 보험 상품 조회", description = "특정 카테고리의 보험 상품 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/list/{category}")
+    @GetMapping("/showInsuranceTypeList/{category}")
     public List<ShowInsuranceTypeDto> showInsuranceTypeList(
             @Parameter(description = "보험 카테고리 (car, cancer, houseFire, international)", example = "car")
             @PathVariable String category
@@ -33,7 +33,7 @@ public class InsuranceController {
     // 보험 상품 상세 내용 조회
     @Operation(summary = "보험 상품 상세 조회", description = "특정 보험 상품의 상세 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/detail/{id}")
+    @GetMapping("/showInsuranceDetail/{id}")
     public ShowInsuranceDetailDto showInsuranceDetail(
             @Parameter(description = "보험 상품 ID") @PathVariable Integer id
     ) {
@@ -42,7 +42,7 @@ public class InsuranceController {
 
     @Operation(summary = "보험 상품 조회", description = "특정 보험 상품 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/retrieve/{id}")
+    @GetMapping("/retrieveInsurance/{id}")
     public RetrieveInsuranceDto retrieveInsurance(
             @Parameter(description = "보험 상품 ID") @PathVariable Integer id
     ) {
@@ -52,7 +52,7 @@ public class InsuranceController {
     // 상품 리스트를 확인한다.
     @Operation(summary = "전체 보험 상품 조회", description = "모든 보험 상품 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/getAll")
+    @GetMapping("/getAllInsurance")
     private List<GetAllInsuranceDto> getAllInsurance() {
         return insuranceService.getAllInsurance();
     }

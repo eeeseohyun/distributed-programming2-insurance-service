@@ -7,17 +7,9 @@ import lombok.Data;
 @Data
 public class CreateCompensationDTO {
     private int accidentID;
-    private int insuranceAmount;
-    private String employeeOpinion;
-    private int lossAmount;
-    private String billReason;
 
     public Compensation toEntity(Accident accident) {
         return Compensation.builder()
-                .insuranceAmount(this.insuranceAmount)
-                .employeeOpinion(this.employeeOpinion)
-                .lossAmount(this.lossAmount)
-                .billReason(this.billReason)
                 .accident(accident)
                 .build();
     }
