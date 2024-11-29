@@ -6,8 +6,8 @@ on:
     branches: [ "ver2" ]
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy to AWS EC2
+  build:
+    name: Build the Project
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -29,27 +29,48 @@ jobs:
     - name: Cache Gradle dependencies
       uses: actions/cache@v3
       with:
-        path: ~/.gradle/caches
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
         key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           gradle-${{ runner.os }}
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      run: ./gradlew assemble 
 
-    - name: Deploy to EC2 instances
-      env:
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+  deploy-ec2-1:
+    name: Deploy to EC2 Instance 1 (13.125.148.26)
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+    - name: Deploy to EC2 Instance 1
       run: |
         echo "$PRIVATE_KEY" | tee /tmp/aws-insurance-service-1.pem > /dev/null
         chmod 600 /tmp/aws-insurance-service-1.pem
-
         scp -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no build/libs/insurance-service-0.0.1-SNAPSHOT.jar ubuntu@13.125.148.26:/home/ubuntu/
         ssh -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@13.125.148.26 << 'EOF'
         pkill -f 'insurance-service-0.0.1-SNAPSHOT.jar' || true
-        nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar 
+        nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar &
 
+  deploy-ec2-2:
+    name: Deploy to EC2 Instance 2 (3.35.170.99)
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+    - name: Deploy to EC2 Instance 2
+      run: |
+        echo "$PRIVATE_KEY" | tee /tmp/aws-insurance-service-1.pem > /dev/null
+        chmod 600 /tmp/aws-insurance-service-1.pem
         scp -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no build/libs/insurance-service-0.0.1-SNAPSHOT.jar ubuntu@3.35.170.99:/home/ubuntu/
         ssh -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@3.35.170.99 << 'EOF'
         pkill -f 'insurance-service-0.0.1-SNAPSHOT.jar' || true
-        nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar 
+        nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar &
