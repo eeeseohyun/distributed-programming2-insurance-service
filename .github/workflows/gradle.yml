@@ -51,6 +51,10 @@ jobs:
     steps:
     - name: Checkout source code
       uses: actions/checkout@v4
+    - name: Print working directory
+      run: pwd
+    - name: Verify build/libs directory
+      run: ls -l build/libs/
     - name: Deploy to EC2 Instance 1
       run: |
         echo "$PRIVATE_KEY" | tee /tmp/aws-insurance-service-1.pem > /dev/null
@@ -59,7 +63,6 @@ jobs:
         ssh -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@52.78.155.226 << 'EOF'
         pkill -f 'insurance-service-0.0.1-SNAPSHOT.jar' || true
         nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar &
-
 
   deploy-ec2-2:
     name: Deploy to EC2 Instance 2 (3.35.170.99)
