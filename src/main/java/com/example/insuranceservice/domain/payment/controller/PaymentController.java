@@ -27,7 +27,7 @@ public class PaymentController {
     // 보험료 납부 리스트 조회
     @Operation(summary = "보험료 납부 내역 조회", description = "고객의 보험료 납부 내역을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/list/{customerId}")
+    @GetMapping("/showPaymentList/{customerId}")
     public List<ShowPaymentDto> showPaymentList(
             @Parameter(description = "고객 ID", required = true) @PathVariable Integer customerId
     ) {
@@ -41,7 +41,7 @@ public class PaymentController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "404", description = "납부 정보를 찾을 수 없음")
     })
-    @PutMapping("/pay/{paymentId}")
+    @PutMapping("/payPremium/{paymentId}")
     public String payPremium(
             @Parameter(description = "납부 ID", required = true) @PathVariable Integer paymentId,
             @Parameter(description = "카드 결제 정보", required = true) @RequestBody CardRequestDto cardRequestDto
@@ -51,7 +51,7 @@ public class PaymentController {
     // 납부한 보험료 리스트 조회
     @Operation(summary = "납부한 보험료 리스트 조회", description = "고객의 납부한 보험료 내역을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/processed/list/{customerId}")
+    @GetMapping("/showProcessedPaymentList/{customerId}")
     public List<ShowProcessedPaymentDto> showProcessedPaymentList(
             @Parameter(description = "고객 ID", required = true) @PathVariable Integer customerId
     ) {

@@ -77,7 +77,7 @@ public class ContractController {
     // 보험 가입 신청
     @Operation(summary = "보험 가입 신청", description = "새로운 보험 계약을 신청합니다")
     @ApiResponse(responseCode = "200", description = "신청 성공")
-    @PostMapping("/request/{customerId}")
+    @PostMapping("/requestContract/{customerId}")
     public String requestContract(
             @Parameter(description = "고객 ID") @PathVariable Integer customerId,
             @Parameter(description = "계약 신청 정보") @RequestBody RequestContractDto requestContractDto
@@ -188,7 +188,7 @@ public class ContractController {
     // 보유 계약 조회
     @Operation(summary = "체결된 계약 목록 조회", description = "고객의 체결된 계약 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/concluded/{customerId}")
+    @GetMapping("/showConcludedContractList/{customerId}")
     public List<ShowConcludedContractDto> showConcludedContractList(
             @Parameter(description = "고객 ID") @PathVariable Integer customerId
     ) {
@@ -198,7 +198,7 @@ public class ContractController {
     // 신청한 계약 조회
     @Operation(summary = "신청한 계약 목록 조회", description = "고객이 신청한 계약 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/requested/{customerId}")
+    @GetMapping("/showRequestedContractList/{customerId}")
     public List<ShowRequestedContractDto> showRequestedContractList(
             @Parameter(description = "고객 ID") @PathVariable Integer customerId
     ) {
@@ -208,7 +208,7 @@ public class ContractController {
     // 상세 내용 조회
     @Operation(summary = "계약 상세 조회", description = "특정 계약의 상세 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/detail/{contractId}")
+    @GetMapping("/showContractDetail/{contractId}")
     public ShowContractDetailDto showContractDetail(
             @Parameter(description = "계약 ID") @PathVariable Integer contractId
     ) {
@@ -218,7 +218,7 @@ public class ContractController {
     // 보유 계약 해지
     @Operation(summary = "계약 해지", description = "보유 중인 계약을 해지합니다")
     @ApiResponse(responseCode = "200", description = "해지 성공")
-    @DeleteMapping("/cancel/{contractId}")
+    @DeleteMapping("/cancelContract/{contractId}")
     public String cancelContract(
             @Parameter(description = "계약 ID") @PathVariable Integer contractId
     ) {
