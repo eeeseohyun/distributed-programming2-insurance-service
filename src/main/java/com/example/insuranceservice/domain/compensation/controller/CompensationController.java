@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -47,13 +49,16 @@ public class CompensationController {
     @Operation(summary = "보상 신청", description = "새로운 보상을 신청합니다")
     @ApiResponse(responseCode = "201", description = "신청 성공")
     @PostMapping("/createCompensation")
-    public String createCompensation(
+    public ResponseEntity<String> createCompensation(
             @Parameter(description = "보상 신청 정보") @RequestBody CreateCompensationDTO compensation
     ) {
         try {
-            return compensationService.createCompensation(compensation);
+            String result = compensationService.createCompensation(compensation);
+            return ResponseEntity.ok(result);
         } catch (DuplicateIDException e) {
-            return e.toString();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -61,27 +66,34 @@ public class CompensationController {
     @Operation(summary = "보상 정보 수정", description = "기존 보상 정보를 수정합니다")
     @ApiResponse(responseCode = "200", description = "수정 성공")
     @PutMapping("/updateCompensation")
-    public String updateCompensation(
+    public ResponseEntity<String> updateCompensation(
             @Parameter(description = "수정할 보상 정보") @RequestBody UpdateCompensationDto compensation
     ) {
         try {
-            return compensationService.updateCompensation(compensation);
+            String result = compensationService.updateCompensation(compensation);
+            return ResponseEntity.ok(result);
         } catch (NotFoundProfileException e) {
-            return e.toString();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("[error] " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("[error] 알 수 없는 오류가 발생했습니다.");
         }
     }
+
 
     // 보상 삭제
     @Operation(summary = "보상 삭제", description = "보상 정보를 삭제합니다")
     @ApiResponse(responseCode = "200", description = "삭제 성공")
     @DeleteMapping("/deleteCompensation/{compensationID}")
-    public String deleteCompensation(
+    public ResponseEntity<String> deleteCompensation(
             @Parameter(description = "보상 ID") @PathVariable int compensationID
     ) {
         try {
-            return compensationService.deleteCompensation(compensationID);
+            String result = compensationService.deleteCompensation(compensationID);
+            return ResponseEntity.ok(result);
         } catch (NotFoundProfileException e) {
-            return e.toString();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -89,13 +101,14 @@ public class CompensationController {
     @Operation(summary = "보험금 청구", description = "보험금을 청구합니다")
     @ApiResponse(responseCode = "200", description = "청구 성공")
     @PostMapping("/requestInsuranceAmount")
-    private String requestInsuranceAmount(
+    private ResponseEntity<String> requestInsuranceAmount(
             @Parameter(description = "보험금 청구 정보") @RequestBody RequestInsuranceAmountDto billDTO
     ) {
         try {
-            return compensationService.requestInsuranceAmount(billDTO);
+            String result = compensationService.requestInsuranceAmount(billDTO);
+            return ResponseEntity.ok(result);
         } catch (NotFoundProfileException e) {
-            return e.toString();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -103,13 +116,14 @@ public class CompensationController {
     @Operation(summary = "손해 조사", description = "손해 조사를 진행합니다")
     @ApiResponse(responseCode = "200", description = "조사 성공")
     @PostMapping("/investigateLoss")
-    private String investigateLoss(
+    private ResponseEntity<String> investigateLoss(
             @Parameter(description = "손해 조사 정보") @RequestBody InvestigateLossDto lossDto
     ) {
         try {
-            return compensationService.investigateLoss(lossDto);
+            String result = compensationService.investigateLoss(lossDto);
+            return ResponseEntity.ok(result);
         } catch (NotFoundProfileException e) {
-            return e.toString();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -117,13 +131,14 @@ public class CompensationController {
     @Operation(summary = "보험금 산출", description = "보험금을 산출합니다")
     @ApiResponse(responseCode = "200", description = "산출 성공")
     @GetMapping("/calculateInsuranceAmount/{compensationId}")
-    private String calculateInsuranceAmount(
+    private ResponseEntity<String> calculateInsuranceAmount(
             @Parameter(description = "보상 ID") @PathVariable int compensationId
     ) {
         try {
-            return compensationService.calculateInsuranceAmount(compensationId);
+            String result = compensationService.calculateInsuranceAmount(compensationId);
+            return ResponseEntity.ok(result);
         } catch (NotFoundProfileException e) {
-            return e.toString();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -131,13 +146,14 @@ public class CompensationController {
     @Operation(summary = "보험금 지급", description = "보험금을 지급합니다")
     @ApiResponse(responseCode = "200", description = "지급 성공")
     @GetMapping("/giveInsuranceAmount/{compensationId}")
-    private String giveInsuranceAmount(
+    private ResponseEntity<String> giveInsuranceAmount(
             @Parameter(description = "보상 ID") @PathVariable int compensationId
     ) {
         try {
-            return compensationService.giveInsuranceAmount(compensationId);
+            String result = compensationService.giveInsuranceAmount(compensationId);
+            return ResponseEntity.ok(result);
         } catch (NotFoundProfileException e) {
-            return e.toString();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }

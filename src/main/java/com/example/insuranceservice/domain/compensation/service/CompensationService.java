@@ -42,7 +42,7 @@ public class CompensationService {
     public String createCompensation(CreateCompensationDTO compensation) throws DuplicateIDException {
         Optional<Accident> accident = accidentRepository.findById(compensation.getAccidentID());
         if(!accident.isPresent()){
-            throw new RuntimeException("존재하지 않는 사고 ID 입니다.");
+            throw new RuntimeException("[error] 존재하지 않는 사고 ID 입니다.");
         }
         Compensation response = compensationRepository.save(compensation.toEntity(accident.get()));
         if(response.equals(null)){
@@ -86,7 +86,7 @@ public class CompensationService {
     //보험금 청구
     public String requestInsuranceAmount(RequestInsuranceAmountDto billDTO) throws NotFoundProfileException {
         Optional<Compensation> optionalcompensation =compensationRepository.findById(billDTO.getCompensationID());
-        if (optionalcompensation == null) {
+        if (optionalcompensation.isEmpty()) {
             throw new NotFoundProfileException("[Exception] 해당 보상ID의 보상이 존재하지 않습니다. 다시 시도해주세요.");
         }
         Compensation compensation = optionalcompensation.get();
@@ -102,7 +102,7 @@ public class CompensationService {
     // 손해조사
     public String investigateLoss(InvestigateLossDto lossDto) throws NotFoundProfileException {
         Optional<Compensation> compensation =compensationRepository.findById(lossDto.getCompensationID());
-        if (compensation == null) {
+        if (compensation.isEmpty()) {
             throw new NotFoundProfileException("[Exception] 해당 보상ID의 보상이 존재하지 않습니다. 다시 시도해주세요.");
         }
         Compensation com = compensation.get();
@@ -137,7 +137,6 @@ public class CompensationService {
         if (!optionalCompensation.isPresent()) {
             throw new NotFoundProfileException("[Exception] 해당 보상ID의 보상이 존재하지 않습니다. 다시 시도해주세요.");
         }
-
         Compensation compensation = optionalCompensation.get();
         return "보험금: " + compensation.getInsuranceAmount();
     }

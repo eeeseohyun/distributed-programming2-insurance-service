@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,12 +51,16 @@ public class CustomerController {
             @ApiResponse(responseCode = "404", description = "고객 정보를 찾을 수 없음")
     })
     @PutMapping("/updateCustomer/{customerId}")
-    public ResponseEntity<Void> updateCustomer(
+    public ResponseEntity<String> updateCustomer(
             @Parameter(description = "고객 ID", required = true) @PathVariable Integer customerId,
             @Parameter(description = "수정할 고객 정보", required = true) @RequestBody CustomerDTO customerDTO
     ) {
-        customerService.updateCustomer(customerId, customerDTO);
-        return ResponseEntity.ok().build();
+        try {
+            String resultMessage = customerService.updateCustomer(customerId, customerDTO);
+            return ResponseEntity.ok(resultMessage);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @Operation(summary = "고객 정보 삭제", description = "고객 정보를 삭제합니다")
