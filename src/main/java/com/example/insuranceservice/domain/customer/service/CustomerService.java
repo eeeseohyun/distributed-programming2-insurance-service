@@ -52,9 +52,9 @@ public class CustomerService {
         return customers.stream().map(ShowCustomerList::new).collect(Collectors.toList());
     }
 
-    public void updateCustomer(Integer customerId, CustomerDTO customerDTO) {
+    public String updateCustomer(Integer customerId, CustomerDTO customerDTO) {
         Customer existingCustomer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new RuntimeException("[error] 해당 id의 고객이 존재하지 않습니다."));
 
         existingCustomer.setAccount(customerDTO.getAccount());
         existingCustomer.setAddress(customerDTO.getAddress());
@@ -80,7 +80,10 @@ public class CustomerService {
                     return medicalHistory;
                 }).collect(Collectors.toList());
         existingCustomer.getMedicalHistories().addAll(updatedMedicalHistories);
+
         customerRepository.save(existingCustomer);
+
+        return "[success] 성공적으로 고객 정보가 수정되었습니다.";
     }
     public void deleteCustomer(Integer customerId) {
         customerRepository.deleteById(customerId);
