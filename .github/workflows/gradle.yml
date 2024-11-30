@@ -63,6 +63,6 @@ jobs:
         scp -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no build/libs/insurance-service-0.0.1-SNAPSHOT.jar ubuntu@43.201.48.197:/home/ubuntu/
         ssh -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@43.201.48.197 << 'EOF'
         pkill -f 'insurance-service-0.0.1-SNAPSHOT.jar' || true
-        nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar &
+        nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
         exit
         EOF
