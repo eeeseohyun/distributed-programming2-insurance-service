@@ -54,31 +54,46 @@ public class AccidentController {
     @Operation(summary = "사고접수 생성", description = "새로운 사고를 접수합니다")
     @ApiResponse(responseCode = "201", description = "사고접수 생성 성공")
     @PostMapping
-    public ResponseEntity<AccidentDTO> createAccident(
+    public ResponseEntity<String> createAccident(
             @Parameter(description = "사고접수 정보") @RequestBody AccidentDTO accidentDTO
     ) {
-        return new ResponseEntity<>(accidentService.createAccident(accidentDTO), HttpStatus.CREATED);
+        try {
+            String result = accidentService.createAccident(accidentDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     // 사고접수 수정
     @Operation(summary = "사고접수 수정", description = "기존 사고접수 내용을 수정합니다")
     @ApiResponse(responseCode = "200", description = "수정 성공")
     @PutMapping("/{accidentID}")
-    public ResponseEntity<AccidentDTO> updateAccident(
+    public ResponseEntity<String> updateAccident(
             @Parameter(description = "사고접수 ID") @PathVariable int accidentID,
             @Parameter(description = "수정할 사고접수 정보") @RequestBody AccidentDTO accidentDTO
     ) {
-        return ResponseEntity.ok(accidentService.updateAccident(accidentID, accidentDTO));
+        try {
+            String result = accidentService.updateAccident(accidentID, accidentDTO);
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     // 사고접수 삭제 - 직원만 가능
     @Operation(summary = "사고접수 삭제", description = "사고접수를 삭제합니다 (직원 전용)")
     @ApiResponse(responseCode = "204", description = "삭제 성공")
+    @ApiResponse(responseCode = "404", description = "사고ID가 존재하지 않음")
     @DeleteMapping("/{accidentID}")
-    public ResponseEntity<Void> deleteAccident(
+    public ResponseEntity<String> deleteAccident(
             @Parameter(description = "사고접수 ID") @PathVariable int accidentID
     ) {
-        accidentService.deleteAccident(accidentID);
-        return ResponseEntity.noContent().build();
+        try {
+            String result = accidentService.deleteAccident(accidentID);
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
