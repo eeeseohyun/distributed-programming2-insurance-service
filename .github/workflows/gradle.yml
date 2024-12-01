@@ -46,22 +46,22 @@ jobs:
     - name: Verify JAR File
       run: ls -l build/libs/
 
-    - name: Deploy to EC2 Instance 1 (13.125.148.26)
+    - name: Deploy to EC2 Instance 1
       run: |
         echo "$PRIVATE_KEY" | tee /tmp/aws-insurance-service-1.pem > /dev/null
         chmod 600 /tmp/aws-insurance-service-1.pem
-        scp -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no build/libs/insurance-service-0.0.1-SNAPSHOT.jar ubuntu@52.78.155.226:/home/ubuntu/
-        ssh -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@52.78.155.226 << 'EOF'
+        scp -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no build/libs/insurance-service-0.0.1-SNAPSHOT.jar ubuntu@3.36.41.107:/home/ubuntu/
+        ssh -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@3.36.41.107 << 'EOF'
         pkill -f 'insurance-service-0.0.1-SNAPSHOT.jar' || true
         nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
         exit
         EOF
-    - name: Deploy to EC2 Instance 2 (3.35.170.99)
+    - name: Deploy to EC2 Instance 2 
       run: |
         echo "$PRIVATE_KEY" | tee /tmp/aws-insurance-service-1.pem > /dev/null
         chmod 600 /tmp/aws-insurance-service-1.pem
-        scp -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no build/libs/insurance-service-0.0.1-SNAPSHOT.jar ubuntu@43.201.48.197:/home/ubuntu/
-        ssh -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@43.201.48.197 << 'EOF'
+        scp -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no build/libs/insurance-service-0.0.1-SNAPSHOT.jar ubuntu@3.34.73.7:/home/ubuntu/
+        ssh -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@3.34.73.7 << 'EOF'
         pkill -f 'insurance-service-0.0.1-SNAPSHOT.jar' || true
         nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
         exit
