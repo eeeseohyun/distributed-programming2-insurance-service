@@ -14,7 +14,7 @@ jobs:
       contents: read
     env:
       PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-    
+
     steps:
     - name: Checkout source code
       uses: actions/checkout@v4
@@ -39,30 +39,41 @@ jobs:
         key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           gradle-${{ runner.os }}
-
+    
     - name: Build with Gradle Wrapper
       run: ./gradlew clean bootJar
 
     - name: Verify JAR File
       run: ls -l build/libs/
 
-    - name: Deploy to EC2 Instance 1
+    - name: Compress JAR File
+      run: zip insurance-service.zip build/libs/insurance-service-0.0.1-SNAPSHOT.jar
+
+    - name: Deploy to EC2
       run: |
-        echo "$PRIVATE_KEY" | tee /tmp/aws-insurance-service-1.pem > /dev/null
-        chmod 600 /tmp/aws-insurance-service-1.pem
-        scp -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no build/libs/insurance-service-0.0.1-SNAPSHOT.jar ubuntu@3.36.41.107:/home/ubuntu/
-        ssh -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@3.36.41.107 << 'EOF'
+        # Save private key for SSH access
+        echo "$PRIVATE_KEY" | tee /tmp/aws-insurance-service.pem > /dev/null
+        chmod 600 /tmp/aws-insurance-service.pem
+
+        # Establish SSH master connection
+        ssh -M -o ControlPath=/tmp/ssh-%r@%h:%p -i /tmp/aws-insurance-service.pem -o StrictHostKeyChecking=no ubuntu@3.36.41.107 "echo Connected"
+
+        # Deploy to EC2 Instance 1
+        scp -C -o ControlPath=/tmp/ssh-%r@%h:%p insurance-service.zip ubuntu@3.36.41.107:/home/ubuntu/
+        ssh -o ControlPath=/tmp/ssh-%r@%h:%p ubuntu@3.36.41.107 << 'EOF'
+        unzip -o /home/ubuntu/insurance-service.zip -d /home/ubuntu/
         pkill -f 'insurance-service-0.0.1-SNAPSHOT.jar' || true
         nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
-        exit
         EOF
-    - name: Deploy to EC2 Instance 2 
-      run: |
-        echo "$PRIVATE_KEY" | tee /tmp/aws-insurance-service-1.pem > /dev/null
-        chmod 600 /tmp/aws-insurance-service-1.pem
-        scp -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no build/libs/insurance-service-0.0.1-SNAPSHOT.jar ubuntu@3.34.73.7:/home/ubuntu/
-        ssh -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@3.34.73.7 << 'EOF'
+
+        # Deploy to EC2 Instance 2
+        scp -C -o ControlPath=/tmp/ssh-%r@%h:%p insurance-service.zip ubuntu@3.34.73.7:/home/ubuntu/
+        ssh -o ControlPath=/tmp/ssh-%r@%h:%p ubuntu@3.34.73.7 << 'EOF'
+        unzip -o /home/ubuntu/insurance-service.zip -d /home/ubuntu/
         pkill -f 'insurance-service-0.0.1-SNAPSHOT.jar' || true
         nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
-        exit
         EOF
+
+        # Close SSH master connection
+        ssh -O exit -o ControlPath=/tmp/ssh-%r@%h:%p ubuntu@3.36.41.107
+        ssh -O exit -o ControlPath=/tmp/ssh-%r@%h:%p ubuntu@3.34.73.7
