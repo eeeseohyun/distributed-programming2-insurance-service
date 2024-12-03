@@ -7,6 +7,8 @@ import com.example.insuranceservice.domain.compensation.repository.CompensationR
 import com.example.insuranceservice.domain.customer.repository.CustomerRepository;
 import com.example.insuranceservice.exception.DuplicateIDException;
 import com.example.insuranceservice.exception.NotFoundProfileException;
+import com.example.insuranceservice.global.alertManager.AlertManager;
+import com.example.insuranceservice.global.logManager.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -18,12 +20,16 @@ public class CompensationService {
     private final CompensationRepository compensationRepository;
     private final AccidentRepository accidentRepository;
     private final CustomerRepository customerRepository;
+    private final LogManager logManager;
+    private final AlertManager alertManager;
 
     @Autowired
-    public CompensationService(CompensationRepository compensationRepository, AccidentRepository accidentRepository, CustomerRepository customerRepository) {
+    public CompensationService(CompensationRepository compensationRepository, AccidentRepository accidentRepository, CustomerRepository customerRepository, LogManager logManager, AlertManager alertManager) {
         this.compensationRepository = compensationRepository;
         this.accidentRepository = accidentRepository;
         this.customerRepository = customerRepository;
+        this.logManager = logManager;
+        this.alertManager = alertManager;
     }
     // 모든 보상 조회
     public List<Compensation> showAllCompensationList() {
@@ -67,6 +73,12 @@ public class CompensationService {
         if(response.equals(null)){
             throw new NullPointerException();
         }else{
+            logManager.logSend("INFO", "수정: " + compensation.getCompensationID());
+            // 이메일 알림 발송
+            alertManager.sendAlert(
+                    "보상 수정 알림",
+                    "보상 id: " + compensation.getCompensationID() + "이(가) 수정되었습니다."
+            );
             return "[success] 보상 수정이 완료되었습니다.";
         }
     }
