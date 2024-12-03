@@ -52,11 +52,11 @@ jobs:
     - name: Deploy to EC2
       run: |
         # Save private key for SSH access
-        echo "$PRIVATE_KEY" | tee /tmp/aws-insurance-service.pem > /dev/null
-        chmod 600 /tmp/aws-insurance-service.pem
+        echo "$PRIVATE_KEY" | tee /tmp/aws-insurance-service-1.pem > /dev/null
+        chmod 600 /tmp/aws-insurance-service-1.pem
 
         # Establish SSH master connection
-        ssh -M -o ControlPath=/tmp/ssh-%r@%h:%p -i /tmp/aws-insurance-service.pem -o StrictHostKeyChecking=no ubuntu@3.36.41.107 "echo Connected"
+        ssh -M -o ControlPath=/tmp/ssh-%r@%h:%p -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@3.36.41.107 "echo Connected"
 
         # Deploy to EC2 Instance 1
         scp -C -o ControlPath=/tmp/ssh-%r@%h:%p insurance-service.zip ubuntu@3.36.41.107:/home/ubuntu/
