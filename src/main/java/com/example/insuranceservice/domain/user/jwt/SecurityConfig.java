@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         // 해당 API에 대해서는 모든 요청을 허가
+                        .requestMatchers("/actuator/prometheus").permitAll()
                         .requestMatchers("/api/users/customer/login","/api/users/employee/login" ,"/api/users/customer/signup", "/api/users/employee/signup","/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/compensations/createCompensation","/api/compensations/showCompensationList/*","/api/compensations/requestInsuranceAmount").hasRole(Constant.Customer)
                         .requestMatchers("/api/compensations/showAllCompensationList","/api/compensations/updateCompensation","/api/compensations/deleteCompensation/*","/api/compensations/investigateLoss","/api/compensations/calculateInsuranceAmount/*","/api/compensations/giveInsuranceAmount/*").hasRole(Constant.CompensationProcessing)
