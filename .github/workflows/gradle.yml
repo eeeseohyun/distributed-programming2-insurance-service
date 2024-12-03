@@ -55,7 +55,7 @@ jobs:
         echo "$PRIVATE_KEY" > /tmp/aws-insurance-service-1.pem
         chmod 600 /tmp/aws-insurance-service-1.pem
         # Deploy to EC2 Instance 1
-        scp -v -C -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no insurance-service.zip ubuntu@3.36.41.107:/home/ubuntu/
+        scp -v -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no insurance-service.zip ubuntu@3.36.41.107:/home/ubuntu/
         ssh -v -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@3.36.41.107 << 'EOF'
         unzip -o /home/ubuntu/insurance-service.zip -d /home/ubuntu/
         pkill -f 'insurance-service-0.0.1-SNAPSHOT.jar' || true
