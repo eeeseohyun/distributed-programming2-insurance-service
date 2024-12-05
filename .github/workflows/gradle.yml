@@ -74,6 +74,8 @@ jobs:
         chmod 600 /tmp/aws-insurance-service-1.pem
         scp -v -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no insurance-service.zip ubuntu@3.36.41.107:/home/ubuntu/
         ssh -v -i /tmp/aws-insurance-service-1.pem -o StrictHostKeyChecking=no ubuntu@3.36.41.107 << 'EOF'
+        sudo apt update
+        sudo apt install unzip
         unzip -o /home/ubuntu/insurance-service.zip -d /home/ubuntu/
         pkill -f 'insurance-service-0.0.1-SNAPSHOT.jar' || true
         nohup java -jar /home/ubuntu/insurance-service-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
