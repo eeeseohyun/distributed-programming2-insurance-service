@@ -1,4 +1,5 @@
 package com.example.insuranceservice.global.logManager;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,14 +12,14 @@ import java.util.Map;
 public class LogManager {
 
     private final RestTemplate restTemplate;
+    @Value("${logsystem.url}")
+    private String logUrl;
 
     public LogManager(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     public void logSend(String logType, String message) {
-        String logUrl = "http://localhost:5555/logsystem/api/logs";
-
         Map<String, String> logData = new HashMap<>();
         logData.put("logType", logType);
         logData.put("message", message);

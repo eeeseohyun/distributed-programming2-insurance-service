@@ -73,7 +73,7 @@ public class CompensationService {
         if(response.equals(null)){
             throw new NullPointerException();
         }else{
-            logManager.logSend("INFO", "수정: " + compensation.getCompensationID());
+            logManager.logSend("[INFO]", "수정: " + compensation.getCompensationID());
             // 이메일 알림 발송
             alertManager.sendAlert(
                     "보상 수정 알림",
