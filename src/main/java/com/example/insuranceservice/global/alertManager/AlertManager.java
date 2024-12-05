@@ -1,5 +1,6 @@
 package com.example.insuranceservice.global.alertManager;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,14 +14,14 @@ import java.util.Map;
 public class AlertManager {
 
     private final RestTemplate restTemplate;
+    @Value("${alertmanager.url}")
+    private String alertUrl;
 
     public AlertManager(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     public void sendAlert(String subject, String message) {
-        String alertUrl = "http://localhost:8888/api/alert/email";
-
         Map<String, String> emailRequest = new HashMap<>();
         emailRequest.put("subject", subject);
         emailRequest.put("message", message);
