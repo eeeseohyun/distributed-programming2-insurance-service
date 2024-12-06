@@ -33,7 +33,7 @@ public class LogManager {
             restTemplate.postForEntity(logUrl, request, String.class);
             System.out.println("[LogManager] 로그 전송 성공: " + logData);
         } catch (Exception e) {
-            System.err.println("[LogManager] 로그 전송 실패: " + e.getMessage());
+            System.err.println("[LogManager] 로그 전송 실패 오류 로그: " + e.getMessage());
         }
     }
 }
