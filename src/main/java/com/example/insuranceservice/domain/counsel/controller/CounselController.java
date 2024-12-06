@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +25,10 @@ public class CounselController {
     @Operation(summary = "상담 신청", description = "새로운 보험 상담을 신청합니다")
     @ApiResponse(responseCode = "200", description = "신청 성공")
     @PostMapping("/createCounsel")
-    public String createCounsel(
+    public ResponseEntity<String> createCounsel(
             @Parameter(description = "상담 신청 정보") @RequestBody CreateCounselDto createCounselDto
     ) {
-        return counselService.createCounsel(createCounselDto);
+       return counselService.createCounsel(createCounselDto);
     }
 
     // 상담 신청 내역 조회
@@ -66,7 +67,11 @@ public class CounselController {
             @Parameter(description = "상담 ID") @PathVariable Integer counselId,
             @Parameter(description = "직원 ID") @RequestBody Integer employeeId
     ) {
-        return counselService.confirmCounsel(counselId, employeeId);
+        try {
+            return counselService.confirmCounsel(counselId, employeeId);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     //// 상담 내역 관리 카테고리
@@ -95,16 +100,16 @@ public class CounselController {
     @Operation(summary = "보험 상품 제안", description = "상담에서 보험 상품을 제안합니다")
     @ApiResponse(responseCode = "200", description = "제안 성공")
     @PostMapping("/suggestInsurance/{counselId}")
-    public SuggestInsuranceDto suggestInsurance(
+    public ResponseEntity<SuggestInsuranceDto> suggestInsurance(
             @Parameter(description = "상담 ID") @PathVariable Integer counselId,
             @Parameter(description = "보험 상품 ID") @RequestBody SuggestInsuranceRequestDto suggestInsuranceRequestDto
     ) {
-        return counselService.suggestInsurance(counselId, suggestInsuranceRequestDto);
+        return ResponseEntity.ok(counselService.suggestInsurance(counselId, suggestInsuranceRequestDto));
     }
 
     @Operation(summary = "상담 정보 조회", description = "특정 상담의 상세 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/retrieve/{counselId}")
+    @GetMapping("/retrieveCounsel/{counselId}")
     public RetrieveCounselDto retrieveCounsel(
             @Parameter(description = "상담 ID") @PathVariable Integer counselId
     ) {

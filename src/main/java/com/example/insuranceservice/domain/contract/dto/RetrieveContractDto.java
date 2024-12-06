@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ContractRetrieveDto {
+public class RetrieveContractDto {
     private Integer id;
     private Integer concludeEID;
     private String createdDate;
@@ -27,7 +27,7 @@ public class ContractRetrieveDto {
     private String resurrectionReason;
     private Integer underwritingEID;
 
-    public ContractRetrieveDto(Contract contract) {
+    public RetrieveContractDto(Contract contract) {
         this.id = contract.getId();
         this.concludeEID = contract.getConcludedEID();
         this.createdDate = contract.getCreatedDate();

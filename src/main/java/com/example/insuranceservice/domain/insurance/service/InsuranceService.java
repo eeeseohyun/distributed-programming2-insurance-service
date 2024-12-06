@@ -11,7 +11,9 @@ import com.example.insuranceservice.domain.insurance.InsuranceMapper;
 import com.example.insuranceservice.domain.insurance.dto.*;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
+import com.example.insuranceservice.exception.NotFoundProfileException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +34,8 @@ public class InsuranceService {
     private InternationalRepository internationalRepository;
     @Autowired
     private HouseFireRepository houseFireRepository;
+    @Autowired
+    private DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration;
 
     public InsuranceService(InsuranceRepository insuranceRepository) {
         this.insuranceRepository = insuranceRepository;
@@ -44,22 +48,30 @@ public class InsuranceService {
                 .collect(Collectors.toList());
     }
 
-    public ShowInsuranceDetailDto showInsuranceDetail(Integer insuranceId) {
+    public ShowInsuranceDetailDto showInsuranceDetail(Integer insuranceId) throws NotFoundProfileException {
         Insurance insurance = findInsuranceById(insuranceId);
-        return new ShowInsuranceDetailDto(insurance);
+        if(insurance == null)
+            throw new NotFoundProfileException("[Exception] 보험 ID가 존재하지 않습니다.");
+        else
+            return new ShowInsuranceDetailDto(insurance);
     }
 
-    public RetrieveInsuranceDto retrieveInsurance(Integer insuranceId) {
+    public RetrieveInsuranceDto retrieveInsurance(Integer insuranceId) throws NotFoundProfileException {
         Insurance insurance = findInsuranceById(insuranceId);
-        return new RetrieveInsuranceDto(insurance);
+        if(insurance!=null)
+            return new RetrieveInsuranceDto(insurance);
+        else
+            return null;
     }
 
     public Insurance findInsuranceById(Integer insuranceId) {
         Optional<Insurance> insurance = insuranceRepository.findById(insuranceId);
-        if(insurance.isPresent())
-            return insurance.get();
-        else
-           throw new RuntimeException("존재하지 않는 보험 상품 ID");
+//        if(insurance.isPresent())
+//            return insurance.get();
+//        else{
+//            throw new NotFoundProfileException("[Exception] 보험 ID가 존재하지 않습니다.");
+//        }
+        return insurance.orElse(null);
     }
 
     public List<GetAllInsuranceDto> getAllInsurance() {

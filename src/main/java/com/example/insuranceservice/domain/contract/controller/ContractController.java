@@ -2,17 +2,17 @@ package com.example.insuranceservice.domain.contract.controller;
 
 import com.example.insuranceservice.domain.contract.dto.*;
 import com.example.insuranceservice.domain.contract.service.ContractService;
+import com.example.insuranceservice.exception.NotFoundProfileException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.text.ParseException;
-
 import java.util.List;
 
 @RestController
@@ -57,20 +57,28 @@ public class ContractController {
     @Operation(summary = "재계약 관리", description = "계약 갱신을 관리합니다")
     @ApiResponse(responseCode = "200", description = "처리 성공")
     @PostMapping("/manageRenewalContract")
-    private String manageRenewalContract(
+    private ResponseEntity<String> manageRenewalContract(
             @Parameter(description = "계약 ID") @RequestParam int contractId
     ) {
-        return contractService.manageRenewalContract(contractId);
+        try{
+            return contractService.manageRenewalContract(contractId);
+        } catch (NullPointerException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     //배서를 관리한다.
     @Operation(summary = "계약 변경 관리", description = "계약 내용 변경을 관리합니다")
     @ApiResponse(responseCode = "200", description = "처리 성공")
     @PatchMapping("/manageUpdate")
-    private String manageUpdate(
+    private ResponseEntity<String> manageUpdate(
             @Parameter(description = "변경할 계약 정보") @RequestBody ManageUpdateDto contractDto
     ) {
-        return contractService.manageUpdate(contractDto);
+        try {
+            return contractService.manageUpdate(contractDto);
+        } catch (NotFoundProfileException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     //// 보험 상품 종류 카테고리
@@ -227,8 +235,8 @@ public class ContractController {
 
     @Operation(summary = "계약 조회", description = "특정 계약 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/retrieve/{contractId}")
-    public ContractRetrieveDto retrieveContract(
+    @GetMapping("/retrieveContract/{contractId}")
+    public RetrieveContractDto retrieveContract(
             @Parameter(description = "계약 ID") @PathVariable Integer contractId
     ) {
         return contractService.retrieveContract(contractId);
