@@ -9,6 +9,8 @@ import com.example.insuranceservice.domain.employee.entity.Employee;
 import com.example.insuranceservice.domain.employee.service.EmployeeService;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
+import com.example.insuranceservice.exception.DuplicateIDException;
+import com.example.insuranceservice.exception.NotFoundProfileException;
 import com.example.insuranceservice.global.constant.Constant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ public class CounselService {
     }
 
     // 상담 신청
-    public String createCounsel(CreateCounselDto createCounselDto) {
+    public ResponseEntity<String> createCounsel(CreateCounselDto createCounselDto) {
         Counsel counsel = new Counsel();
         counsel.setInsuranceType(createCounselDto.getInsuranceType());
         counsel.setTimeOfCounsel(createCounselDto.getTimeOfCounsel());
@@ -44,14 +46,14 @@ public class CounselService {
         Customer customer = findCustomerById(createCounselDto.getCustomerId());
         counsel.setCustomer(customer);
         counselRepository.save(counsel);
-        return "[success] 상담 신청이 완료되었습니다.";
+        return ResponseEntity.ok("[success] 상담 신청이 완료되었습니다.");
     }
 
     private Customer findCustomerById(Integer customerId) {
         Optional<Customer> tempCustomer = customerRepository.findById(customerId);
-        if(tempCustomer.isEmpty())
-            throw new RuntimeException("존재하지 않는 고객 ID");
-        return tempCustomer.get();
+//        if(tempCustomer.isEmpty())
+//            throw new NotFoundProfileException("존재하지 않는 고객 ID");
+        return tempCustomer.orElse(null);
     }
 
     // 상담 신청 내역 조회
@@ -67,7 +69,6 @@ public class CounselService {
     //// 상담신청 일정 관리 카테고리
     // 신청된 상담 일정 조회
     public List<ShowRequestedCounselDto> showRequestedCounselList() {
-        // employee 권한 미구현 - Sales
 //        List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(false);
         List<Counsel> requestedCounselList = counselRepository.findAll();
         return requestedCounselList.stream()
@@ -77,7 +78,6 @@ public class CounselService {
 
     // 확정된 상담 일정 조회
     public List<ShowConfirmedCounselDto> showConfirmedCounselList(Integer employeeId) {
-        // employee 권한 미구현 - Sales
         Employee employee = employeeService.findEmployeeById(employeeId);
         List<Counsel> confirmedCounselList = counselRepository.findByEmployeeAndStatusOfCounsel(employee, true);
         return confirmedCounselList.stream()
@@ -87,8 +87,10 @@ public class CounselService {
 
     // 상담 일정 확정
     public ResponseEntity<String> confirmCounsel(Integer counselId, Integer employeeId) {
-        // employee 권한 미구현 - Sales
         Counsel counsel = findCounselById(counselId);
+        if(counsel==null)
+            return ResponseEntity.ok("[error] 상담 ID가 존재하지 않습니다.");
+
         Employee employee = employeeService.findEmployeeById(employeeId);
 
         if(counsel.getStatusOfCounsel())
@@ -104,8 +106,6 @@ public class CounselService {
     //// 상담 내역 관리 카테고리
     // 상담 내역 조회
     public List<ShowConsultedCounselDto> showConsultedCounselList(Integer employeeId) {
-        // employee 권한 미구현 - Sales
-
         Employee employee = employeeService.findEmployeeById(employeeId);
         List<Counsel> counselList = counselRepository.findByEmployee(employee);
         return counselList.stream()
@@ -115,9 +115,10 @@ public class CounselService {
 
     // 상담 내용 추가
     public ResponseEntity<String> updateCounsel(Integer counselId, CounselUpdateDto counselUpdateDto) {
-        // employee 권한 미구현 - Sales
-
         Counsel counsel = findCounselById(counselId);
+        if(counsel == null)
+            return ResponseEntity.ok("[error] 상담 ID가 존재하지 않습니다.");
+
         if(counsel.updateCounsel(counselUpdateDto.getCounselDetail(), counselUpdateDto.getNote())){
             counselRepository.save(counsel);
             return ResponseEntity.ok("[success] 상담 내용이 추가되었습니다.");
@@ -146,8 +147,8 @@ public class CounselService {
 
     public Counsel findCounselById(Integer counselId) {
         Optional<Counsel> tempCounsel = counselRepository.findById(counselId);
-        if(tempCounsel.isEmpty())
-            throw new RuntimeException("존재하지 않는 상담 ID");
+//        if(tempCounsel.isEmpty())
+//            throw new RuntimeException("존재하지 않는 상담 ID");
         return tempCounsel.get();
     }
 

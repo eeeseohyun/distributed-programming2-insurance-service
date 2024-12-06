@@ -16,7 +16,9 @@ import com.example.insuranceservice.domain.medicalHistory.entity.MedicalHistory;
 import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRequestDto;
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import com.example.insuranceservice.domain.paymentInfo.repository.PaymentInfoRepository;
+import com.example.insuranceservice.exception.NotFoundProfileException;
 import com.example.insuranceservice.global.constant.Constant;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -92,7 +94,7 @@ public class ContractService {
     }
 
     // 재계약관리한다. - update
-    public String manageRenewalContract(int contractId) {
+    public ResponseEntity<String> manageRenewalContract(int contractId) {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new NullPointerException("[error] 존재하지 않는 계약 ID 입니다."));
         if (contract.getRenewalStatus()) {
@@ -100,22 +102,25 @@ public class ContractService {
             String formattedDate = expirationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             contract.setExpirationDate(formattedDate);
             contractRepository.save(contract);
-            return "[success] 성공적으로 재계약이 되었습니다!";
+            return ResponseEntity.ok("[success] 성공적으로 재계약이 되었습니다!");
         } else {
-            return "[error] 재계약에 동의하지 않아 재계약에 실패했습니다!";
+            return ResponseEntity.ok("[error] 재계약에 동의하지 않아 재계약에 실패했습니다!");
         }
     }
 
     // 배서관리한다. - update
-    public String manageUpdate(ManageUpdateDto contractDto) {
+    public ResponseEntity<String> manageUpdate(ManageUpdateDto contractDto) throws NotFoundProfileException {
         Contract contract = contractDto.toEntity();
+        if(contractRepository.findById(contract.getId()).isEmpty()) {
+            throw new NotFoundProfileException("[Exception] 계약 정보를 찾을 수 없습니다!");
+        }
         contract.setCustomer(customerRepository.findById(contractDto.getCustomerId()).get());
         contract.setInsurance(insuranceRepository.findById(contractDto.getInsuranceId()).get());
         contract.setEmployee(employeeRepository.findById(contractDto.getEmployeeId()).get());
         contractRepository.save(contract);
         Boolean response = contractRepository.existsById(contractDto.getId());
-        if(response) return "[success] 성공적으로 배서가 반영 되었습니다!";
-        else return "[error] 배서가 반영 되지 않았습니다!";
+        if(response) return ResponseEntity.ok("[success] 성공적으로 배서가 반영 되었습니다!");
+        else return ResponseEntity.ok("[error] 배서가 반영 되지 않았습니다!");
     }
     //// 계약체결 카테고리 - 계약을 체결한다.
     public List<ShowPermitedUnderwriteContractDto> showPermitedUnderwriteContractList() {
@@ -265,8 +270,9 @@ public class ContractService {
 
     private Contract findContractById(Integer contractId){
         Optional<Contract> contract = contractRepository.findById(contractId);
-        if (contract.isPresent()) return contract.get();
-        else throw new RuntimeException("존재하지 않는 계약 ID");
+//        if (contract.isPresent()) return contract.get();
+//        else throw new RuntimeException("존재하지 않는 계약 ID");
+        return contract.orElse(null);
     }
 
     //// 보험 상품 종류 카테고리
@@ -408,9 +414,13 @@ public class ContractService {
             return "[error] 계약 ID가 존재하지 않습니다.";
     }
 
-    public ContractRetrieveDto retrieveContract(Integer contractId) {
+    public RetrieveContractDto retrieveContract(Integer contractId) {
         Contract contract = findContractById(contractId);
-        return new ContractRetrieveDto(contract);
+//        return new RetrieveContractDto(contract);
+        if(contract !=null)
+            return new RetrieveContractDto(contract);
+        else
+            return null;
     }
     ////
 }

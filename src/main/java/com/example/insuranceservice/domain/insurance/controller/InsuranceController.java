@@ -1,11 +1,14 @@
 package com.example.insuranceservice.domain.insurance.controller;
 import com.example.insuranceservice.domain.insurance.dto.*;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
+import com.example.insuranceservice.exception.NotFoundProfileException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,19 +37,27 @@ public class InsuranceController {
     @Operation(summary = "보험 상품 상세 조회", description = "특정 보험 상품의 상세 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/showInsuranceDetail/{id}")
-    public ShowInsuranceDetailDto showInsuranceDetail(
+    public ResponseEntity<?> showInsuranceDetail(
             @Parameter(description = "보험 상품 ID") @PathVariable Integer id
     ) {
-        return insuranceService.showInsuranceDetail(id);
+        try{
+            return ResponseEntity.ok(insuranceService.showInsuranceDetail(id));
+        } catch (NotFoundProfileException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @Operation(summary = "보험 상품 조회", description = "특정 보험 상품 정보를 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/retrieveInsurance/{id}")
-    public RetrieveInsuranceDto retrieveInsurance(
+    public ResponseEntity<?> retrieveInsurance(
             @Parameter(description = "보험 상품 ID") @PathVariable Integer id
     ) {
-        return insuranceService.retrieveInsurance(id);
+        try{
+            return ResponseEntity.ok(insuranceService.retrieveInsurance(id));
+        } catch (NotFoundProfileException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     // 상품 리스트를 확인한다.
