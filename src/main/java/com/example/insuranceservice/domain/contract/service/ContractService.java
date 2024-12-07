@@ -17,7 +17,9 @@ import com.example.insuranceservice.domain.paymentInfo.dto.PaymentInfoRequestDto
 import com.example.insuranceservice.domain.paymentInfo.entity.PaymentInfo;
 import com.example.insuranceservice.domain.paymentInfo.repository.PaymentInfoRepository;
 import com.example.insuranceservice.exception.NotFoundProfileException;
+import com.example.insuranceservice.global.alertManager.AlertManager;
 import com.example.insuranceservice.global.constant.Constant;
+import com.example.insuranceservice.global.logManager.LogManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +44,11 @@ public class ContractService {
     private InsuranceService insuranceService;
     private CustomerRepository customerRepository;
     private PaymentInfoRepository paymentInfoRepository;
+    private LogManager logManager;
+    private AlertManager alertManager;
 
-    public ContractService(ContractRepository contractRepository, CustomerService customerService, InsuranceService insuranceService, CustomerRepository customerRepository, PaymentInfoRepository paymentInfoRepository, InsuranceRepository insuranceRepository, EmployeeRepository employeeRepository) {
+
+    public ContractService(ContractRepository contractRepository, CustomerService customerService, InsuranceService insuranceService, CustomerRepository customerRepository, PaymentInfoRepository paymentInfoRepository, InsuranceRepository insuranceRepository, EmployeeRepository employeeRepository, LogManager logManager, AlertManager alertManager) {
         this.contractRepository = contractRepository;;
         this.customerService = customerService;
         this.insuranceService = insuranceService;
@@ -51,6 +56,8 @@ public class ContractService {
         this.paymentInfoRepository = paymentInfoRepository;
         this.insuranceRepository = insuranceRepository;
         this.employeeRepository = employeeRepository;
+        this.logManager = logManager;
+        this.alertManager = alertManager;
     }
 
     // 미납관리한다. - delete
@@ -270,9 +277,15 @@ public class ContractService {
 
     private Contract findContractById(Integer contractId){
         Optional<Contract> contract = contractRepository.findById(contractId);
+        if (contract.isPresent()){
+            logManager.logSend("[INFO]", "id "+contract.get().getId()+"번 계약이 조회되었습니다.");
+            return contract.get();
+        } else {
+            logManager.logSend("[EXCEPTION]", "존재하지 않는 계약 ID 입니다.");
+            return null;
+        }
 //        if (contract.isPresent()) return contract.get();
 //        else throw new RuntimeException("존재하지 않는 계약 ID");
-        return contract.orElse(null);
     }
 
     //// 보험 상품 종류 카테고리
@@ -286,7 +299,8 @@ public class ContractService {
         if (optionalInsurance.isPresent()) {
             contract.setInsurance(optionalInsurance.get());
         } else {
-            throw new RuntimeException("[errer] 존재하지 않는 보험 상품 ID: " + requestContractDto.getInsuranceId());
+            logManager.logSend("[EXCEPTION]", "존재하지 않는 보험 id입니다.");
+            throw new RuntimeException("[error] 존재하지 않는 보험 상품 ID: " + requestContractDto.getInsuranceId());
         }
         contract.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateTimeFormat)));
         contract.setIsConcluded(false);
@@ -317,9 +331,16 @@ public class ContractService {
                 }
             }
         }
-
         paymentInfoRepository.saveAll(paymentInfoList);
-        return "보험 가입 신청이 완료되었습니다.";
+
+        boolean result = contractRepository.existsById(contract.getId());
+        if(result){
+            logManager.logSend("[SUCCESS]", "id "+customerId+"번 고객이 id "+ optionalInsurance.get().getInsuranceID()+"번 보험 가입 신청을 완료하였습니다.");
+            return "[success] 보험 가입 신청이 완료되었습니다.";
+        } else {
+            logManager.logSend("[ERROR]", "id "+customerId+"번 고객이 id "+ optionalInsurance.get().getInsuranceID()+"번 보험 가입 신청을 실패하였습니다..");
+            return "[error] 가입 신청에 실패하였습니다.";
+        }
     }
 
     private PaymentInfo createBasicPaymentInfo(Contract contract, PaymentInfoRequestDto paymentInfoDto) {
@@ -375,6 +396,7 @@ public class ContractService {
     public List<ShowConcludedContractDto> showConcludedContractList(Integer customerId) {
         Customer customer = customerService.findCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus5);
+        logManager.logSend("[INFO]", "id "+customerId+"번 고객이 보유 계약을 조회하였습니다.");
         return contractList.stream()
                 .map(contract -> new ShowConcludedContractDto(
                         contract.getId(),
@@ -387,6 +409,7 @@ public class ContractService {
     public List<ShowRequestedContractDto> showRequestedContractList(Integer customerId) {
         Customer customer = customerService.findCustomerById(customerId);
         List<Contract> contractList = contractRepository.findByCustomerAndContractStatusIs(customer, Constant.contractStatus1);
+        logManager.logSend("[INFO]", "id "+customerId+"번 고객이 신청한 계약을 조회하였습니다.");
         return contractList.stream()
                 .map(contract -> new ShowRequestedContractDto(
                         contract.getId(),
@@ -399,19 +422,26 @@ public class ContractService {
     // 상세 내용 조회
     public ShowContractDetailDto showContractDetail(Integer contractId) {
         Contract contract = findContractById(contractId);
-        return new ShowContractDetailDto(contract);
+        if (contract != null){
+            logManager.logSend("[INFO]", "id "+contract.getCustomer().getCustomerID()+ "번 고객이 id "+contract.getId()+"번 계약의 상세 내용을 조회하었습니다.");
+            return new ShowContractDetailDto(contract);
+        } else{
+            return null;
+        }
     }
 
     // 계약을 해지한다
     public String cancelContract(Integer contractId) {
-//        Contract contract = findContractById(contractId);
-        Optional<Contract> contract = contractRepository.findById(contractId);
-        if (contract.isPresent()){
-            contractRepository.delete(contract.get());
+        Contract contract = findContractById(contractId);
+//        Optional<Contract> contract = contractRepository.findById(contractId);
+        if (contract != null){
+            contractRepository.delete(contract);
+            logManager.logSend("[SUCCESS]", contract.getId()+"번 계약이 해지되었습니다.");
             return "[success] 보험 계약이 해지되었습니다.";
         }
-        else
+        else {
             return "[error] 계약 ID가 존재하지 않습니다.";
+        }
     }
 
     public RetrieveContractDto retrieveContract(Integer contractId) {

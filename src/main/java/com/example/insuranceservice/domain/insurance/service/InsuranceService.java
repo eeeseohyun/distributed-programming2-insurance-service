@@ -12,8 +12,13 @@ import com.example.insuranceservice.domain.insurance.dto.*;
 import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.repository.InsuranceRepository;
 import com.example.insuranceservice.exception.NotFoundProfileException;
+import com.example.insuranceservice.global.alertManager.AlertManager;
+import com.example.insuranceservice.global.logManager.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +41,9 @@ public class InsuranceService {
     private HouseFireRepository houseFireRepository;
     @Autowired
     private DataSourceTransactionManagerAutoConfiguration dataSourceTransactionManagerAutoConfiguration;
+    @Autowired
+    private LogManager logManager;
+    private AlertManager alertManager;
 
     public InsuranceService(InsuranceRepository insuranceRepository) {
         this.insuranceRepository = insuranceRepository;
@@ -43,6 +51,7 @@ public class InsuranceService {
 
     public List<ShowInsuranceTypeDto> showInsuranceTypeList(String category) {
         List<Insurance> insuranceList = insuranceRepository.findByCategory(category);
+        logManager.logSend("[INFO]", category+ " 상품 목록이 조회되었습니다.");
         return insuranceList.stream()
                 .map(ShowInsuranceTypeDto::new)
                 .collect(Collectors.toList());
@@ -50,10 +59,13 @@ public class InsuranceService {
 
     public ShowInsuranceDetailDto showInsuranceDetail(Integer insuranceId) throws NotFoundProfileException {
         Insurance insurance = findInsuranceById(insuranceId);
-        if(insurance == null)
+        if(insurance == null) {
+            logManager.logSend("[EXCEPTION]", "보험 ID가 존재하지 않습니다.");
             throw new NotFoundProfileException("[Exception] 보험 ID가 존재하지 않습니다.");
-        else
+        } else {
+            logManager.logSend("[INFO]", "보험 id "+insuranceId+ "의 상세 내용이 조회되었습니다.");
             return new ShowInsuranceDetailDto(insurance);
+        }
     }
 
     public RetrieveInsuranceDto retrieveInsurance(Integer insuranceId) throws NotFoundProfileException {
@@ -66,12 +78,18 @@ public class InsuranceService {
 
     public Insurance findInsuranceById(Integer insuranceId) {
         Optional<Insurance> insurance = insuranceRepository.findById(insuranceId);
+        if(insurance.isPresent()){
+            logManager.logSend("[INFO]", "id "+insuranceId+ "번 보험을 조회하었습니다.");
+            return insurance.get();
+        } else {
+            logManager.logSend("[EXCEPTION]", "보험 ID가 존재하지 않습니다.");
+            return null;
+        }
 //        if(insurance.isPresent())
 //            return insurance.get();
 //        else{
 //            throw new NotFoundProfileException("[Exception] 보험 ID가 존재하지 않습니다.");
 //        }
-        return insurance.orElse(null);
     }
 
     public List<GetAllInsuranceDto> getAllInsurance() {

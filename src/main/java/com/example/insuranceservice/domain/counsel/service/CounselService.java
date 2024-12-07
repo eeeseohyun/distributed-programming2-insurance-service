@@ -11,7 +11,9 @@ import com.example.insuranceservice.domain.insurance.entity.Insurance;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import com.example.insuranceservice.exception.DuplicateIDException;
 import com.example.insuranceservice.exception.NotFoundProfileException;
+import com.example.insuranceservice.global.alertManager.AlertManager;
 import com.example.insuranceservice.global.constant.Constant;
+import com.example.insuranceservice.global.logManager.LogManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +29,16 @@ public class CounselService {
     private CustomerRepository customerRepository;
     private EmployeeService employeeService;
     private InsuranceService insuranceService;
+    private LogManager logManager;
+    private AlertManager alertManager;
 
-    public CounselService(CounselRepository counselRepository, CustomerRepository customerRepository, EmployeeService employeeService, InsuranceService insuranceService) {
+    public CounselService(CounselRepository counselRepository, CustomerRepository customerRepository, EmployeeService employeeService, InsuranceService insuranceService, LogManager logManager, AlertManager alertManager) {
         this.counselRepository = counselRepository;
         this.customerRepository = customerRepository;
         this.employeeService = employeeService;
         this.insuranceService = insuranceService;
+        this.logManager = logManager;
+        this.alertManager = alertManager;
     }
 
     // 상담 신청
@@ -46,13 +52,12 @@ public class CounselService {
         Customer customer = findCustomerById(createCounselDto.getCustomerId());
         counsel.setCustomer(customer);
         counselRepository.save(counsel);
+        logManager.logSend("[INFO]", "id "+customer.getCustomerID()+"번 고객이 상담 신청을 완료하였습니다.");
         return ResponseEntity.ok("[success] 상담 신청이 완료되었습니다.");
     }
 
     private Customer findCustomerById(Integer customerId) {
         Optional<Customer> tempCustomer = customerRepository.findById(customerId);
-//        if(tempCustomer.isEmpty())
-//            throw new NotFoundProfileException("존재하지 않는 고객 ID");
         return tempCustomer.orElse(null);
     }
 
@@ -61,6 +66,7 @@ public class CounselService {
 //        Customer customer = findCustomerById(customerId);
 //        List<Counsel> counselList = counselRepository.findByCustomer(customer);
         List<Counsel> customerCounselList = counselRepository.findByCustomer_CustomerID(customerId);
+        logManager.logSend("[INFO]", "id "+customerId+"번 고객이 상담 신청 내역을 조회하였습니다.");
         return customerCounselList.stream()
                 .map(ShowCounselDto::new)
                 .collect(Collectors.toList());
