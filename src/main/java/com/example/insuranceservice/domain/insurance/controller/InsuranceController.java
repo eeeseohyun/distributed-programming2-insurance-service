@@ -2,6 +2,8 @@ package com.example.insuranceservice.domain.insurance.controller;
 import com.example.insuranceservice.domain.insurance.dto.*;
 import com.example.insuranceservice.domain.insurance.service.InsuranceService;
 import com.example.insuranceservice.exception.NotFoundProfileException;
+import com.example.insuranceservice.global.alertManager.AlertManager;
+import com.example.insuranceservice.global.logManager.LogManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,6 +22,8 @@ import java.util.List;
 public class InsuranceController {
 
     private final InsuranceService insuranceService;
+    private final LogManager logManager;
+    private final AlertManager alertManager;
 
     //// 보험 상품 종류 카테고리
     // 보험 상품 카테고리별 조회
