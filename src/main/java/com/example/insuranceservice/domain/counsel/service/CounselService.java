@@ -14,6 +14,8 @@ import com.example.insuranceservice.exception.NotFoundProfileException;
 import com.example.insuranceservice.global.alertManager.AlertManager;
 import com.example.insuranceservice.global.constant.Constant;
 import com.example.insuranceservice.global.logManager.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CounselService {
+    private static final Logger log = LoggerFactory.getLogger(CounselService.class);
     private CounselRepository counselRepository;
     private CustomerRepository customerRepository;
     private EmployeeService employeeService;
@@ -76,16 +79,18 @@ public class CounselService {
     // 신청된 상담 일정 조회
     public List<ShowRequestedCounselDto> showRequestedCounselList() {
 //        List<Counsel> requestedCounselList = counselRepository.findByStatusOfCounsel(false);
+        logManager.logSend("[INFO]", "신청된 상담 일정이 조회되었습니다.");
         List<Counsel> requestedCounselList = counselRepository.findAll();
         return requestedCounselList.stream()
                 .map(ShowRequestedCounselDto::new)
                 .collect(Collectors.toList());
     }
 
-    // 확정된 상담 일정 조회
+    // 확정한 상담 일정 조회
     public List<ShowConfirmedCounselDto> showConfirmedCounselList(Integer employeeId) {
         Employee employee = employeeService.findEmployeeById(employeeId);
         List<Counsel> confirmedCounselList = counselRepository.findByEmployeeAndStatusOfCounsel(employee, true);
+        logManager.logSend("[INFO]", "id "+employeeId+"번 직원이 확정한 상담 일정을 조회하었습니다.");
         return confirmedCounselList.stream()
                 .map(ShowConfirmedCounselDto::new)
                 .collect(Collectors.toList());
@@ -94,17 +99,20 @@ public class CounselService {
     // 상담 일정 확정
     public ResponseEntity<String> confirmCounsel(Integer counselId, Integer employeeId) {
         Counsel counsel = findCounselById(counselId);
-        if(counsel==null)
+        if(counsel==null){
+            logManager.logSend("[ERROR]","존재하지 않는 상담 ID 입니다.");
             return ResponseEntity.ok("[error] 상담 ID가 존재하지 않습니다.");
-
+        }
         Employee employee = employeeService.findEmployeeById(employeeId);
 
-        if(counsel.getStatusOfCounsel())
-           return ResponseEntity.ok("[error] 이미 처리완료된 상담입니다.");
-
+        if(counsel.getStatusOfCounsel()){
+            logManager.logSend("[ERROR]","이미 처리완료된 상담입니다.");
+            return ResponseEntity.ok("[error] 이미 처리완료된 상담입니다.");
+        }
         counsel.setStatusOfCounsel(true);
         counsel.setEmployee(employee);
         counselRepository.save(counsel);
+        logManager.logSend("[SUCCESS]", "id "+employeeId+"번 직원이 id "+counselId+"번 상담 일정을 확정하였습니다.");
         return ResponseEntity.ok("[success] 상담 일정이 확정되었습니다.");
     }
     ////
@@ -114,6 +122,7 @@ public class CounselService {
     public List<ShowConsultedCounselDto> showConsultedCounselList(Integer employeeId) {
         Employee employee = employeeService.findEmployeeById(employeeId);
         List<Counsel> counselList = counselRepository.findByEmployee(employee);
+        logManager.logSend("[INFO]", "id "+employee.getEmployeeId()+"번 직원이 상담 내역을 조회하였습니다.");
         return counselList.stream()
                 .map(ShowConsultedCounselDto::new)
                 .collect(Collectors.toList());
@@ -122,16 +131,19 @@ public class CounselService {
     // 상담 내용 추가
     public ResponseEntity<String> updateCounsel(Integer counselId, CounselUpdateDto counselUpdateDto) {
         Counsel counsel = findCounselById(counselId);
-        if(counsel == null)
+        if(counsel == null){
+            logManager.logSend("[error]", "상담 ID가 존재하지 않습니다.");
             return ResponseEntity.ok("[error] 상담 ID가 존재하지 않습니다.");
-
+        }
         if(counsel.updateCounsel(counselUpdateDto.getCounselDetail(), counselUpdateDto.getNote())){
             counselRepository.save(counsel);
+            logManager.logSend("[SUCCESS]", "id "+counselId+"번 상담 내용이 추가되었습니다.");
             return ResponseEntity.ok("[success] 상담 내용이 추가되었습니다.");
         }
-        else
+        else{
+            logManager.logSend("[SUCCESS]", "id "+counselId+"번 상담 내용 추가에 실패하었습니다.");
             return ResponseEntity.ok("[error] 상담 내용 추가에 실패하였습니다.");
-
+        }
 //        counsel.setCounselDetail(counselUpdateDto.getCounselDetail());
 //        counsel.setNote(counselUpdateDto.getNote());
     }
@@ -148,6 +160,7 @@ public class CounselService {
         suggestInsuranceDto.setInsuranceName(insurance.getInsuranceName());
         suggestInsuranceDto.setEmployeeName(employee.getName());
         suggestInsuranceDto.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constant.dateFormat)));
+        logManager.logSend("[SUCCESS]", "id "+employee.getEmployeeId()+"번 직원이 id "+counselId+"번 상담에 id "+insurance.getInsuranceID()+"번 보험을 제안하였습니다.");
         return suggestInsuranceDto;
     }
 
@@ -155,11 +168,17 @@ public class CounselService {
         Optional<Counsel> tempCounsel = counselRepository.findById(counselId);
 //        if(tempCounsel.isEmpty())
 //            throw new RuntimeException("존재하지 않는 상담 ID");
-        return tempCounsel.get();
+        return tempCounsel.orElse(null);
     }
 
     public RetrieveCounselDto retrieveCounsel(Integer counselId) {
         Optional<Counsel> counsel = counselRepository.findById(counselId);
-        return counsel.map(RetrieveCounselDto::new).orElse(null);
+        if(counsel.isPresent()){
+            logManager.logSend("[INFO]", "id "+counselId+"번 상담이 조회되었습니다.");
+            return new RetrieveCounselDto(counsel.get());
+        }else {
+            logManager.logSend("[ERROR]", "존재하지 않는 상담 ID 입니다.");
+            return null;
+        }
     }
 }

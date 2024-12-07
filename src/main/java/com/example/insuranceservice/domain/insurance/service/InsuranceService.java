@@ -70,21 +70,19 @@ public class InsuranceService {
 
     public RetrieveInsuranceDto retrieveInsurance(Integer insuranceId) throws NotFoundProfileException {
         Insurance insurance = findInsuranceById(insuranceId);
-        if(insurance!=null)
+        if(insurance!=null){
+            logManager.logSend("[INFO]", "id "+insuranceId+"번 보험이 조회되었습니다.");
             return new RetrieveInsuranceDto(insurance);
-        else
+        }
+        else{
+            logManager.logSend("[ERROR]", "존재하지 않는 보험 ID 입니다.");
             return null;
+        }
     }
 
     public Insurance findInsuranceById(Integer insuranceId) {
         Optional<Insurance> insurance = insuranceRepository.findById(insuranceId);
-        if(insurance.isPresent()){
-            logManager.logSend("[INFO]", "id "+insuranceId+ "번 보험을 조회하었습니다.");
-            return insurance.get();
-        } else {
-            logManager.logSend("[EXCEPTION]", "보험 ID가 존재하지 않습니다.");
-            return null;
-        }
+        return insurance.orElse(null);
 //        if(insurance.isPresent())
 //            return insurance.get();
 //        else{

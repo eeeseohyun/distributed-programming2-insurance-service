@@ -277,13 +277,7 @@ public class ContractService {
 
     private Contract findContractById(Integer contractId){
         Optional<Contract> contract = contractRepository.findById(contractId);
-        if (contract.isPresent()){
-            logManager.logSend("[INFO]", "id "+contract.get().getId()+"번 계약이 조회되었습니다.");
-            return contract.get();
-        } else {
-            logManager.logSend("[EXCEPTION]", "존재하지 않는 계약 ID 입니다.");
-            return null;
-        }
+        return contract.orElse(null);
 //        if (contract.isPresent()) return contract.get();
 //        else throw new RuntimeException("존재하지 않는 계약 ID");
     }
@@ -425,7 +419,8 @@ public class ContractService {
         if (contract != null){
             logManager.logSend("[INFO]", "id "+contract.getCustomer().getCustomerID()+ "번 고객이 id "+contract.getId()+"번 계약의 상세 내용을 조회하었습니다.");
             return new ShowContractDetailDto(contract);
-        } else{
+        } else {
+            logManager.logSend("[ERROR]", "존재하지 않는 계약 ID 입니다.");
             return null;
         }
     }
@@ -440,6 +435,7 @@ public class ContractService {
             return "[success] 보험 계약이 해지되었습니다.";
         }
         else {
+            logManager.logSend("[ERROR]", "존재하지 않는 계약 ID 입니다.");
             return "[error] 계약 ID가 존재하지 않습니다.";
         }
     }
@@ -447,10 +443,14 @@ public class ContractService {
     public RetrieveContractDto retrieveContract(Integer contractId) {
         Contract contract = findContractById(contractId);
 //        return new RetrieveContractDto(contract);
-        if(contract !=null)
+        if(contract !=null){
+            logManager.logSend("[SUCCESS]", contract.getId()+"번 계약이 조회되었습니다.");
             return new RetrieveContractDto(contract);
-        else
+        }
+        else{
+            logManager.logSend("[ERROR]","존재하지 않는 계약 ID 입니다.");
             return null;
+        }
     }
     ////
 }
