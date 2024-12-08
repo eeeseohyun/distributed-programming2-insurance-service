@@ -63,54 +63,88 @@ public class ContractService {
     // 미납관리한다. - delete
     public String manageLatePayment(int contractId) {
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new NullPointerException("Contract not found"));
+                .orElseThrow(() -> {
+                    logManager.logSend("[EXCEPTION]", contractId+"번의 계약은 존재하지 않는 계약입니다.");
+                    return new NullPointerException("존재하지 않는 계약입니다.");
+                });
         if(contract.getNonPaymentPeriod() >= Constant.maximumLatePaymentPeriod) {
             contractRepository.deleteById(contractId);
         }
         boolean response = contractRepository.existsById(contractId);
-        if(!response) return "[success] 성공적으로 미납 관리가 되었습니다!";
-        else return "[error] 미납자 정보가 지워지지 않았습니다!";
+        if(!response) {
+            logManager.logSend("[success]", contractId+"번의 계약에 대해 성공적으로 미납 관리가 되었습니다!");
+            return "[success] 성공적으로 미납 관리가 되었습니다!";
+        }
+        else {
+            logManager.logSend("[error]", contractId+"번의 계약에 대해 미납자 정보가 지워지지 않았습니다!");
+            return "[error] 미납자 정보가 지워지지 않았습니다!";
+        }
     }
 
     // 부활관리한다. - update
     public String manageRevive(ManageReviveDto contractDto) {
         Contract contract = contractRepository.findById(contractDto.getId())
-                .orElseThrow(() -> new NullPointerException("Contract not found"));
+                .orElseThrow(() -> {
+                    logManager.logSend("[EXCEPTION]", contractDto.getId()+"번의 계약은 존재하지 않는 계약입니다.");
+                    return new NullPointerException("존재하지 않는 계약입니다.");
+                });
         contract.revive(contractDto);
         Contract response = contractRepository.save(contract);
-        if(response!=null)  return "[success] 성공적으로 부활관리가 되었습니다!";
-        else return "[error] 계약이 부활되지 않았습니다!";
+        if(response!=null) {
+            logManager.logSend("[success]", contractDto.getId()+"번의 계약에 대해 성공적으로 부활 관리가 되었습니다!");
+            return "[success] 성공적으로 부활 관리가 되었습니다!";
+        }
+        else {
+            logManager.logSend("[error]", contractDto.getId()+"번의 계약이 부활되지 않았습니다!");
+            return "[error] 계약이 부활되지 않았습니다!";
+        }
     }
     // 만기관리하다.- delete
     public String manageExpirationContract(int contractId) throws ParseException {
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new NullPointerException("Contract not found"));
+                .orElseThrow(() -> {
+                    logManager.logSend("[EXCEPTION]", contractId+"번의 계약은 존재하지 않는 계약입니다.");
+                    return new NullPointerException("존재하지 않는 계약입니다.");
+                });
         SimpleDateFormat dateFormat = new SimpleDateFormat(Constant.dateFormat);
         Date expirationDate = dateFormat.parse(contract.getExpirationDate());
         Date today = new Date();
         if (!expirationDate.before(today)) {
+            logManager.logSend("[error]",contractId+"번의 계약은 만기된 계약이 아닙니다!");
             return "[error] 만기된 계약이 아닙니다!";
         }
         if (contract.getRenewalStatus()) {
+            logManager.logSend("[error]",contractId+"번의 계약은 재계약 진행 희망자로 만기할 수 없는 계약입니다!");
             return "[error] 재계약 진행 희망자로 만기할 수 없는 계약입니다!";
         }
         contractRepository.deleteById(contractId);
         boolean response= contractRepository.existsById(contractId);
-        if(!response) return "[success] 성공적으로 만기계약 관리가 되었습니다!";
-        else return "[error] 만기계약 관리에 실패하였습니다!";
+        if(!response) {
+            logManager.logSend("[success]", contractId+"번의 계약에 대해 성공적으로 만기계약 관리가 되었습니다!");
+            return "[success] 성공적으로 만기계약 관리가 되었습니다!";
+        }
+        else {
+            logManager.logSend("[error]",  contractId+"번의 계약에 대하여 만기계약 관리에 실패하였습니다");
+            return "[error] 만기계약 관리에 실패하였습니다!";
+        }
     }
 
     // 재계약관리한다. - update
     public ResponseEntity<String> manageRenewalContract(int contractId) {
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new NullPointerException("[error] 존재하지 않는 계약 ID 입니다."));
+                .orElseThrow(() -> {
+                    logManager.logSend("[EXCEPTION]", contractId+"번의 계약은 존재하지 않는 계약입니다.");
+                    return new NullPointerException("존재하지 않는 계약입니다.");
+                });
         if (contract.getRenewalStatus()) {
             LocalDate expirationDate = LocalDate.now().plusYears(2);
             String formattedDate = expirationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             contract.setExpirationDate(formattedDate);
             contractRepository.save(contract);
+            logManager.logSend("[success]", contractId+"번의 계약에 대해 성공적으로 재계약이 되었습니다!");
             return ResponseEntity.ok("[success] 성공적으로 재계약이 되었습니다!");
         } else {
+            logManager.logSend("[error]", contractId+"번의 계약에 대해 재계약에 동의하지 않아 재계약에 실패했습니다");
             return ResponseEntity.ok("[error] 재계약에 동의하지 않아 재계약에 실패했습니다!");
         }
     }
@@ -119,6 +153,7 @@ public class ContractService {
     public ResponseEntity<String> manageUpdate(ManageUpdateDto contractDto) throws NotFoundProfileException {
         Contract contract = contractDto.toEntity();
         if(contractRepository.findById(contract.getId()).isEmpty()) {
+            logManager.logSend("[EXCEPTION]", contractDto.getId()+"번의 계약은 존재하지 않는 계약입니다.");
             throw new NotFoundProfileException("[Exception] 계약 정보를 찾을 수 없습니다!");
         }
         contract.setCustomer(customerRepository.findById(contractDto.getCustomerId()).get());
@@ -126,8 +161,14 @@ public class ContractService {
         contract.setEmployee(employeeRepository.findById(contractDto.getEmployeeId()).get());
         contractRepository.save(contract);
         Boolean response = contractRepository.existsById(contractDto.getId());
-        if(response) return ResponseEntity.ok("[success] 성공적으로 배서가 반영 되었습니다!");
-        else return ResponseEntity.ok("[error] 배서가 반영 되지 않았습니다!");
+        if(response) {
+            logManager.logSend("[success]", contractDto.getId()+"번의 계약에 대하여 성공적으로 배서가 반영 되었습니다");
+            return ResponseEntity.ok("[success] 성공적으로 배서가 반영 되었습니다!");
+        }
+        else {
+            logManager.logSend("[error]", contractDto.getId()+"번의 계약에 대하여 배서가 반영 되지 않았습니다!");
+            return ResponseEntity.ok("[error] 배서가 반영 되지 않았습니다!");
+        }
     }
     //// 계약체결 카테고리 - 계약을 체결한다.
     public List<ShowPermitedUnderwriteContractDto> showPermitedUnderwriteContractList() {
