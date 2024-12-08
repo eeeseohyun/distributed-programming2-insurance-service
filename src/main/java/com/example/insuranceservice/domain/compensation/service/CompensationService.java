@@ -76,8 +76,8 @@ public class CompensationService {
             logManager.logSend("[INFO]", "수정: " + compensation.getCompensationID());
             // 이메일 알림 발송
             alertManager.sendAlert(
-                    "보상 수정 알림",
-                    "보상 id: " + compensation.getCompensationID() + "이(가) 수정되었습니다."
+                    "[INFO]",
+                    "id " + compensation.getCompensationID() + "번째 보상이 수정되었습니다."
             );
             return "[success] 보상 수정이 완료되었습니다.";
         }
