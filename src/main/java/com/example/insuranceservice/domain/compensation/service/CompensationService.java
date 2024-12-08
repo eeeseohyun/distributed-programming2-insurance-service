@@ -9,6 +9,7 @@ import com.example.insuranceservice.exception.DuplicateIDException;
 import com.example.insuranceservice.exception.NotFoundProfileException;
 import com.example.insuranceservice.global.alertManager.AlertManager;
 import com.example.insuranceservice.global.logManager.LogManager;
+import com.example.insuranceservice.global.replica.ReadOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -32,11 +33,13 @@ public class CompensationService {
         this.alertManager = alertManager;
     }
     // 모든 보상 조회
+    @ReadOnly
     public List<Compensation> showAllCompensationList() {
         return compensationRepository.findAll();
     }
 
     //보상 조회
+    @ReadOnlygit 
     public List<Compensation> showCompensationList(int customerId) throws NotFoundProfileException {
         if (!customerRepository.existsById(customerId)) {
             logManager.logSend("[EXCEPTION]", customerId+"는 존재하지 않는 고객 ID 입니다.");
