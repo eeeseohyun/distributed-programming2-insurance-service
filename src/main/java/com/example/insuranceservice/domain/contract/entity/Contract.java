@@ -13,13 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Entity
-@Data
 @Builder
 @Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
 public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

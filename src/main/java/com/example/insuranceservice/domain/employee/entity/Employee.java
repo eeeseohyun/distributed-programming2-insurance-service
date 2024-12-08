@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "employee")
+@Getter @Setter
 public class Employee extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

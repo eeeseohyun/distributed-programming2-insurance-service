@@ -51,7 +51,7 @@ public class CounselController {
     }
 
     // 확정된 상담 일정 조회
-    @Operation(summary = "확정된 상담 일정 조회", description = "확정된 모든 상담 일정을 조회합니다")
+    @Operation(summary = "확정한 상담 일정 조회", description = "확정된 모든 상담 일정을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/showConfirmedCounselList/{employeeId}")
     public List<ShowConfirmedCounselDto> showConfirmedCounselList(
