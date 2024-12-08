@@ -97,29 +97,41 @@ public class InsuranceService {
                         case CarInsurance -> {
                             int carId = insurance.getCar().getCarId();
                             Car car = carRepository.findById(carId)
-                                    .orElseThrow(() -> new RuntimeException("존재하지 않는 차 보험 상품 ID"));
+                                    .orElseThrow(() -> {
+                                        logManager.logSend("[EXCEPTION]", carId + "는 존재하지 않는 차 보험 ID 입니다.");
+                                        return new RuntimeException("존재하지 않는 차 보험 상품 ID");
+                                    });
+
                             CreateCarInsuranceDto dto = InsuranceMapper.insuranceMapper.toCarInsuranceDto(insurance, car);
                             return dto;
                         }
                         case CancerHealthInsurance -> {
                             int cancerId = insurance.getCancerHealth().getCancerId();
                             CancerHealth cancerHealth = cancerHealthRepository.findById(cancerId)
-                                    .orElseThrow(() -> new RuntimeException("존재하지 않는 암 보험 상품 ID "));
+                                    .orElseThrow(() -> {
+                                        logManager.logSend("[EXCEPTION]", cancerId + "는 존재하지 않는 암 보험 ID 입니다.");
+                                        return new RuntimeException("존재하지 않는 암 보험 상품 ID");
+                                    });
+
                             CreateCancerInsuranceDto dto = InsuranceMapper.insuranceMapper.toCancerInsuranceDto(insurance, cancerHealth);
                             return dto;
                         }
                         case HouseFireInsurance -> {
                             int houseFireId = insurance.getHouseFire().getHouseFireId();
                             HouseFire houseFire = houseFireRepository.findById(houseFireId)
-                                    .orElseThrow(() -> new RuntimeException("존재하지 않는 화재 보험 상품 ID"));
-                            CreateHousefireInsuranceDto dto = InsuranceMapper.insuranceMapper.toHouseFireInsuranceDto(insurance, houseFire);
+                                    .orElseThrow(() -> {
+                                        logManager.logSend("[EXCEPTION]", houseFireId + "는 존재하지 않는 화재 보험 ID 입니다.");
+                                        return new RuntimeException("존재하지 않는 화재 보험 상품 ID");
+                                    });                            CreateHousefireInsuranceDto dto = InsuranceMapper.insuranceMapper.toHouseFireInsuranceDto(insurance, houseFire);
                             return dto;
                         }
                         case InternationalTravelInsurance -> {
                             int internationalId = insurance.getInternationalTravel().getTravelId();
                             InternationalTravel internationalTravel = internationalRepository.findById(internationalId)
-                                    .orElseThrow(() -> new RuntimeException("존재하지 않는 여행 보험 상품 ID"));
-                            CreateInternationalInsuranceDto dto = InsuranceMapper.insuranceMapper.toInternationalInsuranceDto(insurance, internationalTravel);
+                                    .orElseThrow(() -> {
+                                        logManager.logSend("[EXCEPTION]", internationalId + "는 존재하지 않는 화재 보험 ID 입니다.");
+                                        return new RuntimeException("존재하지 않는 여행 보험 상품 ID");
+                                    });                                 CreateInternationalInsuranceDto dto = InsuranceMapper.insuranceMapper.toInternationalInsuranceDto(insurance, internationalTravel);
                             return dto;
                         }
                         default -> throw new RuntimeException("존재하지 않는 보험 상품 종류입니다");
