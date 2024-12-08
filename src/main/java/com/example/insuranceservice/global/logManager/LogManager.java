@@ -14,6 +14,8 @@ public class LogManager {
     private final RestTemplate restTemplate;
     @Value("${logsystem.url}")
     private String logUrl;
+    @Value("${instance.name:}")
+    private String instanceName;
 
     public LogManager(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -22,7 +24,7 @@ public class LogManager {
     public void logSend(String logType, String message) {
         Map<String, String> logData = new HashMap<>();
         logData.put("logType", logType);
-        logData.put("message", message);
+        logData.put("message", message+" "+instanceName);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
