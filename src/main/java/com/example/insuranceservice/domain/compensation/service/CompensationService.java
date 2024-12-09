@@ -39,7 +39,7 @@ public class CompensationService {
     }
 
     //보상 조회
-    @ReadOnlygit 
+    @ReadOnly
     public List<Compensation> showCompensationList(int customerId) throws NotFoundProfileException {
         if (!customerRepository.existsById(customerId)) {
             logManager.logSend("[EXCEPTION]", customerId+"는 존재하지 않는 고객 ID 입니다.");
