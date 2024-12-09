@@ -14,6 +14,7 @@ import com.example.insuranceservice.domain.insurance.repository.InsuranceReposit
 import com.example.insuranceservice.exception.NotFoundProfileException;
 import com.example.insuranceservice.global.alertManager.AlertManager;
 import com.example.insuranceservice.global.logManager.LogManager;
+import com.example.insuranceservice.global.replica.ReadOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.security.core.Authentication;
@@ -90,6 +91,7 @@ public class InsuranceService {
 //        }
     }
 
+    @ReadOnly
     public List<GetAllInsuranceDto> getAllInsurance() {
         return insuranceRepository.findAll().stream()
                 .map(insurance -> {
